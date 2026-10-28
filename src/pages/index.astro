@@ -1,0 +1,122 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Phone from '../components/Phone.astro';
+import Stage from '../components/Stage.astro';
+import StagePlayer from '../components/StagePlayer.astro';
+import { cases, type Stage as StageT } from '../data/cases';
+
+const log = (time: string, level: string, service: string, msg: string) => ({ t: 'log' as const, s: [time, level, service, msg].join('|') });
+const fleet: StageT = { medium: 'logs', label: 'agent fleet · live', lines: [
+  { t: 'cmd', s: 'env:prod agents:*' },
+  log('09:00:02', 'INFO', 'engine', 'turn started · agent=support-bot'),
+  log('09:00:03', 'INFO', 'gateway', 'tools/call knowledge_search_query · ok'),
+  log('09:00:03', 'INFO', 'vault', 'user’s own token attached · hidden'),
+  log('09:00:04', 'WARN', 'guard', 'tool text fenced as untrusted'),
+  log('09:00:05', 'INFO', 'engine', 'reply sent · language=es'),
+  log('09:00:07', 'WARN', 'edge', 'forged signature · 401 rejected'),
+  { t: 'dim', s: 'the platform · the tools · the guards around them' },
+]};
+const work = cases.filter((c) => c.ready);
+const blurbs: Record<string, { tag: string; line: string }> = {
+  'agent-platform': { tag: 'Platform · Go · TypeScript', line: 'The engine, studio and gateways behind company-wide AI agents — and how I keep them running.' },
+  'mcp-connections': { tag: 'MCP · OAuth · Gateway', line: 'Connectors that let agents use real apps, with each person’s own access and no shared keys.' },
+  security: { tag: 'Security · Defence in depth', line: 'Six layers, each closed by default — and every fix proven by replaying the attack.' },
+};
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Nityashree S · AI Engineer</title>
+    <meta name="description" content="AI engineer building production AI agents — the platform, the connectors and the security underneath." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body class="studio home">
+    <Nav />
+    <main>
+      <section class="h-open">
+        <div class="h-open-text">
+          <p class="kicker">AI Engineer · India</p>
+          <h1>I build AI agents<br /><span>people can trust.</span></h1>
+          <p class="h-sub">The platform they run on, the tools they use, and the security that keeps them honest.</p>
+          <div class="h-cta"><a class="btn-solid" href="#work">See the work</a><a class="btn-line" href="#about">About me</a></div>
+        </div>
+        <div class="h-open-stage"><Stage stage={fleet} /></div>
+      </section>
+
+      <section class="h-about" id="about">
+        <figure class="polaroid">
+          <span class="tape"></span>
+          <img src="/headshot.png" alt="Nityashree S" width="600" height="600" />
+          <figcaption>nitya, mid-debug</figcaption>
+        </figure>
+        <div class="ab-text">
+          <p class="kicker">About</p>
+          <h2>I started in payments data. Now I build the AI agents that use it.</h2>
+          <p>I joined my company as a payments analyst intern in the CEO’s office, building the database of which payment methods work where — and testing an AI assistant on it before launch. Catching the answers it got wrong is what pulled me into AI engineering.</p>
+          <p>Today I’m on the AI team, shipping the platform our agents run on: the engine, the connectors, and the guardrails around the model. I work with AI the way I want agents to work — fast, but checked.</p>
+          <dl class="now">
+            <div><dt>Building</dt><dd>emi-agent — a multilingual agent, built as code with evals</dd></div>
+            <div><dt>Learning</dt><dd>The fundamentals under every tool I use</dd></div>
+            <div><dt>Based in</dt><dd>India · <span id="ist">--:--</span> IST</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="h-how">
+        <div class="how-text">
+          <p class="kicker">How I work</p>
+          <h2>One laptop. A team of agents. Me in the loop.</h2>
+          <p>Every task gets its own worktree. Subagents research, challenge and review in parallel — and I set the bar and read every line before anything ships.</p>
+          <ul class="how-list">
+            <li><b>Plan</b> state the goal and what would prove it</li>
+            <li><b>Delegate</b> research, skeptic and reviewer agents</li>
+            <li><b>Prove</b> a failing test first, then green</li>
+            <li><b>Own</b> I review the result and ship it</li>
+          </ul>
+        </div>
+        <div class="how-phone"><Phone /></div>
+      </section>
+
+      <section class="h-work" id="work">
+        <div class="story-head"><p class="kicker">Selected work</p><h2>Three case studies.</h2></div>
+        <div class="w-grid">
+          {work.map((c) => (
+            <a class="w-card" href={`/work/${c.slug}/`}>
+              <div class:list={['w-art', `art-${c.slug}`]}>
+                {c.slug === 'agent-platform' && (
+                  <div class="mini-win"><i /><i /><i /><p class="r">turn failed · bad skill header</p><p class="r">turn failed · bad skill header</p><p class="g">fixed · agent answers again</p></div>
+                )}
+                {c.slug === 'mcp-connections' && (
+                  <div class="mini-flow"><span>agent</span><b /><span>gateway</span><b /><span>connector</span><b /><span>app</span></div>
+                )}
+                {c.slug === 'security' && (
+                  <div class="mini-stack">{['edge', 'identity', 'tenant', 'model', 'sandbox'].map((l, i) => <span class:list={{ hit: i === 2 }}>{l}{i === 2 && <em>blocked</em>}</span>)}</div>
+                )}
+              </div>
+              <div class="w-meta">
+                <span class="w-no">Case {c.no} · {blurbs[c.slug].tag}</span>
+                <h3>{c.title}</h3>
+                <p>{blurbs[c.slug].line}</p>
+                <span class="w-go">Read the case study →</span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section class="h-contact" id="contact">
+        <h2>Let’s build something<br />people can rely on.</h2>
+        <div class="h-cta"><a class="btn-solid" href="mailto:nitya08shree@gmail.com">nitya08shree@gmail.com</a><a class="btn-line" href="https://github.com/Nityaa08">GitHub</a><a class="btn-line" href="https://www.linkedin.com/in/nityashree-s-b34b1b291">LinkedIn</a></div>
+      </section>
+    </main>
+    <StagePlayer />
+    <script>
+      const ist = document.getElementById('ist')!;
+      const tick = () => { ist.textContent = new Date().toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', hour12: false }); };
+      tick(); setInterval(tick, 30000);
+    </script>
+  </body>
+</html>

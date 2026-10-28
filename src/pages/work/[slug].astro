@@ -1,0 +1,122 @@
+---
+import '../../styles/global.css';
+import MacBook3D from '../../components/MacBook3D.astro';
+import StoryScroll from '../../components/StoryScroll.astro';
+import FeatureRail from '../../components/FeatureRail.astro';
+import StagePlayer from '../../components/StagePlayer.astro';
+import Stage from '../../components/Stage.astro';
+import Nav from '../../components/Nav.astro';
+import CaseNav from '../../components/CaseNav.astro';
+import Incidents from '../../components/Incidents.astro';
+import { cases } from '../../data/cases';
+
+export function getStaticPaths() {
+  return cases.filter((c) => c.ready && !c.custom).map((c) => ({ params: { slug: c.slug }, props: { c } }));
+}
+const { c } = Astro.props;
+const workbench = { medium: 'claude' as const, label: 'engine — claude', lines: [
+  { t: 'you' as const, s: 'New model family can’t call tools. Find the root cause and fix it with a failing test first.' },
+  { t: 'tool' as const, s: 'Bash(git worktree add ../engine-fix -b fix/settings-per-model-family)' },
+  { t: 'tool' as const, s: 'Agent(research) — read the provider’s docs for this family' },
+  { t: 'tool' as const, s: 'Agent(skeptic) — try to break the root-cause claim' },
+  { t: 'err' as const, s: 'FAIL  tools rejected for the new family' },
+  { t: 'ok' as const, s: 'ok    settings chosen per family · tools work' },
+  { t: 'tool' as const, s: 'Agent(reviewer) — review the diff' },
+  { t: 'ai' as const, s: 'Ready for your review. Branch pushed, PR opened.' },
+]};
+const process = (c.steps ?? []).map((s) => ({ label: s.state, heading: s.heading, text: s.text, stage: s.stage }));
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{c.title} · Nityashree S</title>
+    <meta name="description" content={c.intro} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body class="studio">
+    <Nav crumb={`Case ${c.no}`} active="work" />
+    <nav class="chapters" aria-label="Chapters">
+      <a href="#ch-overview" data-ch="ch-overview"><span>01</span>Overview</a>
+      {process.length > 0 && <a href="#ch-running" data-ch="ch-running"><span>02</span>When something breaks</a>}
+      {c.features && <a href="#ch-features" data-ch="ch-features"><span>03</span>Features</a>}
+      {c.model && <a href="#ch-model" data-ch="ch-model"><span>04</span>The model</a>}
+      {c.bugs && <a href="#ch-broke" data-ch="ch-broke"><span>05</span>Things that broke</a>}
+    </nav>
+    <main>
+      <section class="cs-hero" id="ch-overview">
+        <div class="cs-hero-text">
+          <p class="kicker">Case {c.no}</p>
+          <h1>{c.title}</h1>
+          <p class="cs-intro">{c.intro}</p>
+        </div>
+        <div class="cs-hero-visual"><MacBook3D /></div>
+      </section>
+
+      {process.length > 0 && <StoryScroll id="ch-running" kicker="When something breaks" title="How I fix a bug in production, step by step." items={process} />}
+      {c.features && <FeatureRail features={c.features} />}
+      {c.model && (
+        <section class="mw" id="ch-model">
+          <div class="story-head"><p class="kicker">Working with the model</p><h2>The AI part isn’t just calling a model.</h2></div>
+          <div class="wb">
+            <div class="graph">
+              <div class="g-legend">{c.model.map((col) => <span class:list={['lg-chip', `ln-${col.lane}`]}><i />{col.title}</span>)}</div>
+              <ol class="g-log">
+                <li class="g-main"><span class="g-node main" /><code>main</code><span class="g-note">every branch below merged after tests and review</span></li>
+                {c.model.flatMap((col) => col.items.map(([br, t, d]) => (
+                  <li class:list={['g-row', `ln-${col.lane}`]}>
+                    <span class="g-node" />
+                    <div><code>{br}</code><b>{t}</b><p>{d}</p></div>
+                  </li>
+                )))}
+              </ol>
+            </div>
+            <div class="wb-side">
+              <p class="wb-cap">How I ship a change like this</p>
+              <Stage stage={workbench} />
+              <ul class="wb-keys">
+                <li><b>worktree</b> an isolated copy of the repo per task, so parallel work never collides</li>
+                <li><b>subagents</b> separate AI agents that research, challenge and review — the writer never grades its own work</li>
+                <li><b>me</b> I set the task and the bar, and I read every line before it ships</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      )}
+      {c.bugs && <Incidents bugs={c.bugs} />}
+
+      <CaseNav slug={c.slug} />
+    </main>
+    <StagePlayer />
+    <script>
+      document.querySelectorAll<HTMLElement>('[data-story]').forEach((story) => {
+        const slots = [...story.querySelectorAll<HTMLElement>('[data-slot]')];
+        let current = -1;
+        const activate = (n: number) => {
+          if (n === current) return;
+          current = n;
+          slots.forEach((s) => {
+            const on = Number(s.dataset.slot) === n;
+            s.classList.toggle('active', on);
+            if (on) dispatchEvent(new CustomEvent('slot:active', { detail: s }));
+          });
+        };
+        const io = new IntersectionObserver((entries) => {
+          for (const e of entries) if (e.isIntersecting) activate(Number((e.target as HTMLElement).dataset.step));
+        }, { rootMargin: '-45% 0px -45% 0px' });
+        story.querySelectorAll('.step').forEach((s) => io.observe(s));
+        activate(0);
+      });
+      const chapters = [...document.querySelectorAll<HTMLAnchorElement>('.chapters a')];
+      const nav = document.querySelector<HTMLElement>('.chapters')!;
+      const cio = new IntersectionObserver((entries) => {
+        for (const e of entries) if (e.isIntersecting) {
+          chapters.forEach((a) => a.classList.toggle('on', a.dataset.ch === e.target.id));
+          nav.classList.toggle('show', e.target.id !== 'ch-overview');
+        }
+      }, { rootMargin: '-40% 0px -55% 0px' });
+      document.querySelectorAll('main > section[id]').forEach((sec) => cio.observe(sec));
+    </script>
+  </body>
+</html>

@@ -1,0 +1,70 @@
+---
+import StatusIcons from './StatusIcons.astro';
+const layers = Array.from({ length: 14 }, (_, i) => i);
+const work = [
+  { s: 'ok', name: 'feat/guest-access', repo: '5 services', act: '$ go test ./... — ok', href: '/work/agent-platform/' },
+  { s: 'run', name: 'fix/skill-removal-sync', repo: 'agent-platform', act: 'claude · removed skills stay removed', href: '/work/agent-platform/' },
+  { s: 'ok', name: 'feat/mcp-connector', repo: 'connectors', act: 'tests green · verified on dev' },
+  { s: 'wait', name: 'fix/tool-gateway-timeouts', repo: 'gateway', act: 'in review · bounded upstream wait' },
+  { s: 'idle', name: 'chore/cve-sweep', repo: 'agent fleet', act: '$ govulncheck ./...' },
+];
+---
+<div class="phone-wrap">
+  <div class="phone" id="phone">
+    {layers.map((i) => <div class="phone-layer" style={`transform: translateZ(${-i}px)`} />)}
+    <div class="phone-btn b1" /><div class="phone-btn b2" /><div class="phone-btn b3" />
+    <div class="phone-face">
+      <div class="screen">
+        <div class="ios-bar big"><span data-clock="ios">--:--</span><span class="ios-island" /><StatusIcons kind="ios" /></div>
+        <div class="list-head"><i class="d ok" /><b>MacBook Pro</b><span>connected</span></div>
+        <div class="live" id="live">
+          <p class="cap">Running now</p>
+          <div class="agent-row" data-agent="0"><i class="d run" /><b>planner</b><span class="a-act">splitting the task in 3</span></div>
+          <div class="agent-row" data-agent="1"><i class="d idle" /><b>coder</b><span class="a-act">queued</span></div>
+          <div class="agent-row" data-agent="2"><i class="d idle" /><b>reviewer</b><span class="a-act">queued</span></div>
+        </div>
+        <p class="cap">Work</p>
+        {work.map((it) => {
+          const Tag = it.href ? 'a' : 'div';
+          return (
+            <Tag class:list={['stream', { link: it.href }]} href={it.href}>
+              <i class:list={['d', it.s]} />
+              <div><b>{it.name}</b><span class="repo"><i class="d small" />{it.repo}</span><span class="act">{it.act}</span></div>
+            </Tag>
+          );
+        })}
+      </div>
+    </div>
+  </div>
+  <div class="phone-shadow" />
+</div>
+
+<script>
+  const phone = document.getElementById('phone')!;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const script: [number, string, string][] = [
+    [0, 'run', 'splitting the task in 3'], [0, 'ok', 'plan ready'], [1, 'run', 'writing sync.go'],
+    [2, 'run', 'reading the diff'], [1, 'run', '$ go test ./... '], [1, 'ok', 'tests pass'],
+    [2, 'wait', 'asks: why skip, not delete?'], [2, 'ok', 'approved · PR opened'],
+  ];
+  const rows = [...document.querySelectorAll<HTMLElement>('.agent-row')];
+  const set = (n: number, s: string, text: string) => {
+    const r = rows[n]; r.querySelector('i')!.className = `d ${s}`;
+    const a = r.querySelector<HTMLElement>('.a-act')!; a.textContent = text;
+    r.classList.remove('flash'); void r.offsetWidth; r.classList.add('flash');
+  };
+  if (!reduced) {
+    (async () => {
+      while (true) {
+        rows.forEach((_, n) => set(n, n ? 'idle' : 'run', n ? 'queued' : 'splitting the task in 3'));
+        for (const [n, s, t] of script) { await new Promise((r) => setTimeout(r, 1500)); set(n, s, t); }
+        await new Promise((r) => setTimeout(r, 3500));
+      }
+    })();
+    addEventListener('pointermove', (e) => {
+      const x = e.clientX / innerWidth - 0.5, y = e.clientY / innerHeight - 0.5;
+      phone.style.setProperty('--ry', `${-24 + x * 10}deg`);
+      phone.style.setProperty('--rx', `${8 - y * 8}deg`);
+    });
+  }
+</script>
