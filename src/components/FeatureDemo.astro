@@ -1,0 +1,74 @@
+---
+interface Props { kind: 'share' | 'memory' | 'guard' | 'skills' | 'schedule' | 'tools'; manual?: boolean }
+const { kind, manual = false } = Astro.props;
+const titles = { share: 'support-bot · chat', memory: 'ops-agent · chat', guard: 'support-bot · chat', skills: 'query-logs.md', schedule: 'ops-agent · schedule', tools: 'support-agent · toolkits' };
+const steps = { share: 4, memory: 4, guard: 4, skills: 4, schedule: 4, tools: 4 };
+---
+<figure class:list={['demo', `d-${kind}`]} data-demo data-manual={manual ? '' : undefined} data-steps={steps[kind]} data-step="0">
+  <div class="demo-bar"><span class="lights"><i /><i /><i /></span><span>{titles[kind]}</span></div>
+  <div class="demo-body">
+    {kind === 'share' && (
+      <>
+        <span class="pointer" aria-hidden="true"></span>
+        <button class="d-share-btn" tabindex="-1">Share</button>
+        <div class="bub you">Which merchants failed checkout yesterday?</div>
+        <div class="bub bot">Three merchants: two card declines, one timeout.</div>
+        <div class="d-sheet">
+          <p class="d-h">Share this chat</p>
+          <div class="opt"><i />Only me</div>
+          <div class="opt on"><i />Specific people<span class="ppl"><em>ops team</em><em>support</em></span></div>
+          <div class="opt"><i />Everyone in the workspace</div>
+        </div>
+        <div class="toast">Shared · each guest gets their own session</div>
+      </>
+    )}
+    {kind === 'memory' && (
+      <>
+        <div class="bub you">Keep your answers to three bullet points.</div>
+        <div class="toast t-top">Saved to memory · answer style = 3 bullets</div>
+        <div class="sep">next day</div>
+        <div class="bub you">What failed overnight?</div>
+        <div class="typing"><i /><i /><i /></div>
+        <div class="bub bot">• 14 checkouts failed<br />• 9 were card declines<br />• 2 timeouts need a look <span class="tag">from memory</span></div>
+      </>
+    )}
+    {kind === 'guard' && (
+      <>
+        <div class="bub you">¿Cuál es el estado de mi pago?</div>
+        <div class="typing"><i /><i /><i /></div>
+        <div class="bub bot draft">Your payment is being processed.</div>
+        <div class="flag">guard · reply is English, user wrote Spanish</div>
+        <div class="bub bot fixed">Tu pago se está procesando. ✓</div>
+      </>
+    )}
+    {kind === 'skills' && (
+      <>
+        <pre class="code"><span>1  ---</span><span>2  name: query-logs</span><span class="bad">3  description: Query logs: by user</span><span class="good">3  description: "Query logs: by user"</span><span>4  ---</span></pre>
+        <div class="d-actions"><button tabindex="-1">Save</button></div>
+        <div class="banner err">Line 3: quote the value — a second ": " breaks the header</div>
+        <div class="banner ok">Saved · the agent can use this skill now</div>
+      </>
+    )}
+    {kind === 'schedule' && (
+      <>
+        <div class="form">
+          <div class="row"><span>Run</span><b class="pick">Every weekday</b></div>
+          <div class="row"><span>At</span><b class="pick">09:00</b></div>
+          <div class="row"><span>Post to</span><b class="pick">#ops</b></div>
+        </div>
+        <div class="clock">09:00 · running…</div>
+        <div class="bub bot post"><b>ops-agent</b><br />Morning summary: 14 failed checkouts, 2 need a look.</div>
+      </>
+    )}
+    {kind === 'tools' && (
+      <>
+        <div class="conns">
+          {[['Ob', 'Observability', 'logs · metrics'], ['Co', 'Code', 'repositories · pull requests'], ['Kn', 'Knowledge', 'company docs'], ['Tr', 'Travel', 'flights · stays']].map(([k, n, d]) => (
+            <div class="conn"><span class="c-logo">{k}</span><span class="c-name"><b>{n}</b><em>{d}</em></span><span class="c-state"><span class="c-connect">Connect</span><span class="c-wait"><i />Connecting</span><span class="c-ok">Connected</span></span></div>
+          ))}
+        </div>
+        <p class="hint">Every connection runs through one gateway. That is case 02 →</p>
+      </>
+    )}
+  </div>
+</figure>

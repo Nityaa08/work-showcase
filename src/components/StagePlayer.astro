@@ -1,0 +1,87 @@
+<script>
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+  const typed = new Set(['cmd', 'you']);
+  const token = new WeakMap<HTMLElement, number>();
+  const visible = new WeakSet<HTMLElement>();
+
+  const isActive = (f: HTMLElement) => {
+    const slot = f.closest<HTMLElement>('[data-slot]');
+    return slot ? slot.classList.contains('active') : visible.has(f);
+  };
+
+  async function playOnce(f: HTMLElement, run: number) {
+    const alive = () => token.get(f) === run && isActive(f);
+    const lines = [...f.querySelectorAll<HTMLElement>('.ln')];
+    const cursor = f.querySelector<HTMLElement>('.cursor');
+    lines.forEach((l) => { l.classList.remove('shown'); const t = l.querySelector<HTMLElement>('.txt')!; t.dataset.full ??= t.textContent ?? ''; });
+    f.classList.add('playing');
+    for (const l of lines) {
+      if (!alive()) return false;
+      const t = l.querySelector<HTMLElement>('.txt')!;
+      const full = t.dataset.full!;
+      l.classList.add('shown');
+      if (cursor) t.after(cursor);
+      if (typed.has(l.dataset.t!)) {
+        t.textContent = '';
+        for (let c = 1; c <= full.length; c++) { if (!alive()) return false; t.textContent = full.slice(0, c); await sleep(20 + Math.random() * 36); }
+        await sleep(420);
+      } else {
+        t.textContent = full;
+        await sleep(l.dataset.t === 'dim' ? 700 : l.dataset.t === 'err' ? 180 : 300);
+      }
+    }
+    f.classList.remove('playing');
+    return true;
+  }
+
+  async function loop(f: HTMLElement) {
+    const run = (token.get(f) ?? 0) + 1;
+    token.set(f, run);
+    while (token.get(f) === run && isActive(f)) {
+      if (!(await playOnce(f, run))) return;
+      await sleep(2800);
+    }
+  }
+
+  const frames = [...document.querySelectorAll<HTMLElement>('[data-stage]')];
+  if (reduced) frames.forEach((f) => f.querySelectorAll('.ln').forEach((l) => l.classList.add('shown')));
+  else {
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        const f = e.target as HTMLElement;
+        if (e.isIntersecting) { visible.add(f); if (!f.closest('[data-slot]')) loop(f); } else visible.delete(f);
+      }
+    }, { threshold: 0.4 });
+    frames.forEach((f) => io.observe(f));
+    addEventListener('slot:active', ((e: CustomEvent<HTMLElement>) => e.detail.querySelectorAll<HTMLElement>('[data-stage]').forEach(loop)) as EventListener);
+  }
+
+  const demos = [...document.querySelectorAll<HTMLElement>('[data-demo]:not([data-manual])')];
+  const seen = new WeakSet<HTMLElement>();
+  if (reduced) demos.forEach((d) => (d.dataset.step = String(Number(d.dataset.steps) - 1)));
+  else {
+    const dio = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        const d = e.target as HTMLElement;
+        if (e.isIntersecting && !seen.has(d)) {
+          seen.add(d);
+          (async () => {
+            const n = Number(d.dataset.steps);
+            while (true) {
+              for (let s = 0; s < n; s++) { d.dataset.step = String(s); await sleep(s === n - 1 ? 3000 : 1600); }
+            }
+          })();
+        }
+      }
+    }, { threshold: 0.35 });
+    demos.forEach((d) => dio.observe(d));
+  }
+
+  const fmt = (o: Intl.DateTimeFormatOptions) => new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', ...o });
+  const clocks = () => {
+    document.querySelectorAll<HTMLElement>('[data-clock="ios"]').forEach((c) => (c.textContent = fmt({ hour: 'numeric', minute: '2-digit', hour12: false })));
+    document.querySelectorAll<HTMLElement>('[data-clock="mac"]').forEach((c) => (c.textContent = fmt({ weekday: 'short', day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit', hour12: false }).replace(',', '')));
+  };
+  clocks(); setInterval(clocks, 30000);
+</script>

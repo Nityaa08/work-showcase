@@ -1,0 +1,29 @@
+---
+import type { Stage } from '../data/cases';
+import StatusIcons from './StatusIcons.astro';
+interface Props { stage: Stage; play?: boolean; mini?: boolean }
+const { stage, play = true, mini = false } = Astro.props;
+const prompts: Record<string, Record<string, string>> = {
+  shell: { cmd: '% ' }, logs: { cmd: '' }, claude: { you: '> ', tool: '⏺ ', ai: '⏺ ' },
+};
+const kinds: Record<string, string> = { shell: 'zsh', logs: 'logs', claude: 'claude code', phone: '' };
+const isPhone = stage.medium === 'phone';
+---
+<figure class:list={[isPhone ? 'iphone' : 'win', `m-${stage.medium}`, { mini }]} data-stage={play && !mini ? '' : undefined}>
+  {isPhone ? (
+    <div class="ios-bar"><span data-clock="ios">--:--</span><span class="ios-island" /><StatusIcons kind="ios" /></div>
+  ) : (
+    <div class="titlebar"><span class="lights"><i /><i /><i /></span><span class="win-title">{stage.label}</span><span class="win-kind">{kinds[stage.medium]}</span></div>
+  )}
+  {!mini && !isPhone && <span class="progress" />}
+  <div class="win-body">
+    {stage.lines.map((l) => {
+      if (l.t === 'log') {
+        const [time, level, service, msg] = l.s.split('|');
+        return <div class:list={['ln', 'logrow', `lv-${level.toLowerCase()}`]} data-t="log"><span class="lg-time">{time}</span><span class="lg-level">{level}</span><span class="lg-svc">{service}</span><span class="txt">{msg}</span></div>;
+      }
+      return <div class:list={['ln', `t-${l.t}`]} data-t={l.t}>{stage.medium === 'logs' && l.t === 'cmd' && <span class="lg-q">⌕</span>}<span class="pfx">{prompts[stage.medium]?.[l.t] ?? ''}</span><span class="txt">{l.s}</span></div>;
+    })}
+    {!mini && <span class="cursor" aria-hidden="true" />}
+  </div>
+</figure>

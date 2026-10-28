@@ -1,0 +1,26 @@
+---
+interface Props { crumb?: string; active?: 'work' | 'about' }
+const { crumb, active } = Astro.props;
+---
+<header class="nav" id="nav">
+  <a class="brand" href="/">
+    <span class="mark">NS</span>
+    <span class="brand-who"><b>Nityashree S</b><i>AI Engineer</i></span>
+  </a>
+  {crumb && <span class="crumb"><a href="/#work">Work</a><span>/</span>{crumb}</span>}
+  <nav class="links" aria-label="Main">
+    <a href="/#about" aria-current={active === 'about' ? 'page' : undefined}>About</a>
+    <a href="/#work" aria-current={active === 'work' ? 'page' : undefined}>Work</a>
+    <a class="cta" href="mailto:nitya08shree@gmail.com">Contact</a>
+  </nav>
+</header>
+<script>
+  const nav = document.getElementById('nav')!;
+  let last = scrollY;
+  addEventListener('scroll', () => {
+    const y = scrollY;
+    nav.classList.toggle('solid', y > 24);
+    nav.classList.toggle('hide', y > last && y > 240);
+    last = y;
+  }, { passive: true });
+</script>

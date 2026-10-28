@@ -1,0 +1,60 @@
+---
+import FeatureDemo from './FeatureDemo.astro';
+import type { Feature } from '../data/cases';
+interface Props { features: Feature[] }
+const { features } = Astro.props;
+---
+<section class="rail-sec" id="ch-features">
+  <div class="rail">
+    <div class="acc">
+      <div class="story-head"><p class="kicker">What the platform does</p><h2>Six things agents can do, because of this work.</h2></div>
+      <ol class="rail-list">
+        {features.map((f, n) => (
+          <li class:list={['rail-item', { on: n === 0 }]} data-i={n}>
+            <button type="button" aria-expanded={n === 0 ? 'true' : 'false'}>
+              <span class="r-name">{f.name}</span>
+              <svg class="chev" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg>
+            </button>
+            <div class="r-more"><div><p>{f.text}</p><span class="r-bar"><i /></span></div></div>
+          </li>
+        ))}
+      </ol>
+    </div>
+    <div class="rail-stage">
+      {features.map((f, n) => <div class:list={['rail-slot', { on: n === 0 }]} data-i={n}><FeatureDemo kind={f.demo} manual /></div>)}
+    </div>
+  </div>
+</section>
+<script>
+  const items = [...document.querySelectorAll<HTMLElement>('.rail-item')];
+  const slots = [...document.querySelectorAll<HTMLElement>('.rail-slot')];
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const STEP = 1700, HOLD = 2800;
+  let current = 0, run = 0, inView = false;
+  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+  async function show(i: number) {
+    const me = ++run;
+    current = i;
+    items.forEach((el, n) => { el.classList.toggle('on', n === i); el.querySelector('button')!.setAttribute('aria-expanded', String(n === i)); });
+    slots.forEach((el, n) => el.classList.toggle('on', n === i));
+    const demo = slots[i].querySelector<HTMLElement>('[data-demo]')!;
+    const steps = Number(demo.dataset.steps);
+    const bar = items[i].querySelector<HTMLElement>('.r-bar i')!;
+    if (reduced) { demo.dataset.step = String(steps - 1); return; }
+    const total = (steps - 1) * STEP + HOLD;
+    bar.style.transition = 'none'; bar.style.transform = 'scaleX(0)'; void bar.offsetWidth;
+    bar.style.transition = `transform ${total}ms linear`; bar.style.transform = 'scaleX(1)';
+    for (let s = 0; s < steps; s++) {
+      if (me !== run) return;
+      demo.dataset.step = String(s);
+      await sleep(s === steps - 1 ? HOLD : STEP);
+    }
+    if (me === run && inView) show((i + 1) % items.length);
+  }
+  items.forEach((el, n) => el.querySelector('button')!.addEventListener('click', () => show(n)));
+  new IntersectionObserver(([e]) => {
+    inView = e.isIntersecting;
+    if (inView) show(current); else run++;
+  }, { threshold: 0.35 }).observe(document.querySelector('.rail')!);
+</script>

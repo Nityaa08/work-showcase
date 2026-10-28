@@ -1,0 +1,27 @@
+---
+import Stage from './Stage.astro';
+import type { Stage as StageT } from '../data/cases';
+type Item = { label: string; heading: string; text: string; stage: StageT; fix?: string; deep?: string };
+interface Props { id: string; kicker: string; title: string; items: Item[] }
+const { id, kicker, title, items } = Astro.props;
+---
+<section class="story" id={id} data-story>
+  <div class="story-grid">
+    <div class="story-steps">
+      {items.map((it, n) => (
+        <article class="step" data-step={n}>
+          {n === 0 && <div class="story-head in-step"><p class="kicker">{kicker}</p><h2>{title}</h2></div>}
+          <p class="step-state"><span>0{n + 1}</span>{it.label}</p>
+          <h3>{it.heading}</h3>
+          <p>{it.text}</p>
+          {it.fix && <p class="step-fix">✓ {it.fix}</p>}
+          {it.deep && <details class="deep"><summary>Deep dive</summary><p>{it.deep}</p></details>}
+          <div class="step-inline"><Stage stage={it.stage} /></div>
+        </article>
+      ))}
+    </div>
+    <div class="sticky-rig">
+      {items.map((it, n) => <div class:list={['desk-slot', { active: n === 0 }]} data-slot={n}><Stage stage={it.stage} /></div>)}
+    </div>
+  </div>
+</section>

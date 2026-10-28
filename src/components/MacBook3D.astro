@@ -1,0 +1,230 @@
+<div class="mb-gl" id="mb-gl" aria-label="A laptop showing how an agent handles one request"></div>
+
+<script>
+  import * as THREE from 'three';
+  import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+  import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
+
+  const host = document.getElementById('mb-gl')!;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.15;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
+  host.appendChild(renderer.domElement);
+
+  const scene = new THREE.Scene();
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  scene.environmentIntensity = 0.95;
+
+  // orthographic: no perspective, so the screen reads as a flat rectangle, dead-on
+  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 500);
+  let frameW = 34, frameCY = 10;
+  function frame() {
+    const aspect = host.clientWidth / host.clientHeight;
+    const halfW = frameW / 2, halfH = halfW / aspect;
+    camera.left = -halfW; camera.right = halfW; camera.top = halfH; camera.bottom = -halfH;
+    camera.updateProjectionMatrix();
+  }
+
+  const laptop = new THREE.Group();
+  scene.add(laptop);
+
+  // screen texture
+  const SW = 3072, SH = 1986;
+  const cv = document.createElement('canvas');
+  cv.width = SW; cv.height = SH;
+  const ctx = cv.getContext('2d')!;
+  const tex = new THREE.CanvasTexture(cv);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  tex.flipY = false;
+  const screenMat = new THREE.MeshBasicMaterial({ map: tex, toneMapped: false });
+  const SCREEN_MATERIAL = 'HlQwFCAPWzetDQy';
+
+  let screenMesh: THREE.Mesh | null = null;
+  new GLTFLoader().load('/models/macbook-pro-14.glb', (gltf) => {
+    const model = gltf.scene;
+    model.traverse((o) => {
+      const mesh = o as THREE.Mesh;
+      if (!mesh.isMesh) return;
+      mesh.castShadow = true;
+      const mat = mesh.material as THREE.Material;
+      if (mat && mat.name !== SCREEN_MATERIAL) (mat as THREE.MeshStandardMaterial).envMapIntensity = 0.3;
+      if (mat?.name === SCREEN_MATERIAL) { mesh.material = screenMat; screenMesh = mesh; }
+      else if (mat?.name === 'IqdrVPEOaZqbHHo') mesh.material = new THREE.MeshBasicMaterial({ color: 0x060607 });
+      else if ((mat as THREE.MeshStandardMaterial).color && !(mat as THREE.MeshStandardMaterial).map && !(mat as THREE.MeshStandardMaterial).emissiveMap && (mat as THREE.MeshStandardMaterial).color.getHSL({ h: 0, s: 0, l: 0 }).l > 0.12) { const m = mat as THREE.MeshStandardMaterial; m.color.set(0x5f6267); m.metalness = 0.85; m.roughness = 0.38; m.envMapIntensity = 0.6; }
+      else if (['zNRfbdNyoCOxSDD', 'HdeQgqDhVRltuvQ', 'XvtJEVWVvyDeJRR', 'WiyOPYJEeiHNVjF', 'jgUGvZiSIPFNFGe'].includes(mat?.name)) { const m = mat as THREE.MeshStandardMaterial; m.color.set(0x5f6267); m.roughness = 0.38; m.metalness = 0.85; m.envMapIntensity = 0.6; }
+      else if (['vJOGifqMXcmlCkF', 'TMkvtqywJDMvuJf', 'ZtrFkpzRROyZncn'].includes(mat?.name)) { const m = mat as THREE.MeshStandardMaterial; m.color.set(0x030304); m.roughness = 0.45; m.envMapIntensity = 0.08; }
+    });
+    const raw = new THREE.Box3().setFromObject(model).getSize(new THREE.Vector3());
+    model.scale.multiplyScalar(31 / Math.max(raw.x, raw.z));
+    model.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(model);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    model.position.set(-center.x, -box.min.y, -center.z);
+    laptop.add(model);
+    laptop.updateMatrixWorld(true);
+    // head-on product shot: long lens, camera just above the deck, so the base reads as a thin lip
+    const sm = screenMesh!;
+    const sbox = new THREE.Box3().setFromObject(sm);
+    const sc = sbox.getCenter(new THREE.Vector3());
+    frameW = size.x * 1.06;
+    frameCY = size.y * 0.5;
+    camera.position.set(sc.x, frameCY, sc.z + 200);
+    camera.lookAt(sc.x, frameCY, sc.z);
+    frame();
+    host.classList.add('ready');
+  }, undefined, (err) => console.error('macbook model failed to load', err));
+
+  // light + shadow catcher
+  const key = new THREE.DirectionalLight(0xffffff, 1.25);
+  key.position.set(12, 80, 22);
+  key.castShadow = true;
+  key.shadow.mapSize.set(2048, 2048);
+  key.shadow.radius = 14;
+  Object.assign(key.shadow.camera, { left: -40, right: 40, top: 40, bottom: -40 });
+  scene.add(key);
+  scene.add(new THREE.HemisphereLight(0xdfe6ee, 0x202326, 0.35));
+  const rim = new THREE.DirectionalLight(0xffffff, 0.9);
+  rim.position.set(0, 40, -60);
+  scene.add(rim);
+  const fill = new THREE.DirectionalLight(0xcfd8e3, 0.35);
+  fill.position.set(-40, 20, 20);
+  scene.add(fill);
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.ShadowMaterial({ opacity: 0.45 }));
+  ground.rotation.x = -Math.PI / 2;
+  ground.receiveShadow = true;
+  scene.add(ground);
+
+  // the screen: a calm product moment — a question, a plain-English run, an answer
+  const C = { ink: '#f2f1ee', dim: '#9a9ca1', faint: '#62646a', sage: '#a7d1ab', line: 'rgba(255,255,255,0.08)' };
+  const F = (w: number, px: number) => `${w} ${px}px "Schibsted Grotesk", -apple-system, sans-serif`;
+  const clamp01 = (x: number) => Math.min(Math.max(x, 0), 1);
+  const ease = (x: number) => 1 - Math.pow(1 - clamp01(x), 3);
+  const rr = (x: number, y: number, w: number, h: number, r: number) => { ctx.beginPath(); ctx.roundRect(x, y, w, h, r); };
+  function text(t: string, x: number, y: number, font: string, color: string, align: CanvasTextAlign = 'left') { ctx.font = font; ctx.fillStyle = color; ctx.textAlign = align; ctx.fillText(t, x, y); ctx.textAlign = 'left'; }
+  const steps = [
+    { label: 'Remembered how Nitya likes answers', tag: 'memory', at: 0.6 },
+    { label: 'Loaded the “summarise failures” skill', tag: 'skills', at: 1.4 },
+    { label: 'Searched logs, payments and docs', tag: 'tools', at: 2.6 },
+    { label: 'Wrote the answer', tag: 'model', at: 4.0 },
+    { label: 'Checked it is in Nitya’s language', tag: 'guard', at: 4.7 },
+  ];
+  const ANSWER_AT = 5.2, LOOP = 10.5;
+
+
+  function draw(t: number) {
+    const K = 3.0; ctx.setTransform(K, 0, 0, K, 0, 0);
+    const W = SW / K, H = SH / K;
+    // wallpaper: cream sky into a deep blue wave (macOS-style)
+    const sky = ctx.createLinearGradient(0, 0, W * 0.7, H * 0.9);
+    sky.addColorStop(0, '#9fc0e6'); sky.addColorStop(0.35, '#d9cfa6'); sky.addColorStop(0.6, '#7aa6dc'); sky.addColorStop(1, '#2b5fd0');
+    ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H);
+    const glow = (x: number, y: number, r: number, c: string) => { const g = ctx.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, c); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); };
+    glow(W * 0.2, H * 0.55, W * 0.35, 'rgba(60,140,230,0.55)');
+    ctx.beginPath(); ctx.moveTo(0, H * 0.85);
+    ctx.bezierCurveTo(W * 0.3, H * 0.75, W * 0.45, H * 0.15, W, H * 0.0);
+    ctx.lineTo(W, H); ctx.lineTo(0, H); ctx.closePath();
+    const deep = ctx.createLinearGradient(W * 0.3, H * 0.2, W * 0.8, H);
+    deep.addColorStop(0, '#3f7be6'); deep.addColorStop(0.45, '#1a46c8'); deep.addColorStop(1, '#0d2a8f');
+    ctx.fillStyle = deep; ctx.fill();
+    ctx.save(); ctx.clip();
+    glow(W * 0.62, H * 0.62, W * 0.32, 'rgba(120,170,255,0.5)');
+    glow(W * 0.95, H * 0.85, W * 0.3, 'rgba(210,225,255,0.55)');
+    glow(W * 0.35, H * 0.95, W * 0.3, 'rgba(150,190,255,0.35)');
+    ctx.restore();
+    ctx.strokeStyle = 'rgba(235,242,255,0.8)'; ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.moveTo(0, H * 0.85); ctx.bezierCurveTo(W * 0.3, H * 0.75, W * 0.45, H * 0.15, W, H * 0.0); ctx.stroke();
+    // menu bar
+    ctx.fillStyle = 'rgba(255,255,255,0.18)'; ctx.fillRect(0, 0, W, 26);
+    text('', 18, 18, F(500, 15), '#fff');
+    text('Agents', 42, 18, F(700, 13.5), '#fff');
+    let mx = 104; ['File', 'Edit', 'View', 'Run', 'Window', 'Help'].forEach((m) => { text(m, mx, 18, F(400, 13.5), 'rgba(255,255,255,0.95)'); ctx.font = F(400, 13.5); mx += ctx.measureText(m).width + 20; });
+    text('Wed 9:14 AM', W - 16, 18, F(500, 13.5), '#fff', 'right');
+    [0, 1, 2].forEach((i) => { rr(W - 180 + i * 22, 9, 14, 10, 3); ctx.fillStyle = 'rgba(255,255,255,0.85)'; ctx.fill(); });
+    // window (light)
+    const wx = 120, wy = 60, ww = W - 240, wh = H - 120;
+    ctx.save(); ctx.shadowColor = 'rgba(0,10,40,0.45)'; ctx.shadowBlur = 40; ctx.shadowOffsetY = 14;
+    rr(wx, wy, ww, wh, 12); ctx.fillStyle = '#fbfbfa'; ctx.fill(); ctx.restore();
+    ctx.fillStyle = '#f2f2f0'; ctx.fillRect(wx, wy + 12, ww, 30); rr(wx, wy, ww, 42, 12); ctx.fill();
+    ['#ff5f57', '#febc2e', '#28c840'].forEach((c, i) => { ctx.beginPath(); ctx.arc(wx + 18 + i * 18, wy + 21, 5.5, 0, Math.PI * 2); ctx.fillStyle = c; ctx.fill(); });
+    text('support-agent', wx + ww / 2, wy + 26, F(600, 13), '#3a3a3c', 'center');
+    rr(wx + ww - 74, wy + 10, 60, 22, 11); ctx.fillStyle = '#e8573f'; ctx.fill(); text('Share', wx + ww - 44, wy + 25, F(600, 11.5), '#fff', 'center');
+    ctx.fillStyle = '#e6e6e3'; ctx.fillRect(wx, wy + 42, ww, 1);
+    // sidebar
+    const sw = 150; ctx.fillStyle = '#f5f5f3'; ctx.fillRect(wx, wy + 43, sw, wh - 55);
+    ctx.fillStyle = '#e6e6e3'; ctx.fillRect(wx + sw, wy + 43, 1, wh - 43);
+    text('AGENTS', wx + 16, wy + 70, F(600, 10), '#8e8e93');
+    [['support-agent', true], ['ops-agent', false], ['finance-helper', false], ['research', false]].forEach(([n, on], i) => {
+      const yy = wy + 84 + i * 30; if (on) { rr(wx + 8, yy, sw - 16, 24, 6); ctx.fillStyle = '#e4e8f2'; ctx.fill(); }
+      ctx.beginPath(); ctx.arc(wx + 24, yy + 12, 5, 0, Math.PI * 2); ctx.fillStyle = on ? '#28c840' : '#c7c7cc'; ctx.fill();
+      text(n as string, wx + 36, yy + 16, F(on ? 600 : 400, 12.5), on ? '#1c1c1e' : '#48484a');
+    });
+    // conversation
+    const cx = wx + sw + 26, cw = ww - sw - 52;
+    let y = wy + 82;
+    ctx.beginPath(); ctx.arc(cx + 14, y - 4, 14, 0, Math.PI * 2); ctx.fillStyle = '#5b6170'; ctx.fill(); text('N', cx + 14, y + 1, F(600, 13), '#fff', 'center');
+    text('Nitya', cx + 36, y - 8, F(600, 13), '#1c1c1e'); text('9:14', cx + 74, y - 8, F(400, 11), '#8e8e93');
+    text('Summarise yesterday’s failed checkouts.', cx + 36, y + 10, F(400, 15.5), '#1c1c1e');
+    y += 34;
+    const cardH = 36 + steps.length * 27;
+    rr(cx + 36, y, cw - 36, cardH, 10); ctx.fillStyle = '#f4f5f7'; ctx.fill(); ctx.strokeStyle = '#e6e6e3'; ctx.lineWidth = 1; ctx.stroke();
+    const running = t < ANSWER_AT;
+    text(running ? 'Working on it…' : 'Done in 4.2 s', cx + 52, y + 22, F(600, 12), running ? '#6e6e73' : '#1f8a3b');
+    steps.forEach((st, i) => {
+      const sy = y + 46 + i * 27;
+      const prevAt = i ? steps[i - 1].at : 0;
+      const state = t >= st.at ? 'done' : t >= prevAt ? 'run' : 'wait';
+      ctx.globalAlpha = state === 'wait' ? 0.4 : 1;
+      if (state === 'done') { ctx.beginPath(); ctx.arc(cx + 60, sy - 4, 7, 0, Math.PI * 2); ctx.fillStyle = '#d6f2dc'; ctx.fill(); text('✓', cx + 60, sy, F(700, 9.5), '#1f8a3b', 'center'); }
+      else if (state === 'run') { ctx.beginPath(); ctx.arc(cx + 60, sy - 4, 6.5, t * 6, t * 6 + 4.6); ctx.strokeStyle = '#6e6e73'; ctx.lineWidth = 1.6; ctx.stroke(); }
+      else { ctx.beginPath(); ctx.arc(cx + 60, sy - 4, 6.5, 0, Math.PI * 2); ctx.strokeStyle = '#c7c7cc'; ctx.lineWidth = 1.2; ctx.stroke(); }
+      text(st.label, cx + 76, sy, F(400, 13), '#1c1c1e');
+      ctx.font = F(500, 10); const tw = ctx.measureText(st.tag).width + 14;
+      rr(cx + cw - tw - 12, sy - 13, tw, 18, 9); ctx.fillStyle = '#e9eaee'; ctx.fill();
+      text(st.tag, cx + cw - tw / 2 - 12, sy, F(500, 10), '#5b5d63', 'center');
+      ctx.globalAlpha = 1;
+    });
+    y += cardH + 30;
+    if (t >= ANSWER_AT) {
+      ctx.globalAlpha = ease((t - ANSWER_AT) * 1.6);
+      ctx.beginPath(); ctx.arc(cx + 14, y, 14, 0, Math.PI * 2); ctx.fillStyle = '#1f8a3b'; ctx.fill(); text('✦', cx + 14, y + 5, F(600, 12), '#fff', 'center');
+      text('support-agent', cx + 36, y - 4, F(600, 13), '#1c1c1e');
+      ['14 failed — 9 card declines, 3 timeouts.', 'Two merchants account for most of them.'].forEach((l, i) => text(l, cx + 36, y + 16 + i * 20, F(400, 14.5), '#1c1c1e'));
+      ctx.globalAlpha = 1;
+    }
+    tex.needsUpdate = true;
+  }
+
+  function resize() {
+    const w = host.clientWidth, h = host.clientHeight;
+    renderer.setSize(w, h, false);
+    frame();
+  }
+  addEventListener('resize', resize);
+  resize();
+
+
+  let visible = true;
+  new IntersectionObserver(([e]) => (visible = e.isIntersecting)).observe(host);
+
+  document.fonts.ready.then(() => {
+    const start = performance.now();
+    const loop = (now: number) => {
+      requestAnimationFrame(loop);
+      if (!visible) return;
+      const t = reduced ? 99 : ((now - start) / 1000) % LOOP;
+      draw(t);
+
+      renderer.render(scene, camera);
+    };
+    requestAnimationFrame(loop);
+  });
+</script>

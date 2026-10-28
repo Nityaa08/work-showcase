@@ -1,0 +1,14 @@
+{
+  "name": "work-showcase",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^7.3.6",
+    "three": "^0.186.1"
+  }
+}

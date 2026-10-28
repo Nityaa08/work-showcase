@@ -1,0 +1,206 @@
+---
+import '../../styles/global.css';
+import Nav from '../../components/Nav.astro';
+import CaseNav from '../../components/CaseNav.astro';
+import Stage from '../../components/Stage.astro';
+import StagePlayer from '../../components/StagePlayer.astro';
+import { cases, type Stage as StageT } from '../../data/cases';
+
+const c = cases.find((x) => x.slug === 'mcp-connections')!;
+
+const flow = [
+  ['Agent asks for a tool', 'An agent decides it needs outside data, so it calls a tool over MCP.'],
+  ['Gateway checks the grant', 'The gateway confirms this agent holds that tool’s permission, and that the tool isn’t switched off.'],
+  ['Vault attaches the user’s token', 'The vault adds the signed-in person’s own token. The agent never sees it.'],
+  ['Our MCP server calls the app', 'The connector turns the tool call into a request to the real app.'],
+  ['Only what this person may see', 'The app answers with what this person is allowed to read, and the answer flows back.'],
+];
+
+const chapters = [
+  { title: 'We refused a shared key', text: 'The quick route was one company key for everyone. We said no: apps check permissions against the token’s owner, so a shared key would have shown every person the same documents. Each user signs in with their own account instead — OAuth with PKCE.', tag: 'Per-user access' },
+  { title: 'The vendor ignored our rules, so we moved them', text: 'Some servers are hosted by the vendor and run none of our code — they simply ignore our permission headers. Rather than trust them, we made the gateway enforce permissions one step earlier, before the vendor is ever contacted.', tag: 'Gateway' },
+  { title: 'Then we built our own', text: 'A server we didn’t control couldn’t publish its own tool list or check permissions itself, and our copy of its tool list kept drifting. So we put our own MCP server in front: it publishes its tools, checks permissions itself, and never keeps a token between requests.', tag: 'Tested end to end' },
+];
+
+const tools = [
+  ['knowledge_search_query', 'Search', 'knowledge:search:read'],
+  ['knowledge_chat_ask', 'Ask a question', 'knowledge:chat:read'],
+  ['knowledge_documents_read', 'Read a document', 'knowledge:documents:read'],
+];
+
+const proof: StageT = { medium: 'shell', label: '~/connector-mcp', lines: [
+  { t: 'cmd', s: 'go test ./...' },
+  { t: 'ok', s: '✓ the user’s token becomes the outbound credential' },
+  { t: 'ok', s: '✓ two callers in a row never share a token' },
+  { t: 'ok', s: '✓ no credential → refused, the app is never called' },
+  { t: 'ok', s: '✓ a tool without permission never reaches the app' },
+  { t: 'ok', s: '✓ the tool catalog is served without credentials' },
+  { t: 'out', s: 'ok   connector-mcp   all green' },
+]};
+
+const connectors = [
+  ['Kn', 'Company knowledge', 'search, ask, read documents'],
+  ['Ob', 'Observability', 'logs, metrics, monitors'],
+  ['Ch', 'Team chat', 'read and write, scoped'],
+  ['Tr', 'Travel', 'flights and stays'],
+  ['Co', 'Code', 'repositories and pull requests'],
+  ['Da', 'Data', 'saved queries'],
+];
+
+const fixes = [
+  ['A cancelled call failed its neighbours', 'each caller isolated; the upstream wait bounded'],
+  ['An expired key looked like a platform bug', 'classified as a credential rejection → reconnect'],
+  ['Callers could set control headers', 'stripped at the edge'],
+  ['The live catalog drifted from the release', 'drift detected on the live rows'],
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{c.title} · Nityashree S</title>
+    <meta name="description" content={c.intro} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body class="studio mcp">
+    <Nav crumb={`Case ${c.no}`} active="work" />
+    <main>
+      <section class="mx-hero">
+        <div class="mx-head">
+          <p class="kicker">Case {c.no}</p>
+          <h1>{c.title}</h1>
+          <p class="cs-intro">MCP is the standard way an AI agent uses a real tool. On our team, I build the connectors that speak it and the gateway every call passes through — so our agents can use company apps without ever holding a key.</p>
+          <ol class="mx-steps">
+            {flow.map(([t, d], i) => <li data-i={i} class:list={{ on: i === 0 }}><span>0{i + 1}</span><div><b>{t}</b><p>{d}</p></div></li>)}
+          </ol>
+        </div>
+
+        <div class="mx-diagram" id="mx">
+          <svg viewBox="0 0 1000 400" aria-hidden="true">
+            <defs>
+              <linearGradient id="nodeg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c1d20" /><stop offset="1" stop-color="#141517" /></linearGradient>
+            </defs>
+            <path id="e0" class="edge" d="M190 110 L270 110" />
+            <path id="e1" class="edge dash" d="M365 290 L365 170" />
+            <path id="e2" class="edge" d="M460 110 L540 110" />
+            <path id="e3" class="edge" d="M730 110 L810 110" />
+            {[
+              ['n0', 0, 50, 190, 'AGENT', 'an agent', 'MCP client'],
+              ['n1', 270, 50, 190, 'GATEWAY', 'checks access', 'scopes · deadline'],
+              ['n2', 540, 50, 190, 'MCP SERVER', 'our connector', 'speaks MCP'],
+              ['n3', 810, 50, 190, 'APP', 'the real app', 'docs · logs · …'],
+              ['n4', 270, 290, 190, 'VAULT', 'user’s token', 'never shown'],
+            ].map(([id, x, y, w, k, t, d]) => (
+              <g class="node" id={String(id)}>
+                <rect x={Number(x)} y={Number(y)} width={Number(w)} height="110" rx="16" />
+                <text x={Number(x) + 18} y={Number(y) + 32} class="nk">{k}</text>
+                <text x={Number(x) + 18} y={Number(y) + 62} class="nt">{t}</text>
+                <text x={Number(x) + 18} y={Number(y) + 88} class="nd">{d}</text>
+              </g>
+            ))}
+            <circle id="pkt" r="7" cx="190" cy="110" />
+          </svg>
+        </div>
+      </section>
+
+      <section class="mx-sec">
+        <div class="story-head"><p class="kicker">How we built it</p><h2>Three decisions that shaped every connector.</h2></div>
+        <div class="chapters-row">
+          {chapters.map((ch, i) => (
+            <article class="chap">
+              <div class="chap-top"><span class="chap-no">0{i + 1}</span></div>
+              <h3>{ch.title}</h3>
+              <p>{ch.text}</p>
+              <span class="chap-tag">{ch.tag}</span>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="mx-sec mx-split">
+        <div>
+          <div class="story-head"><p class="kicker">The tools</p><h2>One name, one permission.</h2></div>
+          <p class="mx-lede">We name every tool <code>service_product_action</code> and give it exactly one permission. When we moved to our own server, we took the chance to fix vague names — an agent can only call what its owner granted, checked before the app is contacted.</p>
+          <ul class="tool-list">
+            {tools.map(([n, d, sc]) => <li><code>{n}</code><span>{d}</span><em>{sc}</em></li>)}
+          </ul>
+        </div>
+        <div>
+          <div class="story-head"><p class="kicker">The proof</p><h2>We tested it against a fake app first.</h2></div>
+          <Stage stage={proof} />
+        </div>
+      </section>
+
+      <section class="mx-sec mx-live">
+        <div class="story-head"><p class="kicker">Proven live</p><h2>Ask a question. Don’t name the tool.</h2></div>
+        <div class="live-grid">
+          <div class="live-card">
+            <div class="bub you">What’s the account code for our newest customer?</div>
+            <div class="tool-chip">used <b>knowledge_search_query</b> · found it in a ticket</div>
+            <div class="bub bot">Found it in the onboarding ticket — and here are the tools I used.</div>
+          </div>
+          <ol class="how-proved">
+            <li><span>01</span><div><b>We didn’t test it ourselves</b><p>A teammate asked their own agent — someone who didn’t build it.</p></div></li>
+            <li><span>02</span><div><b>We never named the connector</b><p>Just a normal question, the way anyone at work would ask it.</p></div></li>
+            <li><span>03</span><div><b>The agent chose the tool</b><p>It picked the right connector by itself and found the answer in a ticket.</p></div></li>
+            <li><span>04</span><div><b>It showed its working</b><p>It named the tools it used, so the answer could be checked.</p></div></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="mx-sec">
+        <div class="story-head"><p class="kicker">Every connection</p><h2>Many apps, one gateway — and what broke along the way.</h2></div>
+        <ul class="conn-list">
+          {connectors.map(([, n, d]) => <li><b>{n}</b><span>{d}</span></li>)}
+        </ul>
+        <ul class="fix-list">
+          {fixes.map(([a, b]) => <li><span class="b-sym">✕ {a}</span><span class="b-fix">✓ {b}</span></li>)}
+        </ul>
+      </section>
+
+      <CaseNav slug={c.slug} />
+    </main>
+    <StagePlayer />
+    <script>
+      const nodes: string[][] = [['n0'], ['n1'], ['n4', 'n1'], ['n2', 'n3'], ['n3', 'n0']];
+      const legs: [string, boolean][][] = [[['e0', false]], [], [['e1', false]], [['e2', false], ['e3', false]], [['e3', true], ['e2', true], ['e0', true]]];
+      const steps = [...document.querySelectorAll<HTMLElement>('.mx-steps li')];
+      const pkt = document.getElementById('pkt') as unknown as SVGCircleElement;
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let i = 0;
+      const SPEED = 0.32; // viewBox units per ms — constant, so short lines are quick
+      let timer = 0;
+      function show(n: number) {
+        clearTimeout(timer);
+        i = n;
+        steps.forEach((s, k) => s.classList.toggle('on', k === n));
+        document.querySelectorAll('.node').forEach((el) => el.classList.toggle('on', nodes[n].includes(el.id)));
+        document.querySelectorAll('.edge').forEach((el) => el.classList.toggle('on', legs[n].some(([id]) => id === el.id)));
+        const gw = document.getElementById('n1')!;
+        gw.classList.remove('check'); void (gw as unknown as HTMLElement).getBoundingClientRect();
+        if (n === 1) gw.classList.add('check');
+        const paths = legs[n].map(([id, back]) => ({ path: document.getElementById(id) as unknown as SVGPathElement, back }));
+        const lens = paths.map((p) => p.path.getTotalLength());
+        const travel = lens.reduce((a, b) => a + b, 0) / SPEED;
+        if (!reduced && paths.length) {
+          const start = performance.now();
+          const tick = (now: number) => {
+            if (i !== n) return;
+            let d = Math.min((now - start) * SPEED, lens.reduce((a, b) => a + b, 0) - 0.01), k = 0;
+            while (d > lens[k]) { d -= lens[k]; k++; }
+            const { path, back } = paths[k];
+            const pt = path.getPointAtLength(back ? lens[k] - d : d);
+            pkt.setAttribute('cx', String(pt.x)); pkt.setAttribute('cy', String(pt.y));
+            if ((now - start) < travel) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        }
+        if (!reduced && auto) timer = window.setTimeout(() => show((n + 1) % steps.length), Math.max(travel, 700) + 1300);
+      }
+      let auto = true;
+      steps.forEach((s, k) => s.addEventListener('click', () => show(k)));
+      show(0);
+    </script>
+  </body>
+</html>

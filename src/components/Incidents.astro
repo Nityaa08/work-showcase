@@ -1,0 +1,19 @@
+---
+import type { Bug } from '../data/cases';
+interface Props { bugs: Bug[] }
+const { bugs } = Astro.props;
+---
+<section class="incidents" id="ch-broke">
+  <div class="story-head"><p class="kicker">Things that broke</p><h2>And why they stay fixed.</h2></div>
+  <div class="inc-grid">
+    {bugs.map((b, n) => (
+      <article class="inc">
+        <div class="inc-top"><span class="inc-id">INC-0{n + 1} · {b.where}</span><span class="inc-status">Resolved</span></div>
+        <h3>{b.title}</h3>
+        <p class="b-sym">✕ {b.symptom}</p>
+        <p class="b-fix">✓ {b.fix}</p>
+        <details class="deep"><summary>Postmortem</summary><p>{b.deep}</p></details>
+      </article>
+    ))}
+  </div>
+</section>
