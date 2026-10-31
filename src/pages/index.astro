@@ -29,7 +29,7 @@ const caps = [
   { k: 'LLM systems from scratch', t: 'A cost-aware model router and a multi-agent research API, built on my own time, with code you can read and run.', go: '#builds', gl: 'Side builds' },
 ];
 const blurbs: Record<string, { tag: string; line: string }> = {
-  'agent-platform': { tag: 'Platform · Go · TypeScript', line: 'The engine, studio and gateways behind company-wide AI agents — and how I keep them running.' },
+  'agent-platform': { tag: 'Platform · Go · TypeScript', line: 'The engine, studio and gateways behind company-wide AI agents — and how I kept them running.' },
   'mcp-connections': { tag: 'MCP · OAuth · Gateway', line: 'Connectors that let agents use real apps, with each person’s own access and no shared keys.' },
   security: { tag: 'Security · Defence in depth', line: 'Six layers, each closed by default — and every fix proven by replaying the attack.' },
 };
@@ -40,17 +40,17 @@ const blurbs: Record<string, { tag: string; line: string }> = {
     <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Nityashree S · AI Engineer</title>
     <meta name="description" content="Nityashree S builds production AI agents end to end: the platform, the MCP connectors, the guardrails and the evals." />
-    <Meta title="Nityashree S · AI Engineer" description="AI engineer building production AI agents — the platform, the connectors and the security underneath." />
+    <Meta title="Nityashree S · AI Engineer" description="Nityashree S builds production AI agents end to end: the platform, the MCP connectors, the guardrails and the evals." />
   </head>
   <body class="studio home" id="top">
     <Nav />
     <main>
       <section class="h-open">
         <div class="h-open-text">
-          <p class="kicker">Nityashree S · AI Engineer</p>
-          <h1>I build AI agents<br /><span>people can trust.</span></h1>
-          <p class="h-sub">Hi, I’m Nitya. I build production AI agents end to end: the platform they run on, the tools they reach, and the guardrails and evals that keep them honest. I came to AI through payments data, so I test everything as if it handles money.</p>
-          <div class="h-cta"><a class="btn-solid" href="#work">See the work</a><a class="btn-line" href="#about">My path</a><a class="btn-line" href="/Nityashree_S_Resume.pdf" target="_blank" rel="noopener">Resume</a></div>
+          <p class="kicker">Hi, I’m Nitya · AI Engineer</p>
+          <h1>From payments data<br /><span>to production AI agents.</span></h1>
+          <p class="h-sub">I got into AI engineering by catching the answers an AI assistant got wrong. Since then I’ve built and secured AI agents in production: the platform they run on, the tools they reach, and the guardrails and evals that keep them honest. Here’s how I grew, what I learnt, and how I work.</p>
+          <div class="h-cta"><a class="btn-solid" href="#about">My path</a><a class="btn-line" href="#work">See the work</a><a class="btn-line" href="/Nityashree_S_Resume.pdf" target="_blank" rel="noopener">Resume</a></div>
           <ul class="h-facts">
             <li><b>Production</b><span>agent platform, connectors, security</span></li>
             <li><b>Evals first</b><span>shadow runs, test sets, A/B</span></li>
@@ -70,11 +70,10 @@ const blurbs: Record<string, { tag: string; line: string }> = {
         <div class="path-head">
           <div>
             <p class="kicker">My path</p>
-            <h2>From payments data to production AI agents.</h2>
+            <h2>What I did at each step,<br />and what it taught me.</h2>
           </div>
           <div class="path-intro">
-            <p>I got into AI engineering by catching the answers an AI assistant got wrong. Since then, every step has been about the same thing: making AI systems that people can rely on, and proving it before they ship.</p>
-            <p>I like the unglamorous parts: the logs, the edge cases, the test that fails first. That’s where trust comes from.</p>
+            <p>I like the unglamorous parts: the logs, the edge cases, the test that fails first. That’s where trust in an AI system comes from, and it’s what every step below taught me.</p>
           </div>
         </div>
         <ol class="path-list">
@@ -94,7 +93,7 @@ const blurbs: Record<string, { tag: string; line: string }> = {
       </section>
 
       <section class="h-how" id="how">
-        <div class="story-head"><p class="kicker">What I build · How I build it</p><h2>Agents, the tools they use,<br />and the guardrails around them.</h2></div>
+        <div class="story-head"><p class="kicker">What I build · How I build it</p><h2>I build AI agents people can trust:<br />the agents, their tools, and the guardrails.</h2></div>
         <ul class="cp-grid">
           {caps.map((c, i) => (
             <li><a class="cp" href={c.go}><span class="cp-no">0{i + 1}</span><h3>{c.k}</h3><p>{c.t}</p><span class="cp-go">{c.gl} →</span></a></li>
