@@ -1,4 +1,5 @@
 <div class="mb-gl" id="mb-gl" aria-label="A laptop showing how an agent handles one request"></div>
+<div class="mb-fallback" id="mb-fallback" hidden><slot /></div>
 
 <script>
   import * as THREE from 'three';
@@ -81,7 +82,12 @@
     camera.lookAt(sc.x, frameCY, sc.z);
     frame();
     host.classList.add('ready');
-  }, undefined, (err) => console.error('macbook model failed to load', err));
+  }, undefined, (err) => {
+    // The licensed model is not in git (see the kit, module 16 lesson 4). Without it, show the fallback stage.
+    console.warn('macbook model not available, showing fallback', err);
+    host.style.display = 'none';
+    document.getElementById('mb-fallback')!.hidden = false;
+  });
 
   // light + shadow catcher
   const key = new THREE.DirectionalLight(0xffffff, 1.25);

@@ -6,6 +6,7 @@ import FeatureRail from '../../components/FeatureRail.astro';
 import StagePlayer from '../../components/StagePlayer.astro';
 import Stage from '../../components/Stage.astro';
 import Nav from '../../components/Nav.astro';
+import Meta from '../../components/Meta.astro';
 import CaseNav from '../../components/CaseNav.astro';
 import Incidents from '../../components/Incidents.astro';
 import { cases } from '../../data/cases';
@@ -32,6 +33,7 @@ const process = (c.steps ?? []).map((s) => ({ label: s.state, heading: s.heading
     <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{c.title} · Nityashree S</title>
     <meta name="description" content={c.intro} />
+    <Meta title={`${c.title} · Nityashree S`} description={c.intro} path={`/work/${c.slug}/`} />
     <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
   </head>
@@ -51,7 +53,7 @@ const process = (c.steps ?? []).map((s) => ({ label: s.state, heading: s.heading
           <h1>{c.title}</h1>
           <p class="cs-intro">{c.intro}</p>
         </div>
-        <div class="cs-hero-visual"><MacBook3D /></div>
+        <div class="cs-hero-visual"><MacBook3D><Stage stage={c.steps?.[1]?.stage ?? c.card} /></MacBook3D></div>
       </section>
 
       {process.length > 0 && <StoryScroll id="ch-running" kicker="When something breaks" title="How I fix a bug in production, step by step." items={process} />}

@@ -1,6 +1,7 @@
 ---
 import '../../styles/global.css';
 import Nav from '../../components/Nav.astro';
+import Meta from '../../components/Meta.astro';
 import CaseNav from '../../components/CaseNav.astro';
 import Stage from '../../components/Stage.astro';
 import StagePlayer from '../../components/StagePlayer.astro';
@@ -93,6 +94,7 @@ const sweep: StageT = { medium: 'shell', label: '~/agent-fleet', lines: [
     <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{c.title} · Nityashree S</title>
     <meta name="description" content={c.intro} />
+    <Meta title={`${c.title} · Nityashree S`} description={c.intro} path={`/work/${c.slug}/`} />
     <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
   </head>

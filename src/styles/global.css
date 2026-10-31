@@ -49,7 +49,7 @@ body.studio::before { content: ''; position: absolute; inset: 0; pointer-events:
 /* about (home) */
 .polaroid { margin: 0; background: #fff; padding: 14px 14px 52px; box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.35), 0 2px 6px rgba(0, 0, 0, 0.08); rotate: -4deg; position: relative; transition: rotate 500ms var(--ease); }
 .polaroid:hover { rotate: 1deg; }
-.polaroid img { width: 100%; aspect-ratio: 1; object-fit: cover; filter: grayscale(0.15) contrast(1.05); }
+.polaroid img { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; filter: grayscale(0.15) contrast(1.05); }
 .polaroid figcaption { position: absolute; bottom: 14px; left: 0; right: 0; text-align: center; font: 15px var(--mono); color: #444; }
 .tape { position: absolute; top: -14px; left: 50%; translate: -50% 0; rotate: 3deg; width: 110px; height: 30px; background: rgba(240, 226, 170, 0.75); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
 
@@ -632,3 +632,19 @@ body.studio::before { opacity: 0.06 !important; }
 .h-open-stage { min-width: 0; }
 .h-open-stage .win { min-height: 340px; }
 @media (max-width: 960px) { .h-open { grid-template-columns: 1fr; } .h-open-stage .win { min-height: 0; } }
+
+/* side projects (home) */
+.h-builds { padding-top: var(--sec-y); padding-bottom: var(--sec-y); border-top: 1px solid var(--hair); }
+.b-list { list-style: none; margin: 0 auto; padding: 0; max-width: 1240px; border-top: 1px solid var(--hair); }
+.b-row { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.6fr) 200px; gap: 32px; align-items: baseline; padding: 26px 0; border-bottom: 1px solid var(--hair); }
+.b-name h3 { margin: 0 0 6px; font-size: 21px; font-weight: 600; letter-spacing: -0.02em; }
+.b-name span { font: 12px var(--mono); color: var(--ink-3); letter-spacing: 0.04em; }
+.b-row p { margin: 0; color: var(--ink-2); font-size: 15.5px; line-height: 1.6; }
+.b-links { display: flex; gap: 18px; white-space: nowrap; }
+.b-links a { font: 500 13px var(--mono); color: #9cc5a1; }
+.b-links a:hover { color: #ecebe6; }
+@media (max-width: 860px) { .b-row { grid-template-columns: 1fr; gap: 10px; } }
+
+/* case hero: shown when the licensed 3D model isn't present */
+.mb-fallback { max-width: 760px; margin-left: auto; }
+.mb-fallback[hidden] { display: none; }
