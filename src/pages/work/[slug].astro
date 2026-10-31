@@ -59,10 +59,10 @@ const process = (c.steps ?? []).map((s) => ({ label: s.state, heading: s.heading
           <p class="kicker">Case {c.no}</p>
           <h1>{c.title}</h1>
           <p class="cs-intro">{c.intro}</p>
-          {c.glance && <Glance items={c.glance} />}
         </div>
         <div class="cs-hero-visual">{has3D ? <MacBook3D><Stage stage={c.steps?.[1]?.stage ?? c.card} /></MacBook3D> : <Laptop />}</div>
       </section>
+      {c.glance && <section class="glance-sec"><Glance items={c.glance} /></section>}
 
       {process.length > 0 && <StoryScroll id="ch-running" kicker="When something breaks" title="How I fix a bug in production, step by step." items={process} />}
       {c.features && <FeatureRail features={c.features} />}

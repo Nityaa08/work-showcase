@@ -8,10 +8,10 @@ import { cases } from '../data/cases';
 
 const work = cases.filter((c) => c.ready);
 const path = [
-  { when: '2022', title: 'Studied', line: 'Computer science, AI & Data Science, at SASTRA University.' },
-  { when: '2025', title: 'Payments data', line: 'Built the payments database an AI assistant answered from.' },
-  { when: '2026', title: 'Testing AI', line: 'Caught its wrong answers before launch. That’s how I found AI engineering.' },
-  { when: '2026', title: 'Shipping agents', line: 'Built and secured AI agents in production: platform, tools, guardrails.' },
+  { when: '01', title: 'Studied', line: 'Computer science, AI & Data Science, at SASTRA University.' },
+  { when: '02', title: 'Payments data', line: 'Built the payments database an AI assistant answered from.' },
+  { when: '03', title: 'Testing AI', line: 'Caught its wrong answers before launch. That’s how I found AI engineering.' },
+  { when: '04', title: 'Shipping agents', line: 'Building and securing AI agents in production: platform, tools, guardrails.' },
 ];
 const blurbs: Record<string, { tag: string; line: string }> = {
   'agent-platform': { tag: 'Platform · Go · TypeScript', line: 'The engine, studio and gateways behind company-wide AI agents — and how I kept them running.' },
@@ -53,18 +53,8 @@ const blurbs: Record<string, { tag: string; line: string }> = {
         </ol>
       </section>
 
-      <section class="h-how" id="how">
-        <div class="how-text">
-          <p class="kicker">How I work</p>
-          <h2>One laptop, a team of agents,<br />and me in the loop.</h2>
-          <p>Subagents research, challenge and review in parallel. I set the bar, read every line, and own what ships.</p>
-          <ol class="how-steps"><li>Plan</li><li>Delegate</li><li>Prove</li><li>Own</li></ol>
-        </div>
-        <div class="how-phone"><Phone /></div>
-      </section>
-
       <section class="h-work" id="work">
-        <div class="story-head"><p class="kicker">Selected work</p><h2>Three case studies.</h2></div>
+        <div class="story-head"><p class="kicker">Selected work</p><h2>Three things I built.</h2></div>
         <div class="w-grid">
           {work.map((c) => (
             <a class="w-card" href={`/work/${c.slug}/`}>
@@ -90,14 +80,20 @@ const blurbs: Record<string, { tag: string; line: string }> = {
         </div>
       </section>
 
-      <section class="h-contact" id="contact">
+      <section class="h-how" id="how">
+        <div class="how-text">
+          <p class="kicker">How I work</p>
+          <h2>One laptop, a team of agents,<br />and me in the loop.</h2>
+          <p>Subagents research, challenge and review in parallel. I set the bar, read every line, and own what ships.</p>
+          <ol class="how-steps"><li>Plan</li><li>Delegate</li><li>Prove</li><li>Own</li></ol>
+        </div>
+        <div class="how-phone"><Phone /></div>
+      </section>
+
+      <section class="h-contact light" id="contact" data-light>
         <div class="ct-text">
           <p class="kicker">Contact</p>
           <h2>Let’s build something<br />people can rely on.</h2>
-          <p>Hiring for AI engineering, forward-deployed, or AI security and evals? Write to me. I reply within a day.</p>
-          <ul class="ct-roles">
-            <li>AI Engineer</li><li>Forward-deployed engineer</li><li>AI red-teaming & evals</li><li>Solutions engineering</li>
-          </ul>
         </div>
         <ul class="ct-cards">
           <li class="ct-card ct-mail">
@@ -110,9 +106,9 @@ const blurbs: Record<string, { tag: string; line: string }> = {
         </ul>
       </section>
     </main>
-    <footer class="foot">
-      <span>© 2026 Nityashree S</span>
-      <span>Built with Astro, hosted on Vercel. Made with AI coding agents and reviewed line by line by me.</span>
+    <footer class="foot light" data-light>
+      <span>© Nityashree S</span>
+      <span>Built with AI coding agents, reviewed line by line by me.</span>
       <a href="#top">Back to top ↑</a>
     </footer>
     <StagePlayer />
