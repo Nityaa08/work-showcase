@@ -692,3 +692,20 @@ body.studio::before { opacity: 0.06 !important; }
 
 .crumb { color: var(--ink-3); } .crumb span { color: #5a5c60; }
 .l-no { color: var(--ink-3); }
+
+/* Hero: face and intro first (photo right on desktop, on top on phones) */
+.h-open-photo { display: grid; place-items: center; min-width: 0; }
+.h-open-photo .polaroid { width: min(400px, 100%); rotate: 3deg; background: #f4f3ef; }
+.h-open-photo .polaroid:hover { rotate: -1deg; }
+.h-open-to { display: flex; align-items: center; gap: 10px; margin: 28px 0 0; font: 13px var(--mono); color: var(--ink-2); }
+.h-open-to i { width: 8px; height: 8px; border-radius: 50%; background: #9cc5a1; box-shadow: 0 0 0 4px rgba(156, 197, 161, 0.15); }
+/* About: text left, the live agent log right */
+.h-about { grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr); }
+.ab-stage { min-width: 0; }
+.ab-cap { font: 500 12px var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 14px; }
+@media (max-width: 960px) {
+  .h-open { grid-template-columns: 1fr; }
+  .h-open-photo { order: -1; justify-items: start; }
+  .h-open-photo .polaroid { width: min(240px, 62vw); rotate: -3deg; }
+  .h-about { grid-template-columns: 1fr; }
+}
