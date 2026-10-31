@@ -1,63 +1,123 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><title>Nityashree S — Resume</title>
+<!-- Source for public/Nityashree_S_Resume.pdf. Build: node resume/make-pdf.mjs
+     The public copy has no phone number. The private copy (with phone) is built from the same file
+     by replacing the PHONE marker below; it lives in the private ai-career-kit repo, never here. -->
 <style>
-@page{size:A4;margin:10mm 14mm}
-body{font:9.6pt/1.28 "Helvetica Neue",Arial,sans-serif;color:#111;margin:0;background:#fff}
-h1{font-size:19pt;margin:0;letter-spacing:.5px}
-.c{font-size:9pt;color:#333;margin:2px 0 5px}
-h2{font-size:10.5pt;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #999;margin:8px 0 3px;padding-bottom:1px}
-.r{display:flex;justify-content:space-between;font-weight:bold;margin-top:4px}
-.r span{font-weight:normal;color:#333}
-ul{margin:2px 0 0 15px;padding:0}li{margin:1.5px 0}
-p{margin:2px 0}a{color:#111;text-decoration:none;white-space:nowrap}
+@page{size:A4;margin:8mm 12mm 7mm}
+*{box-sizing:border-box}
+body{font:9pt/1.27 "Helvetica Neue",Helvetica,Arial,sans-serif;color:#1a1a1a;margin:0;background:#fff}
+a{color:#1a1a1a;text-decoration:none;border-bottom:1px solid #b9b9b9}
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding-bottom:7px;border-bottom:1.5px solid #111}
+h1{font-size:22pt;line-height:1;margin:0;letter-spacing:-.3px;font-weight:700}
+.role{font-size:10.5pt;color:#444;margin-top:4px}
+.links{text-align:right;font-size:8.9pt;line-height:1.6;color:#333}
+.links b a{border-bottom-color:#111}
+.sep{color:#aaa;margin:0 5px}
+h2{font-size:8.4pt;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:#111;margin:8px 0 3px;padding-bottom:2px;border-bottom:1px solid #ddd}
+.summary{margin:5px 0 0;font-size:9.3pt;color:#222}
+.job{margin-top:5px}
+.jh{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.jt{font-size:10.4pt;font-weight:700}
+.jm{font-size:8.9pt;color:#555;white-space:nowrap}
+.co{font-size:9pt;color:#555;margin:1px 0 2px}
+.grp{font-size:7.8pt;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#666;margin:3px 0 0}
+ul{margin:1px 0 0 14px;padding:0}li{margin:1px 0}
+.proj li{margin:2px 0}
+.pl{font-size:8.6pt;color:#555}
+.skills{display:grid;grid-template-columns:92px 1fr;gap:2px 10px;margin:0}
+.skills dt{font-weight:700}.skills dd{margin:0}
+.edu{display:flex;justify-content:space-between;gap:12px;margin:1px 0}
+.edu span{color:#555;white-space:nowrap}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:0 22px}
 </style></head><body>
-<h1>NITYASHREE S</h1>
-<div class="c">New Delhi, India · open to Bangalore or remote · nitya08shree@gmail.com ·
-<a href="https://www.linkedin.com/in/nityashree-s-b34b1b291">linkedin.com/in/nityashree-s-b34b1b291</a> ·
-<a href="https://github.com/Nityaa08">github.com/Nityaa08</a> ·
-<a href="https://nityashree.vercel.app">nityashree.vercel.app</a></div>
 
-<h2>Summary</h2>
-<p>AI Engineer on the AI Team at Yuno, a payment orchestration company. I build production features for an internal
-multi-tenant AI agent platform by directing AI coding agents (Claude Code): I set each task, review each change and
-verify it before release. I joined Yuno as a Payments Analyst Intern in the Office of the CEO.</p>
+<header>
+  <div>
+    <h1>Nityashree S</h1>
+    <div class="role">AI Engineer · AI agents, MCP connectors, guardrails and evals</div>
+  </div>
+  <div class="links">
+    <b><a href="https://nityashree.vercel.app">Portfolio &amp; case studies</a></b><span class="sep">·</span><a href="https://personal-website-rgag.vercel.app">Personal website</a><br>
+    <a href="https://www.linkedin.com/in/nityashree-s-b34b1b291">LinkedIn</a><span class="sep">·</span><a href="https://github.com/Nityaa08">GitHub</a><span class="sep">·</span><a href="mailto:nitya08shree@gmail.com">nitya08shree@gmail.com</a><!--PHONE-->
+  </div>
+</header>
+
+<p class="summary">AI Engineer who builds and secures production AI agents: the platform, the tools they connect to, and the guardrails and evals around them. I direct AI coding agents and verify every change before it ships.</p>
 
 <h2>Experience</h2>
-<div class="r">Yuno — AI Engineer, AI Team <span>Jun 2026 – present · Remote, India</span></div>
-<ul>
-<li>Root-caused an outage where one malformed instruction file took a production agent offline; fixed it at save time and at read time with a failing test first, then stopped the new error message from echoing untrusted text to the model.</li>
-<li>Audited the tool gateway's reliability and shipped fixes: per-backend timeouts, cancellation isolation, request metrics and structured logs. The new logs exposed a connector failing silently in production; I fixed its routing.</li>
-<li>Built guest access to personal AI assistants across five services, to rules set by our lead: per-guest permissions, separate credential custody and session isolation; released to production behind a feature switch.</li>
-<li>Built a per-user OAuth (PKCE) connector so each employee's agent can search only what that employee may see; we chose per-user sign-in over a shared key; live in production.</li>
-<li>Closed web-security gaps: a cross-site request forgery (CSRF) logout, unverified webhook events, and credentials that let calls through when unset (now fail closed). Patched reachable dependency vulnerabilities across several services.</li>
-<li>Built a reply-language resolver that decides which language each agent reply uses; ran it in shadow mode beside the old logic, measured it on a labelled test set, then shipped it to production.</li>
-<li>Fixed agent-session failures: duplicate or orphaned tool-call entries that model providers rejected, and failed turns that lost the user's message. Added a per-turn outcome record so the team can measure agent success per turn in production.</li>
-<li>Built AI agents for finance operations: an invoice-intake agent where the model reads and tested code applies the rules (verified on dev), and a mailbox-sorting agent running in production. Cut the mailbox agent's projected monthly model cost by changing its schedule, after measuring the cost of a run that found no new mail.</li>
-<li>Showed with a small A/B test, prompt held fixed, that the model, not the prompt, made prebuilt agents ignore instructions; the team changed the default model.</li>
-<li>Presented an internal AI talk to the company's AI talk series.</li>
-</ul>
-<div class="r">Yuno — Payments Analyst Intern, Office of the CEO <span>Dec 2025 – Jun 2026</span></div>
-<ul>
-<li>Built and maintained a payments-capability database of providers, payment methods and markets.</li>
-<li>Ran a data-quality audit of that database with a documented error taxonomy: duplicates, category mismatches, region errors, unsupported methods.</li>
-<li>Ran acceptance testing for an internal AI assistant that answers payment-coverage questions; collected test sets from Sales and Business Development, and caught a data error before launch.</li>
-</ul>
+
+<div class="job">
+  <div class="jh"><span class="jt">AI Engineer</span><span class="jm">Jun 2026 – Present</span></div>
+  <div class="co">AI Team · Yuno (payment orchestration) · Onsite</div>
+
+  <div class="grp">Platform and reliability</div>
+  <ul>
+    <li>Root-caused an outage where one malformed instruction file took a production agent offline; fixed it at save and read time with a failing test first, and stopped the error from echoing untrusted text to the model.</li>
+    <li>Audited the tool gateway every agent tool call passes through; shipped per-backend timeouts, cancellation isolation, metrics and structured logs. The new logs exposed a connector failing silently in production; I fixed its routing.</li>
+    <li>Fixed agent-session failures (orphaned or duplicate tool-call entries that providers rejected; failed turns that lost the user's message) and added a per-turn outcome record to measure agent success in production.</li>
+  </ul>
+
+  <div class="grp">Access and security</div>
+  <ul>
+    <li>Built guest access to personal AI assistants across five services, to rules set by our lead: per-guest permissions, separate credential custody and session isolation; released to production behind a feature switch.</li>
+    <li>Built a per-user OAuth (PKCE) connector so each employee's agent can search only what that employee may see; we chose per-user sign-in over a shared key. Live in production.</li>
+    <li>Closed web-security gaps (a cross-site request forgery logout, unverified webhook events, unset secrets that let calls through, now fail closed) and patched reachable dependency vulnerabilities across several services.</li>
+  </ul>
+
+  <div class="grp">Evals and model behaviour</div>
+  <ul>
+    <li>Built a reply-language resolver that decides which language each agent reply uses; ran it in shadow mode beside the old logic, measured it on a labelled test set, then shipped it to production.</li>
+    <li>Showed with a small A/B test, prompt held fixed, that the model, not the prompt, made prebuilt agents ignore instructions; the team changed the default model.</li>
+  </ul>
+
+  <div class="grp">Agents for business teams</div>
+  <ul>
+    <li>Built finance agents: invoice intake where the model reads and tested code applies the rules, and a mailbox sorter in production whose projected monthly model cost I cut by changing its schedule after measuring an empty run.</li>
+  </ul>
+</div>
+
+<div class="job">
+  <div class="jh"><span class="jt">Payments Analyst Intern</span><span class="jm">Dec 2025 – Jun 2026</span></div>
+  <div class="co">Office of the CEO · Yuno (payment orchestration) · Onsite</div>
+  <ul>
+    <li>Built and maintained a payments-capability database of providers, payment methods and markets, and audited it with a documented error taxonomy: duplicates, category mismatches, region errors, unsupported methods.</li>
+    <li>Ran acceptance testing for an internal AI assistant that answers payment-coverage questions: collected test sets from Sales and Business Development, and caught a data error before launch.</li>
+  </ul>
+</div>
 
 <h2>Projects</h2>
-<ul>
-<li><b>Meridian</b> — multi-agent research API (Python, FastAPI). A planner agent splits a question into sub-questions, researcher agents search them in parallel, local embeddings rank the passages, a critic agent flags gaps and contradictions, and each stage streams to the client over server-sent events. <a href="https://github.com/Nityaa08/meridian">github.com/Nityaa08/meridian</a></li>
-<li><b>Smart Router</b> — LLM cost-control gateway (Python). OpenAI-compatible endpoint that routes each prompt to a cheaper or stronger model tier with rule-based classification, logs each request's estimated cost in PostgreSQL and caches repeated prompts in Redis; unit tests run in CI. <a href="https://github.com/Nityaa08/smart-router">github.com/Nityaa08/smart-router</a></li>
+<ul class="proj">
+  <li><b>Smart Router</b> <span class="pl">· Python, FastAPI, PostgreSQL, Redis ·</span> <a href="https://github.com/Nityaa08/smart-router">Code</a> — An OpenAI-compatible LLM gateway: rules route each prompt to a cheaper or stronger model tier, a failing provider falls back to the next tier, and every request logs its estimated cost. Unit tests run in CI.</li>
+  <li><b>Meridian</b> <span class="pl">· Python, FastAPI, asyncio ·</span> <a href="https://github.com/Nityaa08/meridian">Code</a> — A multi-agent research API: a planner splits the question, researchers search in parallel, local embeddings rank the passages, a critic flags gaps and contradictions, and each stage streams to the client.</li>
+  <li><b>Cross-Border Fee API</b> <span class="pl">· TypeScript, Express, Jest ·</span> <a href="https://github.com/Nityaa08/cross-border-fee-api">Code</a><span class="sep">·</span><a href="https://cross-border-fee-api.vercel.app">Live demo</a> — An itemised price estimate for Latin American B2B payments (FX spread, provider fees, local taxes), with rates kept separate from the pricing engine; Jest tests.</li>
 </ul>
 
 <h2>Skills</h2>
-<ul>
-<li><b>AI engineering:</b> LLM agents (tool use, scheduled runs), MCP, OAuth, prompt-injection defence, guardrails, evals, multi-tenant isolation</li>
-<li><b>How I build:</b> AI-assisted development (Claude Code): I direct coding agents, then review and verify every change</li>
-<li><b>Codebases I shipped to with AI coding agents:</b> Go, TypeScript/React, Python; PostgreSQL, MongoDB, Docker, Kubernetes, AWS, Git/GitHub, CI</li>
-<li><b>Learning now:</b> Python, writing it by hand</li>
-</ul>
+<dl class="skills">
+  <dt>AI engineering</dt><dd>LLM agents and tool use, MCP, retrieval and ranking, evals (labelled sets, shadow mode, A/B), guardrails, prompt-injection defence</dd>
+  <dt>Security</dt><dd>OAuth 2.0 / PKCE, multi-tenant isolation, webhook signatures, CSRF, fail-closed design, dependency scanning</dd>
+  <dt>Shipped to</dt><dd>Go, TypeScript/React, Python · PostgreSQL, MongoDB, Redis · Docker, Kubernetes, AWS · Git, GitHub, CI (via AI coding agents)</dd>
+  <dt>How I work</dt><dd>AI-assisted development (Claude Code), failing test first, code review, feature-switched releases</dd>
+</dl>
 
-<h2>Education</h2>
-<div class="r">SASTRA University, Thanjavur — B.Tech, Computer Science and Engineering (AI &amp; Data Science) <span>2022 – 2026</span></div>
-<p>CBSE Class XII, Convent of Jesus and Mary, New Delhi · Certifications: Supervised Machine Learning (DeepLearning.AI / Stanford); ML Pipelines with Azure ML Studio (Coursera)</p>
+<div class="two">
+  <div>
+    <h2>Education</h2>
+    <div class="edu"><b>B.Tech, Computer Science and Engineering (AI &amp; Data Science)</b><span>2022 – 2026</span></div>
+    <div>SASTRA University</div>
+    <div style="margin-top:2px"><b>Class XII, CBSE</b> · Convent of Jesus and Mary</div>
+  </div>
+  <div>
+    <h2>Certifications</h2>
+    <div><b>Supervised Machine Learning</b></div>
+    <div>DeepLearning.AI and Stanford University (Coursera)</div>
+    <div style="margin-top:3px"><b>ML Pipelines with Azure ML Studio</b></div>
+    <div>Coursera</div>
+  </div>
+</div>
+
+<h2>Talks and recommendations</h2>
+<p style="margin:0">Speaker, internal AI talk series<span class="sep">·</span>Letter of recommendation from my manager (Head of AI), available on request</p>
+
 </body></html>
