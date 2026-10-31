@@ -44,20 +44,22 @@ const blurbs: Record<string, { tag: string; line: string }> = {
     <main>
       <section class="h-open">
         <div class="h-open-text">
-          <p class="kicker">AI Engineer · India</p>
+          <p class="kicker">Nityashree S · AI Engineer</p>
           <h1>I build AI agents<br /><span>people can trust.</span></h1>
-          <p class="h-sub">The platform they run on, the tools they use, and the security that keeps them honest.</p>
+          <p class="h-sub">Hi, I’m Nitya. I build and secure production AI agents at a payments company: the platform they run on, the tools they use, and the guardrails that keep them honest.</p>
           <div class="h-cta"><a class="btn-solid" href="#work">See the work</a><a class="btn-line" href="#about">About me</a><a class="btn-line" href="/Nityashree_S_Resume.pdf" target="_blank" rel="noopener">Resume</a></div>
+          <p class="h-open-to"><i aria-hidden="true"></i>Open to AI engineer and forward-deployed roles</p>
         </div>
-        <div class="h-open-stage"><Stage stage={fleet} /></div>
+        <div class="h-open-photo">
+          <figure class="polaroid">
+            <span class="tape"></span>
+            <img src="/headshot.png" alt="Nityashree S" width="600" height="600" fetchpriority="high" />
+            <figcaption>nitya, mid-debug</figcaption>
+          </figure>
+        </div>
       </section>
 
       <section class="h-about" id="about">
-        <figure class="polaroid">
-          <span class="tape"></span>
-          <img src="/headshot.png" alt="Nityashree S" width="600" height="600" />
-          <figcaption>nitya, mid-debug</figcaption>
-        </figure>
         <div class="ab-text">
           <p class="kicker">About</p>
           <h2>I started in payments data. Now I build the AI agents that use it.</h2>
@@ -69,6 +71,7 @@ const blurbs: Record<string, { tag: string; line: string }> = {
             <div><dt>Based in</dt><dd>India · <span id="ist">--:--</span> IST</dd></div>
           </dl>
         </div>
+        <div class="ab-stage"><p class="ab-cap">What a normal minute looks like</p><Stage stage={fleet} /></div>
       </section>
 
       <section class="h-how">
