@@ -817,3 +817,12 @@ html { scroll-behavior: smooth; }
 .ls-list p { margin: 0; color: var(--ink-2); font-size: 15px; line-height: 1.6; }
 @media (max-width: 860px) { .ls-list { grid-template-columns: 1fr; } }
 @media (max-width: 680px) { .glance { grid-template-columns: 1fr; gap: 14px; } .p-chip { white-space: normal; width: max-content; max-width: 88%; text-align: left; } }
+/* hero headline is the growth line now: a touch smaller so it fits two lines */
+.h-open h1 { font-size: clamp(40px, 4.4vw, 72px); }
+/* path follows the hero directly */
+.h-path { border-top: 0; padding-top: clamp(40px, 6vw, 80px); }
+@media (max-width: 680px) {
+  .h-open .h-cta a[href="#about"] { display: inline-flex; }
+  .h-open .h-cta a[href="#work"] { display: none; }
+  .h-open h1 { font-size: clamp(32px, 9vw, 40px); }
+}
