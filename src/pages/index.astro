@@ -4,6 +4,7 @@ import Nav from '../components/Nav.astro';
 import Phone from '../components/Phone.astro';
 import Stage from '../components/Stage.astro';
 import StagePlayer from '../components/StagePlayer.astro';
+import Meta from '../components/Meta.astro';
 import { cases, type Stage as StageT } from '../data/cases';
 
 const log = (time: string, level: string, service: string, msg: string) => ({ t: 'log' as const, s: [time, level, service, msg].join('|') });
@@ -18,6 +19,12 @@ const fleet: StageT = { medium: 'logs', label: 'agent fleet · live', lines: [
   { t: 'dim', s: 'the platform · the tools · the guards around them' },
 ]};
 const work = cases.filter((c) => c.ready);
+const builds = [
+  { name: 'Smart Router', tag: 'Python · FastAPI · PostgreSQL · Redis', line: 'An OpenAI-compatible LLM gateway. Rules route each prompt to a cheaper or stronger model tier, a failing provider falls back to the next tier, and every request logs its cost and latency.', repo: 'https://github.com/Nityaa08/smart-router' },
+  { name: 'Meridian', tag: 'Python · FastAPI · asyncio', line: 'A multi-agent research API. A planner splits the question, researchers search in parallel, a critic flags gaps, and every stage streams to the client.', repo: 'https://github.com/Nityaa08/meridian' },
+  { name: 'Cross-Border Fee API', tag: 'TypeScript · Express · Jest', line: 'Itemised all-in price for Latin American B2B payments: FX spread, processing, cross-border fees and local taxes, with rates kept apart from the engine.', repo: 'https://github.com/Nityaa08/cross-border-fee-api', live: 'https://cross-border-fee-api.vercel.app' },
+  { name: 'Fraud Pattern Explorer', tag: 'Next.js · TypeScript', line: 'A dashboard for risk analysts on synthetic data: cross-filtering charts, rule-based flags and a drill-down on each transaction.', repo: 'https://github.com/Nityaa08/fraud-pattern-explorer', live: 'https://fraud-pattern-explorer.vercel.app' },
+];
 const blurbs: Record<string, { tag: string; line: string }> = {
   'agent-platform': { tag: 'Platform · Go · TypeScript', line: 'The engine, studio and gateways behind company-wide AI agents — and how I keep them running.' },
   'mcp-connections': { tag: 'MCP · OAuth · Gateway', line: 'Connectors that let agents use real apps, with each person’s own access and no shared keys.' },
@@ -30,6 +37,7 @@ const blurbs: Record<string, { tag: string; line: string }> = {
     <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Nityashree S · AI Engineer</title>
     <meta name="description" content="AI engineer building production AI agents — the platform, the connectors and the security underneath." />
+    <Meta title="Nityashree S · AI Engineer" description="AI engineer building production AI agents — the platform, the connectors and the security underneath." />
     <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
   </head>
@@ -41,7 +49,7 @@ const blurbs: Record<string, { tag: string; line: string }> = {
           <p class="kicker">AI Engineer · India</p>
           <h1>I build AI agents<br /><span>people can trust.</span></h1>
           <p class="h-sub">The platform they run on, the tools they use, and the security that keeps them honest.</p>
-          <div class="h-cta"><a class="btn-solid" href="#work">See the work</a><a class="btn-line" href="#about">About me</a></div>
+          <div class="h-cta"><a class="btn-solid" href="#work">See the work</a><a class="btn-line" href="#about">About me</a><a class="btn-line" href="/Nityashree_S_Resume.pdf" target="_blank" rel="noopener">Resume</a></div>
         </div>
         <div class="h-open-stage"><Stage stage={fleet} /></div>
       </section>
@@ -107,9 +115,25 @@ const blurbs: Record<string, { tag: string; line: string }> = {
         </div>
       </section>
 
+      <section class="h-builds" id="builds">
+        <div class="story-head"><p class="kicker">On my own time</p><h2>Things I built and you can run.</h2></div>
+        <ul class="b-list">
+          {builds.map((b) => (
+            <li class="b-row">
+              <div class="b-name"><h3>{b.name}</h3><span>{b.tag}</span></div>
+              <p>{b.line}</p>
+              <div class="b-links">
+                <a href={b.repo} target="_blank" rel="noopener">Code →</a>
+                {b.live && <a href={b.live} target="_blank" rel="noopener">Live demo →</a>}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+
       <section class="h-contact" id="contact">
         <h2>Let’s build something<br />people can rely on.</h2>
-        <div class="h-cta"><a class="btn-solid" href="mailto:nitya08shree@gmail.com">nitya08shree@gmail.com</a><a class="btn-line" href="https://github.com/Nityaa08">GitHub</a><a class="btn-line" href="https://www.linkedin.com/in/nityashree-s-b34b1b291">LinkedIn</a></div>
+        <div class="h-cta"><a class="btn-solid" href="mailto:nitya08shree@gmail.com">nitya08shree@gmail.com</a><a class="btn-line" href="/Nityashree_S_Resume.pdf" target="_blank" rel="noopener">Resume (PDF)</a><a class="btn-line" href="https://github.com/Nityaa08">GitHub</a><a class="btn-line" href="https://www.linkedin.com/in/nityashree-s-b34b1b291">LinkedIn</a></div>
       </section>
     </main>
     <StagePlayer />
