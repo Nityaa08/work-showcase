@@ -12,6 +12,8 @@ import Stage from '../../components/Stage.astro';
 import Nav from '../../components/Nav.astro';
 import Meta from '../../components/Meta.astro';
 import CaseNav from '../../components/CaseNav.astro';
+import Glance from '../../components/Glance.astro';
+import Lessons from '../../components/Lessons.astro';
 import Incidents from '../../components/Incidents.astro';
 import { cases } from '../../data/cases';
 
@@ -57,6 +59,7 @@ const process = (c.steps ?? []).map((s) => ({ label: s.state, heading: s.heading
           <p class="kicker">Case {c.no}</p>
           <h1>{c.title}</h1>
           <p class="cs-intro">{c.intro}</p>
+          {c.glance && <Glance items={c.glance} />}
         </div>
         <div class="cs-hero-visual">{has3D ? <MacBook3D><Stage stage={c.steps?.[1]?.stage ?? c.card} /></MacBook3D> : <Laptop />}</div>
       </section>
@@ -93,6 +96,7 @@ const process = (c.steps ?? []).map((s) => ({ label: s.state, heading: s.heading
       )}
       {c.bugs && <Incidents bugs={c.bugs} />}
 
+      {c.lessons && <Lessons items={c.lessons} />}
       <CaseNav slug={c.slug} />
     </main>
     <StagePlayer />

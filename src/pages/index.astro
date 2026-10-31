@@ -2,28 +2,31 @@
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Phone from '../components/Phone.astro';
-import Stage from '../components/Stage.astro';
 import StagePlayer from '../components/StagePlayer.astro';
 import Meta from '../components/Meta.astro';
-import { cases, type Stage as StageT } from '../data/cases';
+import { cases } from '../data/cases';
 
-const log = (time: string, level: string, service: string, msg: string) => ({ t: 'log' as const, s: [time, level, service, msg].join('|') });
-const fleet: StageT = { medium: 'logs', label: 'agent fleet · live', lines: [
-  { t: 'cmd', s: 'env:prod agents:*' },
-  log('09:00:02', 'INFO', 'engine', 'turn started · agent=support-bot'),
-  log('09:00:03', 'INFO', 'gateway', 'tools/call knowledge_search_query · ok'),
-  log('09:00:03', 'INFO', 'vault', 'user’s own token attached · hidden'),
-  log('09:00:04', 'WARN', 'guard', 'tool text fenced as untrusted'),
-  log('09:00:05', 'INFO', 'engine', 'reply sent · language=es'),
-  log('09:00:07', 'WARN', 'edge', 'forged signature · 401 rejected'),
-  { t: 'dim', s: 'the platform · the tools · the guards around them' },
-]};
 const work = cases.filter((c) => c.ready);
 const builds = [
   { name: 'Smart Router', tag: 'Python · FastAPI · PostgreSQL · Redis', line: 'An OpenAI-compatible LLM gateway. Rules route each prompt to a cheaper or stronger model tier, a failing provider falls back to the next tier, and every request logs its cost and latency.', repo: 'https://github.com/Nityaa08/smart-router' },
   { name: 'Meridian', tag: 'Python · FastAPI · asyncio', line: 'A multi-agent research API. A planner splits the question, researchers search in parallel, a critic flags gaps, and every stage streams to the client.', repo: 'https://github.com/Nityaa08/meridian' },
   { name: 'Cross-Border Fee API', tag: 'TypeScript · Express · Jest', line: 'Itemised all-in price for Latin American B2B payments: FX spread, processing, cross-border fees and local taxes, with rates kept apart from the engine.', repo: 'https://github.com/Nityaa08/cross-border-fee-api', live: 'https://cross-border-fee-api.vercel.app' },
   { name: 'Fraud Pattern Explorer', tag: 'Next.js · TypeScript', line: 'A dashboard for risk analysts on synthetic data: cross-filtering charts, rule-based flags and a drill-down on each transaction.', repo: 'https://github.com/Nityaa08/fraud-pattern-explorer', live: 'https://fraud-pattern-explorer.vercel.app' },
+];
+const path = [
+  { when: '2022 – 2026', title: 'Foundations', did: 'B.Tech in Computer Science (AI & Data Science) at SASTRA University, plus certifications in supervised machine learning and ML pipelines.', learnt: 'How models learn, and how they fail.' },
+  { when: 'Dec 2025', title: 'Payments data', did: 'Joined a payments company as an analyst intern in the CEO’s office. Built the database of which providers and payment methods work in which markets, then audited it with a written error taxonomy.', learnt: 'An AI answer is only as right as the data under it.' },
+  { when: '2026', title: 'Testing AI before launch', did: 'Ran acceptance testing for an AI assistant that answered payment-coverage questions. Collected real test questions from Sales and Business Development and caught a data error before launch.', learnt: 'Evals are product work. Test the way your users ask.' },
+  { when: '2026', title: 'Shipping agents to production', did: 'Moved to the AI team and shipped to a multi-tenant agent platform: connectors, guest access, security fixes, a reply-language resolver and finance agents.', learnt: 'Root cause first, failing test first, then watch the logs after release.' },
+  { when: 'Now', title: 'Going deeper', did: 'Building my own systems end to end (an LLM gateway and a multi-agent research API), and writing Python by hand to know the fundamentals under every tool I use.', learnt: 'Using AI well means understanding what it does for you.' },
+];
+const caps = [
+  { k: 'Agent platforms', t: 'The engine that runs each turn, the studio where agents are made, and access rules that hold across services, like guest access spanning five of them.', go: '/work/agent-platform/', gl: 'Case 01' },
+  { k: 'Tool connectors (MCP)', t: 'Per-user OAuth (PKCE) connectors, so an agent sees only what its person may see, behind a gateway with timeouts, metrics and structured logs.', go: '/work/mcp-connections/', gl: 'Case 02' },
+  { k: 'Guardrails & security', t: 'Tool output fenced against prompt injection, verified webhooks, secrets that fail closed, CSRF fixes and patched vulnerabilities that code could actually reach.', go: '/work/security/', gl: 'Case 03' },
+  { k: 'Evals & measurement', t: 'New logic run in shadow mode and scored on a labelled test set before release. A controlled A/B that showed the model, not the prompt, was the problem.', go: '/work/agent-platform/#ch-model', gl: 'Model work' },
+  { k: 'Agents for real teams', t: 'Finance agents: invoice intake where the model reads and tested code applies the rules, and a mailbox sorter whose model cost I cut by changing its schedule.', go: '#contact', gl: 'Ask me about it' },
+  { k: 'LLM systems from scratch', t: 'A cost-aware model router and a multi-agent research API, built on my own time, with code you can read and run.', go: '#builds', gl: 'Side builds' },
 ];
 const blurbs: Record<string, { tag: string; line: string }> = {
   'agent-platform': { tag: 'Platform · Go · TypeScript', line: 'The engine, studio and gateways behind company-wide AI agents — and how I keep them running.' },
@@ -36,57 +39,81 @@ const blurbs: Record<string, { tag: string; line: string }> = {
   <head>
     <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Nityashree S · AI Engineer</title>
-    <meta name="description" content="AI engineer building production AI agents — the platform, the connectors and the security underneath." />
+    <meta name="description" content="Nityashree S builds production AI agents end to end: the platform, the MCP connectors, the guardrails and the evals." />
     <Meta title="Nityashree S · AI Engineer" description="AI engineer building production AI agents — the platform, the connectors and the security underneath." />
   </head>
-  <body class="studio home">
+  <body class="studio home" id="top">
     <Nav />
     <main>
       <section class="h-open">
         <div class="h-open-text">
           <p class="kicker">Nityashree S · AI Engineer</p>
           <h1>I build AI agents<br /><span>people can trust.</span></h1>
-          <p class="h-sub">Hi, I’m Nitya. I build and secure production AI agents at a payments company: the platform they run on, the tools they use, and the guardrails that keep them honest.</p>
-          <div class="h-cta"><a class="btn-solid" href="#work">See the work</a><a class="btn-line" href="#about">About me</a><a class="btn-line" href="/Nityashree_S_Resume.pdf" target="_blank" rel="noopener">Resume</a></div>
-          <p class="h-open-to"><i aria-hidden="true"></i>Open to AI engineer and forward-deployed roles</p>
-        </div>
-        <div class="h-open-photo">
-          <figure class="polaroid">
-            <span class="tape"></span>
-            <img src="/headshot.png" alt="Nityashree S" width="600" height="600" fetchpriority="high" />
-            <figcaption>nitya, mid-debug</figcaption>
-          </figure>
-        </div>
-      </section>
-
-      <section class="h-about" id="about">
-        <div class="ab-text">
-          <p class="kicker">About</p>
-          <h2>I started in payments data. Now I build the AI agents that use it.</h2>
-          <p>I joined my company as a payments analyst intern in the CEO’s office, building the database of which payment methods work where — and testing an AI assistant on it before launch. Catching the answers it got wrong is what pulled me into AI engineering.</p>
-          <p>Today I’m on the AI team, shipping the platform our agents run on: the engine, the connectors, and the guardrails around the model. I work with AI the way I want agents to work — fast, but checked.</p>
-          <dl class="now">
-            <div><dt>Building</dt><dd>emi-agent — a multilingual agent, built as code with evals</dd></div>
-            <div><dt>Learning</dt><dd>The fundamentals under every tool I use</dd></div>
-            <div><dt>Based in</dt><dd>India · <span id="ist">--:--</span> IST</dd></div>
-          </dl>
-        </div>
-        <div class="ab-stage"><p class="ab-cap">What a normal minute looks like</p><Stage stage={fleet} /></div>
-      </section>
-
-      <section class="h-how">
-        <div class="how-text">
-          <p class="kicker">How I work</p>
-          <h2>One laptop. A team of agents. Me in the loop.</h2>
-          <p>Every task gets its own worktree. Subagents research, challenge and review in parallel — and I set the bar and read every line before anything ships.</p>
-          <ul class="how-list">
-            <li><b>Plan</b> state the goal and what would prove it</li>
-            <li><b>Delegate</b> research, skeptic and reviewer agents</li>
-            <li><b>Prove</b> a failing test first, then green</li>
-            <li><b>Own</b> I review the result and ship it</li>
+          <p class="h-sub">Hi, I’m Nitya. I build production AI agents end to end: the platform they run on, the tools they reach, and the guardrails and evals that keep them honest. I came to AI through payments data, so I test everything as if it handles money.</p>
+          <div class="h-cta"><a class="btn-solid" href="#work">See the work</a><a class="btn-line" href="#about">My path</a><a class="btn-line" href="/Nityashree_S_Resume.pdf" target="_blank" rel="noopener">Resume</a></div>
+          <ul class="h-facts">
+            <li><b>Production</b><span>agent platform, connectors, security</span></li>
+            <li><b>Evals first</b><span>shadow runs, test sets, A/B</span></li>
+            <li><b>AI-native</b><span>I direct coding agents and review every line</span></li>
           </ul>
         </div>
-        <div class="how-phone"><Phone /></div>
+        <figure class="portrait">
+          <picture>
+            <source srcset="/portrait.webp" type="image/webp" />
+            <img src="/portrait.jpg" alt="Portrait of Nityashree S, smiling" width="880" height="992" fetchpriority="high" />
+          </picture>
+          <figcaption class="p-chip"><i aria-hidden="true"></i>Open to AI engineer and forward-deployed roles</figcaption>
+        </figure>
+      </section>
+
+      <section class="h-path" id="about">
+        <div class="path-head">
+          <div>
+            <p class="kicker">My path</p>
+            <h2>From payments data to production AI agents.</h2>
+          </div>
+          <div class="path-intro">
+            <p>I got into AI engineering by catching the answers an AI assistant got wrong. Since then, every step has been about the same thing: making AI systems that people can rely on, and proving it before they ship.</p>
+            <p>I like the unglamorous parts: the logs, the edge cases, the test that fails first. That’s where trust comes from.</p>
+          </div>
+        </div>
+        <ol class="path-list">
+          {path.map((p, i) => (
+            <li class="path-row">
+              <div class="path-when"><span>0{i + 1}</span>{p.when}</div>
+              <div class="path-did"><h3>{p.title}</h3><p>{p.did}</p></div>
+              <p class="path-learnt"><em>What I learnt</em>{p.learnt}</p>
+            </li>
+          ))}
+        </ol>
+        <dl class="now">
+          <div><dt>Based in</dt><dd>India · <span id="ist">--:--</span> IST</dd></div>
+          <div><dt>Studied</dt><dd>B.Tech CSE (AI & Data Science), SASTRA</dd></div>
+          <div><dt>Looking for</dt><dd>AI engineer, forward-deployed, AI security and evals roles</dd></div>
+        </dl>
+      </section>
+
+      <section class="h-how" id="how">
+        <div class="story-head"><p class="kicker">What I build · How I build it</p><h2>Agents, the tools they use,<br />and the guardrails around them.</h2></div>
+        <ul class="cp-grid">
+          {caps.map((c, i) => (
+            <li><a class="cp" href={c.go}><span class="cp-no">0{i + 1}</span><h3>{c.k}</h3><p>{c.t}</p><span class="cp-go">{c.gl} →</span></a></li>
+          ))}
+        </ul>
+        <div class="how-row">
+          <div class="how-text">
+            <p class="kicker">How I work</p>
+            <h3>One laptop. A team of agents.<br />Me in the loop.</h3>
+            <p>Every task gets its own worktree. Subagents research, challenge and review in parallel. I set the bar, read every line and own what ships. The phone shows a normal afternoon.</p>
+            <ul class="how-list">
+              <li><b>Plan</b> state the goal and what would prove it</li>
+              <li><b>Delegate</b> research, skeptic and reviewer agents</li>
+              <li><b>Prove</b> a failing test first, then green</li>
+              <li><b>Own</b> I review the result, ship it and watch the logs</li>
+            </ul>
+          </div>
+          <div class="how-phone"><Phone /></div>
+        </div>
       </section>
 
       <section class="h-work" id="work">
@@ -133,15 +160,38 @@ const blurbs: Record<string, { tag: string; line: string }> = {
       </section>
 
       <section class="h-contact" id="contact">
-        <h2>Let’s build something<br />people can rely on.</h2>
-        <div class="h-cta"><a class="btn-solid" href="mailto:nitya08shree@gmail.com">nitya08shree@gmail.com</a><a class="btn-line" href="/Nityashree_S_Resume.pdf" target="_blank" rel="noopener">Resume (PDF)</a><a class="btn-line" href="https://github.com/Nityaa08">GitHub</a><a class="btn-line" href="https://www.linkedin.com/in/nityashree-s-b34b1b291">LinkedIn</a></div>
+        <div class="ct-text">
+          <p class="kicker">Contact</p>
+          <h2>Let’s build something<br />people can rely on.</h2>
+          <p>I’m looking for AI engineering, forward-deployed, and AI security or evals roles at startups in India, onsite or hybrid. If you’re hiring, or you just want to talk about agents, write to me. I reply within a day.</p>
+          <ul class="ct-roles">
+            <li>AI Engineer</li><li>Forward-deployed engineer</li><li>AI red-teaming & evals</li><li>Solutions engineering</li>
+          </ul>
+        </div>
+        <ul class="ct-cards">
+          <li class="ct-card ct-mail">
+            <a href="mailto:nitya08shree@gmail.com"><span class="ct-k">Email</span><b>nitya08shree@gmail.com</b><span class="ct-d">The fastest way to reach me</span></a>
+            <button type="button" class="ct-copy" data-copy="nitya08shree@gmail.com" aria-label="Copy email address">Copy</button>
+          </li>
+          <li class="ct-card"><a href="https://www.linkedin.com/in/nityashree-s-b34b1b291" target="_blank" rel="noopener"><span class="ct-k">LinkedIn</span><b>Nityashree S</b><span class="ct-d">Experience and recommendations</span></a></li>
+          <li class="ct-card"><a href="https://github.com/Nityaa08" target="_blank" rel="noopener"><span class="ct-k">GitHub</span><b>@Nityaa08</b><span class="ct-d">Code for every side build</span></a></li>
+          <li class="ct-card"><a href="/Nityashree_S_Resume.pdf" target="_blank" rel="noopener"><span class="ct-k">Resume</span><b>One page, PDF</b><span class="ct-d">Everything here, condensed</span></a></li>
+        </ul>
       </section>
     </main>
+    <footer class="foot">
+      <span>© 2026 Nityashree S</span>
+      <span>Built with Astro, hosted on Vercel. Made with AI coding agents and reviewed line by line by me.</span>
+      <a href="#top">Back to top ↑</a>
+    </footer>
     <StagePlayer />
     <script>
       const ist = document.getElementById('ist')!;
       const tick = () => { ist.textContent = new Date().toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', hour12: false }); };
       tick(); setInterval(tick, 30000);
+      document.querySelectorAll<HTMLButtonElement>('.ct-copy').forEach((b) => b.addEventListener('click', async () => {
+        try { await navigator.clipboard.writeText(b.dataset.copy!); b.textContent = 'Copied'; setTimeout(() => (b.textContent = 'Copy'), 1600); } catch { location.href = 'mailto:' + b.dataset.copy; }
+      }));
     </script>
   </body>
 </html>
