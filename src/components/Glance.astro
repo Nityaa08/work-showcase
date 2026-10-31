@@ -1,0 +1,8 @@
+---
+// "At a glance" strip for case-study heroes: what a recruiter scans first.
+interface Props { items: [string, string][] }
+const { items } = Astro.props;
+---
+<dl class="glance">
+  {items.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+</dl>

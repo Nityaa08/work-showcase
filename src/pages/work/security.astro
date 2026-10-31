@@ -1,7 +1,9 @@
 ---
 import '../../styles/global.css';
 import Nav from '../../components/Nav.astro';
+import Meta from '../../components/Meta.astro';
 import CaseNav from '../../components/CaseNav.astro';
+import Glance from '../../components/Glance.astro';
 import Stage from '../../components/Stage.astro';
 import StagePlayer from '../../components/StagePlayer.astro';
 import { cases, type Stage as StageT } from '../../data/cases';
@@ -93,8 +95,7 @@ const sweep: StageT = { medium: 'shell', label: '~/agent-fleet', lines: [
     <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{c.title} · Nityashree S</title>
     <meta name="description" content={c.intro} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <Meta title={`${c.title} · Nityashree S`} description={c.intro} path={`/work/${c.slug}/`} />
   </head>
   <body class="studio sec">
     <Nav crumb={`Case ${c.no}`} active="work" />
@@ -103,7 +104,8 @@ const sweep: StageT = { medium: 'shell', label: '~/agent-fleet', lines: [
         <div class="sx-head">
           <p class="kicker">Case {c.no}</p>
           <h1>{c.title}</h1>
-          <p class="cs-intro">Our agents read text from strangers, act with people’s own accounts and run code. So we build every layer to say no by default — and we prove each fix by attacking it.</p>
+          <p class="cs-intro">The agents I worked on read text from strangers, act with people’s own accounts and run code. So every layer has to say no by default, and every fix is proven by attacking it.</p>
+          {c.glance && <Glance items={c.glance} />}
         </div>
         <div class="stack" id="stack">
           <div class="attack" id="attack"><span class="a-tag">attack</span><span id="a-text"></span></div>
@@ -140,7 +142,7 @@ const sweep: StageT = { medium: 'shell', label: '~/agent-fleet', lines: [
       </section>
 
       <section class="mx-sec">
-        <div class="story-head"><p class="kicker">How we think about it</p><h2>Four rules we don’t bend.</h2></div>
+        <div class="story-head"><p class="kicker">How I think about it</p><h2>Four rules I don’t bend.</h2></div>
         <div class="rule-row">
           {principles.map(([h, d], i) => <div><span>0{i + 1}</span><h3>{h}</h3><p>{d}</p></div>)}
         </div>
@@ -149,7 +151,7 @@ const sweep: StageT = { medium: 'shell', label: '~/agent-fleet', lines: [
       <section class="mx-sec mx-split">
         <div>
           <div class="story-head"><p class="kicker">The sweep</p><h2>Find it, fix it, prove it’s gone.</h2></div>
-          <p class="mx-lede">Dependency alerts pile up fast, and most can’t touch our code. We scan for the vulnerabilities our code actually calls, upgrade those first, and re-scan to prove they’re gone — in every service we look after.</p>
+          <p class="mx-lede">Dependency alerts pile up fast, and most can’t touch the code. I scanned for the vulnerabilities the code actually calls, upgraded those first, and re-scanned to prove they were gone, across several services.</p>
         </div>
         <Stage stage={sweep} />
       </section>

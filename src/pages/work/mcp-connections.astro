@@ -1,7 +1,10 @@
 ---
 import '../../styles/global.css';
 import Nav from '../../components/Nav.astro';
+import Meta from '../../components/Meta.astro';
 import CaseNav from '../../components/CaseNav.astro';
+import Glance from '../../components/Glance.astro';
+import Lessons from '../../components/Lessons.astro';
 import Stage from '../../components/Stage.astro';
 import StagePlayer from '../../components/StagePlayer.astro';
 import { cases, type Stage as StageT } from '../../data/cases';
@@ -12,7 +15,7 @@ const flow = [
   ['Agent asks for a tool', 'An agent decides it needs outside data, so it calls a tool over MCP.'],
   ['Gateway checks the grant', 'The gateway confirms this agent holds that tool’s permission, and that the tool isn’t switched off.'],
   ['Vault attaches the user’s token', 'The vault adds the signed-in person’s own token. The agent never sees it.'],
-  ['Our MCP server calls the app', 'The connector turns the tool call into a request to the real app.'],
+  ['The MCP server calls the app', 'The connector turns the tool call into a request to the real app.'],
   ['Only what this person may see', 'The app answers with what this person is allowed to read, and the answer flows back.'],
 ];
 
@@ -60,8 +63,7 @@ const fixes = [
     <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{c.title} · Nityashree S</title>
     <meta name="description" content={c.intro} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <Meta title={`${c.title} · Nityashree S`} description={c.intro} path={`/work/${c.slug}/`} />
   </head>
   <body class="studio mcp">
     <Nav crumb={`Case ${c.no}`} active="work" />
@@ -70,7 +72,8 @@ const fixes = [
         <div class="mx-head">
           <p class="kicker">Case {c.no}</p>
           <h1>{c.title}</h1>
-          <p class="cs-intro">MCP is the standard way an AI agent uses a real tool. On our team, I build the connectors that speak it and the gateway every call passes through — so our agents can use company apps without ever holding a key.</p>
+          <p class="cs-intro">MCP is the standard way an AI agent uses a real tool. I built connectors that speak it and hardened the gateway every call passes through, so agents could use company apps without ever holding a key.</p>
+          {c.glance && <Glance items={c.glance} />}
           <ol class="mx-steps">
             {flow.map(([t, d], i) => <li data-i={i} class:list={{ on: i === 0 }}><span>0{i + 1}</span><div><b>{t}</b><p>{d}</p></div></li>)}
           </ol>
@@ -105,7 +108,7 @@ const fixes = [
       </section>
 
       <section class="mx-sec">
-        <div class="story-head"><p class="kicker">How we built it</p><h2>Three decisions that shaped every connector.</h2></div>
+        <div class="story-head"><p class="kicker">How we decided</p><h2>Three decisions that shaped every connector.</h2></div>
         <div class="chapters-row">
           {chapters.map((ch, i) => (
             <article class="chap">
@@ -121,7 +124,7 @@ const fixes = [
       <section class="mx-sec mx-split">
         <div>
           <div class="story-head"><p class="kicker">The tools</p><h2>One name, one permission.</h2></div>
-          <p class="mx-lede">We name every tool <code>service_product_action</code> and give it exactly one permission. When we moved to our own server, we took the chance to fix vague names — an agent can only call what its owner granted, checked before the app is contacted.</p>
+          <p class="mx-lede">Every tool is named <code>service_product_action</code> and carries exactly one permission. Moving to our own server was the chance to fix vague names. An agent can only call what its owner granted, checked before the app is contacted.</p>
           <ul class="tool-list">
             {tools.map(([n, d, sc]) => <li><code>{n}</code><span>{d}</span><em>{sc}</em></li>)}
           </ul>
@@ -141,7 +144,7 @@ const fixes = [
             <div class="bub bot">Found it in the onboarding ticket — and here are the tools I used.</div>
           </div>
           <ol class="how-proved">
-            <li><span>01</span><div><b>We didn’t test it ourselves</b><p>A teammate asked their own agent — someone who didn’t build it.</p></div></li>
+            <li><span>01</span><div><b>I didn’t test it myself</b><p>A teammate asked their own agent — someone who didn’t build it.</p></div></li>
             <li><span>02</span><div><b>We never named the connector</b><p>Just a normal question, the way anyone at work would ask it.</p></div></li>
             <li><span>03</span><div><b>The agent chose the tool</b><p>It picked the right connector by itself and found the answer in a ticket.</p></div></li>
             <li><span>04</span><div><b>It showed its working</b><p>It named the tools it used, so the answer could be checked.</p></div></li>
@@ -159,6 +162,7 @@ const fixes = [
         </ul>
       </section>
 
+      {c.lessons && <Lessons items={c.lessons} />}
       <CaseNav slug={c.slug} />
     </main>
     <StagePlayer />

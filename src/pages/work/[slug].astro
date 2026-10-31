@@ -1,12 +1,19 @@
 ---
 import '../../styles/global.css';
 import MacBook3D from '../../components/MacBook3D.astro';
+import Laptop from '../../components/Laptop.astro';
+import fs from 'node:fs';
+import path from 'node:path';
+import { cwd } from 'node:process';
 import StoryScroll from '../../components/StoryScroll.astro';
 import FeatureRail from '../../components/FeatureRail.astro';
 import StagePlayer from '../../components/StagePlayer.astro';
 import Stage from '../../components/Stage.astro';
 import Nav from '../../components/Nav.astro';
+import Meta from '../../components/Meta.astro';
 import CaseNav from '../../components/CaseNav.astro';
+import Glance from '../../components/Glance.astro';
+import Lessons from '../../components/Lessons.astro';
 import Incidents from '../../components/Incidents.astro';
 import { cases } from '../../data/cases';
 
@@ -14,6 +21,9 @@ export function getStaticPaths() {
   return cases.filter((c) => c.ready && !c.custom).map((c) => ({ params: { slug: c.slug }, props: { c } }));
 }
 const { c } = Astro.props;
+// The 3D laptop needs a licensed model file that is not in git. If it isn't there at build time,
+// use the HTML laptop, which lives entirely in this repo and works on every device.
+const has3D = fs.existsSync(path.join(cwd(), 'public/models/macbook-pro-14.glb'));
 const workbench = { medium: 'claude' as const, label: 'engine — claude', lines: [
   { t: 'you' as const, s: 'New model family can’t call tools. Find the root cause and fix it with a failing test first.' },
   { t: 'tool' as const, s: 'Bash(git worktree add ../engine-fix -b fix/settings-per-model-family)' },
@@ -32,8 +42,7 @@ const process = (c.steps ?? []).map((s) => ({ label: s.state, heading: s.heading
     <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{c.title} · Nityashree S</title>
     <meta name="description" content={c.intro} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <Meta title={`${c.title} · Nityashree S`} description={c.intro} path={`/work/${c.slug}/`} />
   </head>
   <body class="studio">
     <Nav crumb={`Case ${c.no}`} active="work" />
@@ -50,8 +59,9 @@ const process = (c.steps ?? []).map((s) => ({ label: s.state, heading: s.heading
           <p class="kicker">Case {c.no}</p>
           <h1>{c.title}</h1>
           <p class="cs-intro">{c.intro}</p>
+          {c.glance && <Glance items={c.glance} />}
         </div>
-        <div class="cs-hero-visual"><MacBook3D /></div>
+        <div class="cs-hero-visual">{has3D ? <MacBook3D><Stage stage={c.steps?.[1]?.stage ?? c.card} /></MacBook3D> : <Laptop />}</div>
       </section>
 
       {process.length > 0 && <StoryScroll id="ch-running" kicker="When something breaks" title="How I fix a bug in production, step by step." items={process} />}
@@ -86,6 +96,7 @@ const process = (c.steps ?? []).map((s) => ({ label: s.state, heading: s.heading
       )}
       {c.bugs && <Incidents bugs={c.bugs} />}
 
+      {c.lessons && <Lessons items={c.lessons} />}
       <CaseNav slug={c.slug} />
     </main>
     <StagePlayer />
