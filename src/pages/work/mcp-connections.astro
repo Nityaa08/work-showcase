@@ -103,6 +103,15 @@ const fixes = [
             ))}
             <circle id="pkt" r="7" cx="190" cy="110" />
           </svg>
+          <ol class="mflow" aria-hidden="true">
+            <li data-node="n0"><b>Agent</b><span>asks for a tool</span></li>
+            <li class="mf-row">
+              <div data-node="n1"><b>Gateway</b><span>checks access</span></div>
+              <div data-node="n4" class="mf-vault"><b>Vault</b><span>user’s token</span></div>
+            </li>
+            <li data-node="n2"><b>MCP server</b><span>our connector</span></li>
+            <li data-node="n3"><b>App</b><span>docs · logs · …</span></li>
+          </ol>
         </div>
       </section>
       {c.glance && <section class="glance-sec"><Glance items={c.glance} /></section>}
@@ -180,6 +189,7 @@ const fixes = [
         i = n;
         steps.forEach((s, k) => s.classList.toggle('on', k === n));
         document.querySelectorAll('.node').forEach((el) => el.classList.toggle('on', nodes[n].includes(el.id)));
+        document.querySelectorAll<HTMLElement>('[data-node]').forEach((el) => el.classList.toggle('on', nodes[n].includes(el.dataset.node!)));
         document.querySelectorAll('.edge').forEach((el) => el.classList.toggle('on', legs[n].some(([id]) => id === el.id)));
         const gw = document.getElementById('n1')!;
         gw.classList.remove('check'); void (gw as unknown as HTMLElement).getBoundingClientRect();

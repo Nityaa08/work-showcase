@@ -35,7 +35,6 @@ const blurbs: Record<string, { tag: string; line: string }> = {
           <h1>Hi, I’m Nitya.</h1>
           <p class="h-lead">AI engineer. I build AI agents people can trust, and prove it before they ship.</p>
           <div class="h-cta"><a class="btn-solid" href="#work">See the work</a><a class="btn-line" href="/Nityashree_S_Resume.pdf" target="_blank" rel="noopener">Resume</a></div>
-          <p class="h-open-to"><i aria-hidden="true"></i>Open to AI engineer and forward-deployed roles</p>
         </div>
         <figure class="photo">
           <picture>
@@ -51,6 +50,16 @@ const blurbs: Record<string, { tag: string; line: string }> = {
         <ol class="path-steps">
           {path.map((p) => <li><span>{p.when}</span><h3>{p.title}</h3><p>{p.line}</p></li>)}
         </ol>
+      </section>
+
+      <section class="h-how" id="how">
+        <div class="how-text">
+          <p class="kicker">How I work</p>
+          <h2>One laptop, a team of agents,<br />and me in the loop.</h2>
+          <p>Subagents research, challenge and review in parallel. I set the bar, read every line, and own what ships.</p>
+          <ol class="how-steps"><li>Plan</li><li>Delegate</li><li>Prove</li><li>Own</li></ol>
+        </div>
+        <div class="how-phone"><Phone /></div>
       </section>
 
       <section class="h-work" id="work">
@@ -80,16 +89,6 @@ const blurbs: Record<string, { tag: string; line: string }> = {
         </div>
       </section>
 
-      <section class="h-how" id="how">
-        <div class="how-text">
-          <p class="kicker">How I work</p>
-          <h2>One laptop, a team of agents,<br />and me in the loop.</h2>
-          <p>Subagents research, challenge and review in parallel. I set the bar, read every line, and own what ships.</p>
-          <ol class="how-steps"><li>Plan</li><li>Delegate</li><li>Prove</li><li>Own</li></ol>
-        </div>
-        <div class="how-phone"><Phone /></div>
-      </section>
-
       <section class="h-contact light" id="contact" data-light>
         <div class="ct-text">
           <p class="kicker">Contact</p>
@@ -107,8 +106,8 @@ const blurbs: Record<string, { tag: string; line: string }> = {
       </section>
     </main>
     <footer class="foot light" data-light>
-      <span>© Nityashree S</span>
-      <span>Built with AI coding agents, reviewed line by line by me.</span>
+      <span>© Nityashree S™</span>
+      <span class="foot-sig">All rights reserved. No prompts injected.</span>
       <a href="#top">Back to top ↑</a>
     </footer>
     <StagePlayer />
