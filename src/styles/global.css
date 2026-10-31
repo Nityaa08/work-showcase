@@ -939,3 +939,47 @@ html { scroll-behavior: smooth; }
   .mflow > li { padding-bottom: 0; }
   .mflow > li:not(:last-child)::after { left: 24px; bottom: -16px; height: 14px; }
 }
+
+/* ===== Round 5: blended portrait, steadier nav, phone polish ===== */
+/* Hero: the portrait's background is the page colour, so it stands in the page.
+   On wide screens it sits on the section's bottom edge; on phones it fades out softly. */
+.h-open.light { padding-bottom: 0; align-items: stretch; border-bottom: 1px solid rgba(0, 0, 0, 0.07); }
+.h-open-text { align-self: center; padding-bottom: clamp(48px, 7vw, 100px); }
+.photo { align-self: end; justify-self: end; width: min(540px, 100%); margin: 0; }
+.photo img, .light .photo img { border-radius: 0; box-shadow: none; display: block; }
+@media (max-width: 960px) {
+  .h-open.light { border-bottom: 0; padding-bottom: 24px; }
+  .photo { order: -1; align-self: start; justify-self: center; width: min(400px, 92vw); margin: -8px auto -16px; }
+  .photo img { -webkit-mask-image: linear-gradient(#000 78%, transparent); mask-image: linear-gradient(#000 78%, transparent); }
+  .h-open-text { padding-bottom: 24px; }
+}
+@media (max-width: 680px) { .photo { width: min(340px, 88vw); } }
+
+/* Nav: more opaque when solid so content doesn't show through; brand never wraps */
+.nav.solid { background: rgba(10, 10, 11, 0.92); }
+.nav.on-light.solid { background: rgba(245, 245, 242, 0.94); }
+.brand-who b { white-space: nowrap; }
+@media (max-width: 440px) { .brand-who { display: none; } .links { gap: 18px; } }
+
+/* Contact: the email fits on one line on phones */
+@media (max-width: 680px) {
+  .ct-card a { padding: 16px 18px; }
+  .ct-mail a { padding-right: 92px; }
+  .ct-mail b { font-size: clamp(14px, 4.3vw, 17px); overflow-wrap: normal; white-space: nowrap; }
+  .ct-copy { right: 12px; padding: 0 14px; }
+}
+
+/* Case nav: arrow icons centred in their circles */
+.cn-btn svg { display: block; }
+/* Case 02 diagram on phones: a vertical version of the same animated SVG */
+.mx-svg-m { display: none; }
+.mx-diagram svg.mx-svg-m { width: 100%; max-width: 420px; margin: 0 auto; }
+@media (max-width: 960px) {
+  .mx-diagram svg { display: none; }
+  .mx-diagram svg.mx-svg-m { display: block; }
+  .mflow { display: none !important; }
+}
+.mx-svg-m .nk { font: 500 11px var(--mono); letter-spacing: 0.12em; }
+.mx-svg-m .nt { font: 600 18px var(--sans); }
+.mx-svg-m .nd { font: 12px var(--mono); }
+#pkt-m { fill: #e9e8e4; filter: drop-shadow(0 0 8px rgba(156, 197, 161, 0.9)); }

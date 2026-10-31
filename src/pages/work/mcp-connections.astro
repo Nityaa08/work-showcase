@@ -103,15 +103,18 @@ const fixes = [
             ))}
             <circle id="pkt" r="7" cx="190" cy="110" />
           </svg>
-          <ol class="mflow" aria-hidden="true">
-            <li data-node="n0"><b>Agent</b><span>asks for a tool</span></li>
-            <li class="mf-row">
-              <div data-node="n1"><b>Gateway</b><span>checks access</span></div>
-              <div data-node="n4" class="mf-vault"><b>Vault</b><span>user’s token</span></div>
-            </li>
-            <li data-node="n2"><b>MCP server</b><span>our connector</span></li>
-            <li data-node="n3"><b>App</b><span>docs · logs · …</span></li>
-          </ol>
+          <svg class="mx-svg-m" viewBox="0 0 380 546" aria-hidden="true">
+            <path id="e0-m" class="edge" d="M105 96 L105 150" />
+            <path id="e1-m" class="edge dash" d="M240 198 L210 198" />
+            <path id="e2-m" class="edge" d="M105 246 L105 300" />
+            <path id="e3-m" class="edge" d="M105 396 L105 450" />
+              <g class="node" id="n0-m"><rect x="0" y="0" width="210" height="96" rx="16" /><text x="16" y="28" class="nk">AGENT</text><text x="16" y="58" class="nt">an agent</text><text x="16" y="80" class="nd">MCP client</text></g>
+              <g class="node" id="n1-m"><rect x="0" y="150" width="210" height="96" rx="16" /><text x="16" y="178" class="nk">GATEWAY</text><text x="16" y="208" class="nt">checks access</text><text x="16" y="230" class="nd">scopes · deadline</text></g>
+              <g class="node" id="n4-m"><rect x="240" y="150" width="140" height="96" rx="16" /><text x="256" y="178" class="nk">VAULT</text><text x="256" y="208" class="nt">user’s token</text><text x="256" y="230" class="nd">never shown</text></g>
+              <g class="node" id="n2-m"><rect x="0" y="300" width="210" height="96" rx="16" /><text x="16" y="328" class="nk">MCP SERVER</text><text x="16" y="358" class="nt">our connector</text><text x="16" y="380" class="nd">speaks MCP</text></g>
+              <g class="node" id="n3-m"><rect x="0" y="450" width="210" height="96" rx="16" /><text x="16" y="478" class="nk">APP</text><text x="16" y="508" class="nt">the real app</text><text x="16" y="530" class="nd">docs · logs · …</text></g>
+            <circle id="pkt-m" r="7" cx="105" cy="96" />
+          </svg>
         </div>
       </section>
       {c.glance && <section class="glance-sec"><Glance items={c.glance} /></section>}
@@ -179,7 +182,8 @@ const fixes = [
       const nodes: string[][] = [['n0'], ['n1'], ['n4', 'n1'], ['n2', 'n3'], ['n3', 'n0']];
       const legs: [string, boolean][][] = [[['e0', false]], [], [['e1', false]], [['e2', false], ['e3', false]], [['e3', true], ['e2', true], ['e0', true]]];
       const steps = [...document.querySelectorAll<HTMLElement>('.mx-steps li')];
-      const pkt = document.getElementById('pkt') as unknown as SVGCircleElement;
+      const narrow = matchMedia('(max-width: 960px)');
+      const sfx = () => (narrow.matches ? '-m' : '');
       const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
       let i = 0;
       const SPEED = 0.32; // viewBox units per ms — constant, so short lines are quick
@@ -188,13 +192,13 @@ const fixes = [
         clearTimeout(timer);
         i = n;
         steps.forEach((s, k) => s.classList.toggle('on', k === n));
-        document.querySelectorAll('.node').forEach((el) => el.classList.toggle('on', nodes[n].includes(el.id)));
-        document.querySelectorAll<HTMLElement>('[data-node]').forEach((el) => el.classList.toggle('on', nodes[n].includes(el.dataset.node!)));
-        document.querySelectorAll('.edge').forEach((el) => el.classList.toggle('on', legs[n].some(([id]) => id === el.id)));
-        const gw = document.getElementById('n1')!;
+        document.querySelectorAll('.node').forEach((el) => el.classList.toggle('on', nodes[n].includes(el.id.replace('-m', ''))));
+        const pkt = document.getElementById('pkt' + sfx()) as unknown as SVGCircleElement;
+        document.querySelectorAll('.edge').forEach((el) => el.classList.toggle('on', legs[n].some(([id]) => id === el.id.replace('-m', ''))));
+        const gw = document.getElementById('n1' + sfx())!;
         gw.classList.remove('check'); void (gw as unknown as HTMLElement).getBoundingClientRect();
         if (n === 1) gw.classList.add('check');
-        const paths = legs[n].map(([id, back]) => ({ path: document.getElementById(id) as unknown as SVGPathElement, back }));
+        const paths = legs[n].map(([id, back]) => ({ path: document.getElementById(id + sfx()) as unknown as SVGPathElement, back }));
         const lens = paths.map((p) => p.path.getTotalLength());
         const travel = lens.reduce((a, b) => a + b, 0) / SPEED;
         if (!reduced && paths.length) {

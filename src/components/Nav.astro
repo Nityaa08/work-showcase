@@ -15,12 +15,24 @@ const { crumb, active } = Astro.props;
   </nav>
 </header>
 <script>
+  // Show the bar at the top, when scrolling up on purpose, when the pointer reaches the top edge,
+  // or when it has keyboard focus. Hide it only after a deliberate scroll down.
   const nav = document.getElementById('nav')!;
-  let last = scrollY;
+  let last = scrollY, travel = 0, hovering = false;
+  const set = (hide: boolean) => nav.classList.toggle('hide', hide && !hovering && !nav.matches(':focus-within'));
   addEventListener('scroll', () => {
-    const y = scrollY;
+    const y = scrollY, d = y - last; last = y;
     nav.classList.toggle('solid', y > 24);
-    nav.classList.toggle('hide', y > last && y > 240);
-    last = y;
+    if (y < 120) { travel = 0; set(false); return; }
+    travel = Math.sign(d) === Math.sign(travel) ? travel + d : d;
+    if (travel > 48) set(true);
+    else if (travel < -64) set(false);
   }, { passive: true });
+  if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    addEventListener('pointermove', (e) => {
+      const near = e.clientY < 72;
+      if (near !== hovering) { hovering = near; if (near) set(false); }
+    }, { passive: true });
+  }
+  nav.addEventListener('focusin', () => set(false));
 </script>
