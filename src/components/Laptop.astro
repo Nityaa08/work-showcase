@@ -1,0 +1,136 @@
+---
+// A laptop drawn entirely in HTML/CSS — no model file, nothing to download, works on every device.
+// The screen replays one calm product moment: a question, a plain-English run, an answer.
+// Everything on the screen is sized in "u" units (1u = 1/1024 of the screen width), so it scales with the laptop.
+const steps = [
+  { label: 'Remembered how Nitya likes answers', tag: 'memory', at: 0.6 },
+  { label: 'Loaded the “summarise failures” skill', tag: 'skills', at: 1.4 },
+  { label: 'Searched logs, payments and docs', tag: 'tools', at: 2.6 },
+  { label: 'Wrote the answer', tag: 'model', at: 4.0 },
+  { label: 'Checked it is in Nitya’s language', tag: 'guard', at: 4.7 },
+];
+const agents: [string, boolean][] = [['support-agent', true], ['ops-agent', false], ['finance-helper', false], ['research', false]];
+---
+<figure class="lap" data-laptop aria-label="A laptop: an AI agent answers “Summarise yesterday’s failed checkouts” step by step">
+  <div class="lp-lid">
+    <div class="lp-screen">
+      <div class="lp-desk" aria-hidden="true">
+        <div class="lp-menubar">
+          <span class="lp-mb-apple"></span><b>Agents</b>
+          <span>File</span><span>Edit</span><span>View</span><span>Run</span><span>Window</span><span>Help</span>
+          <span class="lp-mb-time">Wed 9:14 AM</span>
+        </div>
+        <div class="lp-win">
+          <div class="lp-win-top">
+            <i class="lp-tl lp-r"></i><i class="lp-tl lp-y"></i><i class="lp-tl lp-g"></i>
+            <span class="lp-win-name">support-agent</span>
+            <span class="lp-share">Share</span>
+          </div>
+          <div class="lp-win-body">
+            <aside class="lp-side">
+              <p class="lp-side-cap">AGENTS</p>
+              {agents.map(([n, on]) => <p class:list={['lp-agent', { 'lp-on': on }]}><i></i>{n}</p>)}
+            </aside>
+            <div class="lp-chat">
+              <div class="lp-msg">
+                <span class="lp-av">N</span>
+                <div><p class="lp-who">Nitya <time>9:14</time></p><p class="lp-q">Summarise yesterday’s failed checkouts.</p></div>
+              </div>
+              <div class="lp-run">
+                <p class="lp-run-head" data-head>Working on it…</p>
+                {steps.map((s) => (
+                  <p class="lp-step" data-at={s.at}><i class="lp-dot"></i><span class="lp-lbl">{s.label}</span><span class="lp-tag">{s.tag}</span></p>
+                ))}
+              </div>
+              <div class="lp-msg lp-ans" data-answer>
+                <span class="lp-av lp-ok">✦</span>
+                <div><p class="lp-who">support-agent</p><p class="lp-a">14 failed — 9 card declines, 3 timeouts.</p><p class="lp-a">Two merchants account for most of them.</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <span class="lp-notch" aria-hidden="true"></span>
+    </div>
+  </div>
+  <div class="lp-base" aria-hidden="true"><span class="lp-groove"></span></div>
+</figure>
+
+<style>
+  .lap { --alu: #c9cbcf; margin: 0 0 0 auto; width: 100%; max-width: 820px; filter: drop-shadow(0 40px 60px rgba(0, 0, 0, 0.55)); }
+  .lp-lid { position: relative; padding: 1.6%; border-radius: 3.2% / 4.8%; background: #0a0a0b; box-shadow: 0 0 0 1.5px #3a3b3e, inset 0 0 0 1px #1b1b1d; }
+  .lp-screen { position: relative; aspect-ratio: 1.547; border-radius: 1.2% / 1.8%; overflow: hidden; container-type: inline-size; background: #000; }
+  .lp-notch { position: absolute; top: 0; left: 50%; translate: -50% 0; width: 9%; height: 2.6%; background: #0a0a0b; border-radius: 0 0 1cqw 1cqw; }
+  .lp-base { position: relative; height: clamp(10px, 2.2vw, 22px); margin: 0 -6%; border-radius: 0 0 14px 14px / 0 0 100% 100%; background: linear-gradient(180deg, #e3e4e6 0%, var(--alu) 30%, #8c8e92 100%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7); }
+  .lp-groove { position: absolute; top: 0; left: 50%; translate: -50% 0; width: 15%; height: 42%; border-radius: 0 0 10px 10px; background: linear-gradient(180deg, #9a9ca0, #b9bbbf); }
+
+  /* the screen (1u = 1/1024 of the screen width) */
+  .lp-desk { --u: calc(100cqw / 1024); position: absolute; inset: 0; font-family: 'Schibsted Grotesk', -apple-system, sans-serif; color: #1c1c1e;
+    background:
+      radial-gradient(35% 45% at 20% 55%, rgba(60, 140, 230, 0.55), transparent 70%),
+      radial-gradient(30% 40% at 95% 85%, rgba(210, 225, 255, 0.5), transparent 70%),
+      linear-gradient(125deg, #9fc0e6 0%, #d9cfa6 30%, #7aa6dc 55%, #2b5fd0 78%, #0d2a8f 100%); }
+  .lp-desk p { margin: 0; }
+  .lp-menubar { display: flex; align-items: center; gap: calc(var(--u) * 20); height: calc(var(--u) * 26); padding: 0 calc(var(--u) * 16); background: rgba(255, 255, 255, 0.18); color: #fff; font-size: calc(var(--u) * 13.5); }
+  .lp-menubar b { font-weight: 700; }
+  .lp-mb-apple { width: calc(var(--u) * 12); height: calc(var(--u) * 13); border-radius: 50% 50% 45% 45%; background: #fff; }
+  .lp-mb-time { margin-left: auto; font-weight: 500; }
+  .lp-win { position: absolute; left: calc(var(--u) * 120); right: calc(var(--u) * 120); top: calc(var(--u) * 60); bottom: calc(var(--u) * 60); border-radius: calc(var(--u) * 12); background: #fbfbfa; overflow: hidden; box-shadow: 0 calc(var(--u) * 14) calc(var(--u) * 40) rgba(0, 10, 40, 0.45); display: flex; flex-direction: column; }
+  .lp-win-top { position: relative; flex: none; display: flex; align-items: center; gap: calc(var(--u) * 7); height: calc(var(--u) * 42); padding: 0 calc(var(--u) * 13); background: #f2f2f0; border-bottom: 1px solid #e6e6e3; }
+  .lp-tl { width: calc(var(--u) * 11); height: calc(var(--u) * 11); border-radius: 50%; } .lp-tl.lp-r { background: #ff5f57; } .lp-tl.lp-y { background: #febc2e; } .lp-tl.lp-g { background: #28c840; }
+  .lp-win-name { position: absolute; left: 50%; translate: -50% 0; font-size: calc(var(--u) * 13); font-weight: 600; color: #3a3a3c; }
+  .lp-share { margin-left: auto; padding: calc(var(--u) * 4) calc(var(--u) * 12); border-radius: 999px; background: #e8573f; color: #fff; font-size: calc(var(--u) * 11.5); font-weight: 600; }
+  .lp-win-body { flex: 1; display: flex; min-height: 0; }
+  .lp-side { flex: none; width: calc(var(--u) * 150); padding: calc(var(--u) * 18) calc(var(--u) * 8); background: #f5f5f3; border-right: 1px solid #e6e6e3; }
+  .lp-side-cap { padding-left: calc(var(--u) * 8); margin-bottom: calc(var(--u) * 6) !important; font-size: calc(var(--u) * 10); font-weight: 600; color: #8e8e93; letter-spacing: 0.04em; }
+  .lp-agent { display: flex; align-items: center; gap: calc(var(--u) * 8); height: calc(var(--u) * 26); padding: 0 calc(var(--u) * 10); margin-bottom: calc(var(--u) * 4) !important; border-radius: calc(var(--u) * 6); font-size: calc(var(--u) * 12.5); color: #48484a; }
+  .lp-agent i { width: calc(var(--u) * 9); height: calc(var(--u) * 9); border-radius: 50%; background: #c7c7cc; }
+  .lp-agent.lp-on { background: #e4e8f2; color: #1c1c1e; font-weight: 600; } .lp-agent.lp-on i { background: #28c840; }
+  .lp-chat { flex: 1; min-width: 0; padding: calc(var(--u) * 24) calc(var(--u) * 26); display: flex; flex-direction: column; gap: calc(var(--u) * 18); }
+  .lp-msg { display: flex; gap: calc(var(--u) * 10); }
+  .lp-av { flex: none; display: grid; place-items: center; width: calc(var(--u) * 28); height: calc(var(--u) * 28); border-radius: 50%; background: #5b6170; color: #fff; font-size: calc(var(--u) * 13); font-weight: 600; }
+  .lp-av.lp-ok { background: #1f8a3b; font-size: calc(var(--u) * 12); }
+  .lp-who { font-size: calc(var(--u) * 13); font-weight: 600; } .lp-who time { margin-left: calc(var(--u) * 6); font-weight: 400; color: #8e8e93; font-size: calc(var(--u) * 11); }
+  .lp-q { font-size: calc(var(--u) * 15.5); margin-top: calc(var(--u) * 3) !important; }
+  .lp-a { font-size: calc(var(--u) * 14.5); line-height: 1.4; margin-top: calc(var(--u) * 3) !important; }
+  .lp-run { margin-left: calc(var(--u) * 38); padding: calc(var(--u) * 12) calc(var(--u) * 16) calc(var(--u) * 8); border-radius: calc(var(--u) * 10); background: #f4f5f7; box-shadow: inset 0 0 0 1px #e6e6e3; }
+  .lp-run-head { font-size: calc(var(--u) * 12); font-weight: 600; color: #6e6e73; margin-bottom: calc(var(--u) * 6) !important; }
+  .lp-run-head.lp-done { color: #1f8a3b; }
+  .lp-step { display: flex; align-items: center; gap: calc(var(--u) * 10); height: calc(var(--u) * 27); font-size: calc(var(--u) * 13); opacity: 0.4; transition: opacity 300ms; }
+  .lp-step .lp-lbl { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lp-tag { padding: calc(var(--u) * 2) calc(var(--u) * 7); border-radius: 999px; background: #e9eaee; color: #5b5d63; font-size: calc(var(--u) * 10); font-weight: 500; }
+  .lp-dot { position: relative; flex: none; width: calc(var(--u) * 14); height: calc(var(--u) * 14); border-radius: 50%; box-shadow: inset 0 0 0 1.2px #c7c7cc; }
+  .lp-step.lp-run-now { opacity: 1; } .lp-step.lp-run-now .lp-dot { box-shadow: none; border: 1.6px solid #6e6e73; border-right-color: transparent; animation: spin 0.9s linear infinite; }
+  .lp-step.lp-done { opacity: 1; } .lp-step.lp-done .lp-dot { box-shadow: none; background: #d6f2dc; }
+  .lp-step.lp-done .lp-dot::after { content: '✓'; position: absolute; inset: 0; display: grid; place-items: center; font-size: calc(var(--u) * 9.5); font-weight: 700; color: #1f8a3b; }
+  .lp-ans { opacity: 0; translate: 0 calc(var(--u) * 6); transition: opacity 500ms, translate 500ms; }
+  .lp-ans.lp-show { opacity: 1; translate: 0 0; }
+  @keyframes spin { to { rotate: 360deg; } }
+  @media (max-width: 960px) { .lp-lap, .lap { width: 88%; margin: 8px auto 0; } }
+</style>
+
+<script>
+  const ANSWER_AT = 5.2, LOOP = 10.5;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-laptop]').forEach((lap) => {
+    const steps = [...lap.querySelectorAll<HTMLElement>('.lp-step')];
+    const head = lap.querySelector<HTMLElement>('[data-head]')!;
+    const answer = lap.querySelector<HTMLElement>('[data-answer]')!;
+    const render = (t: number) => {
+      steps.forEach((s, i) => {
+        const at = Number(s.dataset.at), prev = i ? Number(steps[i - 1].dataset.at) : 0;
+        s.classList.toggle('lp-done', t >= at);
+        s.classList.toggle('lp-run-now', t < at && t >= prev);
+      });
+      const finished = t >= ANSWER_AT;
+      head.textContent = finished ? 'Done in 4.2 s' : 'Working on it…';
+      head.classList.toggle('lp-done', finished);
+      answer.classList.toggle('lp-show', finished);
+    };
+    if (reduced) { render(99); return; }
+    let visible = false, start = performance.now();
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(lap);
+    setInterval(() => { if (visible) render(((performance.now() - start) / 1000) % LOOP); }, 120);
+    render(0);
+  });
+</script>

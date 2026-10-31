@@ -1,3 +1,9 @@
+@import '@fontsource/schibsted-grotesk/400.css';
+@import '@fontsource/schibsted-grotesk/500.css';
+@import '@fontsource/schibsted-grotesk/600.css';
+@import '@fontsource/schibsted-grotesk/700.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
 :root {
   --ink: #f2f1ee;
   --ink-dim: rgba(242, 241, 238, 0.62);
@@ -648,3 +654,41 @@ body.studio::before { opacity: 0.06 !important; }
 /* case hero: shown when the licensed 3D model isn't present */
 .mb-fallback { max-width: 760px; margin-left: auto; }
 .mb-fallback[hidden] { display: none; }
+
+/* ===========================================================
+   Final polish layer — keep LAST in the file.
+   Later rules win, so phone/tablet layouts must restate here.
+   =========================================================== */
+
+/* Readable labels: min 12px, AA contrast (≥ 4.5:1 on #0b0b0c) */
+:root { --ink-3: #8a8c90; }
+.win-kind { font-size: 11px; color: #8b8a83; }
+.lg-level { font-size: 11px; }
+.brand-who i, .now dt, .w-no, .inc-top, .cn-meta em, .fd-st, .fd-layer { font-size: 12px; }
+.brand-who i, .inc-top, .fd-layer, .cn-meta em { color: var(--ink-3); }
+.chapters a { font-size: 12px; color: #8a8c90; }
+.chapters a span { color: #6f7175; }
+.a-tag { font-size: 11.5px; }
+
+/* Touch targets: ≥ 44px tall on phones without changing the look */
+@media (max-width: 680px) {
+  .links a { padding: 13px 2px; }
+  .links .cta { padding: 8px 14px; }
+  .b-links a { display: inline-block; padding: 12px 0; }
+  .deep summary { padding: 12px 0; }
+  .h-open .h-cta a[href="#about"] { display: none; } /* "About" is already in the nav; keeps the 3 buttons on one row */
+}
+
+/* Stack two-column sections on tablets and phones */
+@media (max-width: 960px) {
+  .rail, .wb, .replay { grid-template-columns: 1fr; gap: 40px; }
+  .wb-side, .replay-stage { position: static; }
+  .rail .acc, .rail > * { min-width: 0; }
+}
+@media (max-width: 680px) {
+  .fd { grid-template-columns: 72px minmax(0, 1fr); }
+  .fd-layer { display: none; }
+}
+
+.crumb { color: var(--ink-3); } .crumb span { color: #5a5c60; }
+.l-no { color: var(--ink-3); }

@@ -1,0 +1,32 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Meta from '../components/Meta.astro';
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Page not found · Nityashree S</title>
+    <meta name="description" content="This page doesn’t exist." />
+    <meta name="robots" content="noindex" />
+    <Meta title="Nityashree S · AI Engineer" description="AI engineer building production AI agents — the platform, the connectors and the security underneath." />
+  </head>
+  <body class="studio home">
+    <Nav />
+    <main>
+      <section class="nf">
+        <p class="kicker">404 · not found</p>
+        <h1>This page fails closed.</h1>
+        <p class="nf-sub">The address doesn’t match anything here. The work is one click away.</p>
+        <div class="h-cta"><a class="btn-solid" href="/#work">See the work</a><a class="btn-line" href="/">Home</a></div>
+      </section>
+    </main>
+  </body>
+</html>
+
+<style>
+  .nf { min-height: 100svh; display: grid; align-content: center; padding: 120px var(--sec-x, 6vw) 80px; }
+  .nf h1 { font-size: clamp(44px, 6vw, 88px); line-height: 1; letter-spacing: -0.045em; font-weight: 600; margin: 18px 0 20px; }
+  .nf-sub { color: var(--ink-2); font-size: 18px; line-height: 1.6; max-width: 520px; margin: 0; }
+</style>
