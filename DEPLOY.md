@@ -59,3 +59,14 @@ model unless you have a licence that permits publishing it.
 
 Schibsted Grotesk and IBM Plex Mono are installed from npm (`@fontsource/*`) and served with the
 site, so there's no dependency on Google Fonts.
+
+## Updating the resume
+
+The resume lives in `resume/resume.html` (public copy: no phone number). Edit the text there, then
+rebuild the PDF the site links to:
+
+```bash
+node resume/make-pdf.mjs   # writes public/Nityashree_S_Resume.pdf
+```
+
+Check it is still one page, commit both files, and the site's Resume buttons serve the new PDF.
