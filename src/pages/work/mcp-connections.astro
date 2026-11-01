@@ -20,8 +20,8 @@ const flow = [
 ];
 
 const chapters = [
-  { title: 'We refused a shared key', text: 'The quick route was one company key for everyone. We said no: apps check permissions against the token’s owner, so a shared key would have shown every person the same documents. Each user signs in with their own account instead — OAuth with PKCE.', tag: 'Per-user access' },
-  { title: 'The vendor ignored our rules, so we moved them', text: 'Some servers are hosted by the vendor and run none of our code — they simply ignore our permission headers. Rather than trust them, we made the gateway enforce permissions one step earlier, before the vendor is ever contacted.', tag: 'Gateway' },
+  { title: 'We refused a shared key', text: 'The quick route was one company key for everyone. We said no: apps check permissions against the token’s owner, so a shared key would have shown every person the same documents. Each user signs in with their own account instead, using OAuth with PKCE.', tag: 'Per-user access' },
+  { title: 'The vendor ignored our rules, so we moved them', text: 'Some servers are hosted by the vendor and run none of our code, so they simply ignore our permission headers. Rather than trust them, we made the gateway enforce permissions one step earlier, before the vendor is ever contacted.', tag: 'Gateway' },
   { title: 'Then we built our own', text: 'A server we didn’t control couldn’t publish its own tool list or check permissions itself, and our copy of its tool list kept drifting. So we put our own MCP server in front: it publishes its tools, checks permissions itself, and never keeps a token between requests.', tag: 'Tested end to end' },
 ];
 
@@ -52,9 +52,9 @@ const connectors = [
 
 const fixes = [
   ['A cancelled call failed its neighbours', 'each caller isolated; the upstream wait bounded'],
-  ['An expired key looked like a platform bug', 'classified as a credential rejection → reconnect'],
+  ['A connector failed every call, silently', 'caught by the new logs; routing fixed'],
   ['Callers could set control headers', 'stripped at the edge'],
-  ['The live catalog drifted from the release', 'drift detected on the live rows'],
+  ['Three status checks disagreed', 'aligned into one answer'],
 ];
 ---
 <!doctype html>
@@ -153,10 +153,10 @@ const fixes = [
           <div class="live-card">
             <div class="bub you">What’s the account code for our newest customer?</div>
             <div class="tool-chip">used <b>knowledge_search_query</b> · found it in a ticket</div>
-            <div class="bub bot">Found it in the onboarding ticket — and here are the tools I used.</div>
+            <div class="bub bot">Found it in the onboarding ticket. Here are the tools I used.</div>
           </div>
           <ol class="how-proved">
-            <li><span>01</span><div><b>I didn’t test it myself</b><p>A teammate asked their own agent — someone who didn’t build it.</p></div></li>
+            <li><span>01</span><div><b>I didn’t test it myself</b><p>A teammate who didn’t build it asked their own agent.</p></div></li>
             <li><span>02</span><div><b>We never named the connector</b><p>Just a normal question, the way anyone at work would ask it.</p></div></li>
             <li><span>03</span><div><b>The agent chose the tool</b><p>It picked the right connector by itself and found the answer in a ticket.</p></div></li>
             <li><span>04</span><div><b>It showed its working</b><p>It named the tools it used, so the answer could be checked.</p></div></li>
@@ -165,7 +165,7 @@ const fixes = [
       </section>
 
       <section class="mx-sec">
-        <div class="story-head"><p class="kicker">Every connection</p><h2>Many apps, one gateway — and what broke along the way.</h2></div>
+        <div class="story-head"><p class="kicker">Every connection</p><h2>Many apps, one gateway, and what broke along the way.</h2></div>
         <ul class="conn-list">
           {connectors.map(([, n, d]) => <li><b>{n}</b><span>{d}</span></li>)}
         </ul>

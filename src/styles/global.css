@@ -983,3 +983,8 @@ html { scroll-behavior: smooth; }
 .mx-svg-m .nt { font: 600 18px var(--sans); }
 .mx-svg-m .nd { font: 12px var(--mono); }
 #pkt-m { fill: #e9e8e4; filter: drop-shadow(0 0 8px rgba(156, 197, 161, 0.9)); }
+
+/* Home case cards: a clearer edge on black, no shine */
+.w-card { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.13), inset 0 1px 0 rgba(255, 255, 255, 0.05); }
+.w-card:hover { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 40px 70px -40px rgba(0, 0, 0, 0.9); }
+.w-art { border-bottom: 1px solid rgba(255, 255, 255, 0.08); }

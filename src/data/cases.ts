@@ -24,10 +24,10 @@ export const cases: Case[] = [
   {
     slug: 'agent-platform', no: '01', ready: true,
     title: 'Building an AI agent platform',
-    intro: 'Teams across a company created their own AI agents, each with skills, memory and tools, working inside their chat apps. I worked on the services underneath: the engine that runs every turn, the studio where agents are made, and the gateways that connect them to chat and to tools.',
+    intro: 'Teams across the company built their own AI agents, with skills, memory and tools, inside their chat apps. I worked on what runs underneath: the engine behind every turn, the studio where agents are made, and the gateways to chat and tools.',
     glance: [
-      ['My role', 'AI engineer on the platform team. I took fixes and features end to end: root cause, failing test, review, release, and watching it after.'],
-      ['Scope', 'A multi-tenant agent platform used by teams across the company: engine, studio, chat and tool gateways.'],
+      ['My role', 'AI engineer on the platform team. I took fixes and features end to end: root cause, failing test, review, release, then watching it.'],
+      ['Scope', 'A multi-tenant agent platform used by teams across the company.'],
       ['Stack', 'Go · TypeScript/React · PostgreSQL · MongoDB · Docker · Kubernetes · AWS'],
       ['Shipped', 'Guest access across five services, a reply-language resolver, per-turn outcome records, and the fix for an outage caused by one bad file.'],
     ],
@@ -89,41 +89,38 @@ export const cases: Case[] = [
       },
     ],
     features: [
-      { name: 'Chat sharing', demo: 'share', icon: 'M8 12a3 3 0 1 0 0-.01M16 6a3 3 0 1 0 0-.01M16 18a3 3 0 1 0 0-.01M10.6 10.7l2.8-1.6M10.6 13.3l2.8 1.6', text: 'Teams wanted to share an agent without sharing their data. I built guest access across five services: per-guest permissions, separate credentials and isolated sessions.' },
-      { name: 'Memory', demo: 'memory', icon: 'M12 3a6 6 0 0 0-6 6c0 2.2 1.2 3.6 2.4 4.6.6.5 1 1.2 1 2V17h5.2v-1.4c0-.8.4-1.5 1-2 1.2-1 2.4-2.4 2.4-4.6a6 6 0 0 0-6-6ZM9.5 20h5', text: 'Agents remember what you asked for, across chats. Sensitive values are redacted before anything is saved.' },
-      { name: 'Language guard', demo: 'guard', icon: 'M4 5h9M8.5 3v2M6 5c.6 3.2 2.6 5.7 5.5 7M11 5c-.8 3.5-3.4 6.4-7 8M13 21l4-9 4 9M14.5 18h5', text: 'Users wrote in more than one language. I built the resolver that decides each reply’s language, ran it in shadow mode, scored it on a labelled test set, then shipped it.' },
-      { name: 'Skills', demo: 'skills', icon: 'M7 4h7l4 4v12H7zM14 4v4h4M10 13h5M10 16h5', text: 'Owners teach agents with small instruction files. The studio checks each file as it is saved and points to the exact line that needs fixing.' },
-      { name: 'Scheduled runs', demo: 'schedule', icon: 'M12 7v5l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z', text: 'Teams wanted morning summaries without asking. Scheduled runs post one clean message to the channel.' },
-      { name: 'Toolkits', demo: 'tools', icon: 'M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4Z', text: 'Agents connect to real apps (logs, code, docs, travel) through one tool gateway. That story is case 02.' },
+      { name: 'Chat sharing', demo: 'share', icon: 'M8 12a3 3 0 1 0 0-.01M16 6a3 3 0 1 0 0-.01M16 18a3 3 0 1 0 0-.01M10.6 10.7l2.8-1.6M10.6 13.3l2.8 1.6', text: 'Share an agent without sharing your data. I built guest access across five services: per-guest permissions, separate credentials, isolated sessions.' },
+      { name: 'Memory', demo: 'memory', icon: 'M12 3a6 6 0 0 0-6 6c0 2.2 1.2 3.6 2.4 4.6.6.5 1 1.2 1 2V17h5.2v-1.4c0-.8.4-1.5 1-2 1.2-1 2.4-2.4 2.4-4.6a6 6 0 0 0-6-6ZM9.5 20h5', text: 'Agents remember how you like answers, across chats.' },
+      { name: 'Reply language', demo: 'guard', icon: 'M4 5h9M8.5 3v2M6 5c.6 3.2 2.6 5.7 5.5 7M11 5c-.8 3.5-3.4 6.4-7 8M13 21l4-9 4 9M14.5 18h5', text: 'People write in more than one language. I built the resolver that picks each reply’s language, ran it in shadow mode, scored it on a labelled test set, then shipped it.' },
+      { name: 'Skills', demo: 'skills', icon: 'M7 4h7l4 4v12H7zM14 4v4h4M10 13h5M10 16h5', text: 'Owners teach agents with small instruction files. The studio checks each one on save and points to the line to fix.' },
+      { name: 'Scheduled runs', demo: 'schedule', icon: 'M12 7v5l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z', text: 'Morning summaries without asking: a scheduled run posts one clean message to the channel.' },
+      { name: 'Toolkits', demo: 'tools', icon: 'M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4Z', text: 'Agents reach real apps (logs, code, docs, travel) through one tool gateway. That’s case 02.' },
     ],
     model: [
-      { title: 'Choosing how the model runs', lane: 'runs', items: [
-        ['fix/settings-per-model-family', 'Settings per model family', 'New model families rejected a setting older ones accepted, so tool calls failed. Settings are now chosen per family.'],
-        ['fix/clamp-tools-to-provider-limit', 'Respecting each provider’s limits', 'Providers cap how many tools one request may carry. Requests are trimmed to the limit instead of failing the turn.'],
-        ['fix/real-context-window', 'Knowing the real context window', 'A routed model name hid the model’s true memory size. The real one is resolved, so long chats aren’t cut short.'],
+      { title: 'How the model runs', lane: 'runs', items: [
+        ['fix/clear-provider-errors', 'Clear failure reasons', 'Every provider error used to show as one vague failure. Each now maps to a precise reason, so people can see what went wrong.'],
+        ['eval/model-not-prompt', 'Model, not prompt', 'Agents ignored instructions and every prompt rewrite failed differently. A small A/B with the prompt held fixed pointed at the model, and the team changed the default.'],
       ]},
-      { title: 'Fencing what the model reads', lane: 'reads', items: [
-        ['fix/untrusted-fence-on-trim', 'Untrusted text stays untrusted', 'Tool results are wrapped in a fence the model treats as data, never instructions — even when the result is cut short.'],
-        ['fix/redact-memory-saves', 'No secrets in memory', 'Sensitive values are redacted before an agent remembers anything.'],
-        ['fix/internal-context-off-channels', 'Internal context stays internal', 'Instructions meant for the agent are blocked from what it posts to a channel.'],
+      { title: 'What the model reads', lane: 'reads', items: [
+        ['fix/untrusted-fence-on-trim', 'Untrusted text stays untrusted', 'One path that shortened long tool results skipped the fence that marks them as data. It uses the fence now.'],
+        ['eval/stale-labels', 'When the answer key is wrong', 'A score dropped after a rule change. The test labels still used the old rule, so I separated real regressions from stale labels and model noise.'],
       ]},
-      { title: 'Checking what it writes', lane: 'writes', items: [
-        ['feat/language-guard', 'Right language, every time', 'An output guard catches a reply in the wrong language and rewrites it — and the rewrite step can’t be talked into anything else.'],
-        ['test/assert-on-the-wire', 'Tests that check the real request', 'Tests assert what is actually sent to the provider, not just what the code meant to send.'],
-        ['feat/log-fallback-model', 'Seeing which model answered', 'When a fallback model steps in, it’s logged, so a quality change is never a mystery.'],
+      { title: 'What it writes', lane: 'writes', items: [
+        ['fix/internal-context-off-channels', 'Internal instructions stay internal', 'A filter stops the agent’s own instructions leaking into replies. Its first version matched words and wrecked good replies in testing, so I rebuilt it to match the leaked section’s shape.'],
+        ['feat/reply-language-resolver', 'The right reply language', 'The resolver ran in shadow mode beside the old logic and was scored on a labelled test set before it went live.'],
       ]},
     ],
     bugs: [
-      { title: 'Deleting an agent hid its history', where: 'engine · studio', symptom: 'once an agent was deleted, its owner could no longer see what it had used', fix: 'the owner keeps read access to the usage history after a delete', deep: 'Usage history was reached through the agent itself, so deleting the agent cut the owner off from records they still needed. Now the owner’s access to that history survives the delete, in both the engine and the studio.' },
-      { title: 'A release broke credentials for every agent', where: 'tool gateway', symptom: 'tool calls lost their credentials', fix: 'rolled back the same day; the missing test now exists', deep: 'A gateway change started refusing calls without an identity, on the premise that the engine sends one on every call. One path never did. The release was rolled back the same day, and the test that was missing is exactly that caller shape: a call that arrives without an identity.' },
-      { title: 'New models could not call tools', where: 'model layer', symptom: 'a provider rejected a setting for a new model family', fix: 'per-family settings and a clearer error', deep: 'A new model family rejected a reasoning setting the engine sent alongside tools, so tool calls failed. Settings are now chosen per model family, and the error names the provider’s reason instead of looking like a platform bug.' },
-      { title: 'A message vanished when a turn stopped early', where: 'engine · chat', symptom: 'the user’s message was never saved', fix: 'save the message the moment the turn is accepted', deep: 'When a turn stopped before the model ran, the user’s message was never written, so it disappeared from the chat. The message is now saved the moment the turn is accepted, and tests cover the failure branches that used to skip the save.' },
+      { title: 'A job said “ok” after a fifth of its work', where: 'engine · scheduled runs', symptom: 'a scheduled job stopped early and still logged success', fix: 'cause found: the step limit, not the rate limit', deep: 'A scheduled job hit its step limit about a fifth of the way through and still recorded success. The chat app’s rate limit looked guilty; the real cause was the step limit. A job that says ok when it isn’t is worse than one that fails loudly.' },
+      { title: 'A release broke credentials for ordinary agents', where: 'tool gateway', symptom: 'tool calls lost their credentials', fix: 'rolled back the same day; the missing test now exists', deep: 'A gateway change refused calls without an identity, on the premise that every caller sends one. One path never did. The release was rolled back the same day, and the test that was missing covers exactly that caller: a call that arrives without an identity.' },
+      { title: 'My own change caused a retry loop', where: 'engine · model catalog', symptom: 'an empty model name was rejected and re-sent every few minutes', fix: 'my mistake, found and fixed', deep: 'A catalog row was missing, so my change sent an empty model name. The engine rejected it, and the request was re-sent every few minutes. It was my mistake. I found it, fixed it, and now check for missing rows before I trust a lookup.' },
+      { title: 'A message vanished when a turn stopped early', where: 'engine · chat', symptom: 'the user’s message was never saved', fix: 'save the message the moment the turn is accepted', deep: 'When a turn stopped before the model ran, the user’s message was never written, so it disappeared from the chat. The message is now saved the moment the turn is accepted, and tests cover both early-failure paths.' },
     ],
   },
   {
     slug: 'mcp-connections', no: '02', ready: true, custom: true,
     title: 'Building MCP connections',
-    intro: 'The connectors that let AI agents use real company apps with each person’s own access, and the gateway every call passes through.',
+    intro: 'Connectors that let AI agents use real company apps with each person’s own access, and the gateway every call passes through.',
     glance: [
       ['My role', 'Built the per-user OAuth (PKCE) connector and its MCP server. Audited the tool gateway and shipped its reliability fixes.'],
       ['Scope', 'Every tool call from every agent on the platform passes through this gateway.'],

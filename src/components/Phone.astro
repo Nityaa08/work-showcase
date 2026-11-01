@@ -3,7 +3,7 @@ import StatusIcons from './StatusIcons.astro';
 const layers = Array.from({ length: 14 }, (_, i) => i);
 const work = [
   { s: 'ok', name: 'feat/guest-access', repo: '5 services', act: '$ go test ./... — ok', href: '/work/agent-platform/' },
-  { s: 'run', name: 'fix/skill-removal-sync', repo: 'agent-platform', act: 'claude · removed skills stay removed', href: '/work/agent-platform/' },
+  { s: 'run', name: 'fix/untrusted-fence-on-trim', repo: 'agent-platform', act: 'claude · fence kept after trimming', href: '/work/agent-platform/' },
   { s: 'ok', name: 'feat/mcp-connector', repo: 'connectors', act: 'tests green · verified on dev' },
   { s: 'wait', name: 'fix/tool-gateway-timeouts', repo: 'gateway', act: 'in review · bounded upstream wait' },
   { s: 'idle', name: 'chore/cve-sweep', repo: 'agent fleet', act: '$ govulncheck ./...' },
@@ -43,9 +43,9 @@ const work = [
   const phone = document.getElementById('phone')!;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const script: [number, string, string][] = [
-    [0, 'run', 'splitting the task in 3'], [0, 'ok', 'plan ready'], [1, 'run', 'writing sync.go'],
+    [0, 'run', 'splitting the task in 3'], [0, 'ok', 'plan ready'], [1, 'run', 'writing trim.go'],
     [2, 'run', 'reading the diff'], [1, 'run', '$ go test ./... '], [1, 'ok', 'tests pass'],
-    [2, 'wait', 'asks: why skip, not delete?'], [2, 'ok', 'approved · PR opened'],
+    [2, 'wait', 'asks: does the fence survive a cut?'], [2, 'ok', 'approved · PR opened'],
   ];
   const rows = [...document.querySelectorAll<HTMLElement>('.agent-row')];
   const set = (n: number, s: string, text: string) => {
