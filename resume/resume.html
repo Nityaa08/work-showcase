@@ -4,9 +4,9 @@
      The public copy has no phone number. The private copy (with phone) is built from the same file
      by replacing the PHONE marker below; it lives in the private ai-career-kit repo, never here. -->
 <style>
-@page{size:A4;margin:11mm 13mm 10mm}
+@page{size:A4;margin:13mm 15mm 12mm}
 *{box-sizing:border-box}
-body{font:9.4pt/1.36 "Helvetica Neue",Helvetica,Arial,sans-serif;color:#1a1a1a;margin:0;background:#fff}
+body{font:9.8pt/1.45 "Helvetica Neue",Helvetica,Arial,sans-serif;color:#1a1a1a;margin:0;background:#fff}
 a{color:#1a1a1a;text-decoration:none;border-bottom:1px solid #b9b9b9}
 header{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding-bottom:7px;border-bottom:1.5px solid #111}
 h1{font-size:22pt;line-height:1;margin:0;letter-spacing:-.3px;font-weight:700}
@@ -14,18 +14,18 @@ h1{font-size:22pt;line-height:1;margin:0;letter-spacing:-.3px;font-weight:700}
 .links{text-align:right;font-size:8.9pt;line-height:1.6;color:#333}
 .links b a{border-bottom-color:#111}
 .sep{color:#aaa;margin:0 5px}
-h2{font-size:8.4pt;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:#111;margin:8px 0 3px;padding-bottom:2px;border-bottom:1px solid #ddd}
+h2{font-size:8.6pt;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:#111;margin:14px 0 5px;padding-bottom:2px;border-bottom:1px solid #ddd}
 .summary{margin:5px 0 0;font-size:9.3pt;color:#222}
-.job{margin-top:5px}
+.job{margin-top:8px}
 .jh{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
 .jt{font-size:10.4pt;font-weight:700}
 .jm{font-size:8.9pt;color:#555;white-space:nowrap}
 .co{font-size:9pt;color:#555;margin:1px 0 2px}
-.grp{font-size:7.8pt;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#666;margin:3px 0 0}
-ul{margin:1px 0 0 14px;padding:0}li{margin:1px 0}
-.proj li{margin:2px 0}
+.grp{font-size:8pt;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#666;margin:7px 0 1px}
+ul{margin:2px 0 0 15px;padding:0}li{margin:3px 0}
+.proj li{margin:5px 0}.lor{font-size:9pt;color:#444;margin:6px 0 0;font-style:italic}.url{color:#555;font-size:8.8pt}
 .pl{font-size:8.6pt;color:#555}
-.skills{display:grid;grid-template-columns:104px 1fr;gap:2px 10px;margin:0}
+.skills{display:grid;grid-template-columns:118px 1fr;gap:2px 10px;margin:0}
 .skills dt{font-weight:700}.skills dd{margin:0}
 .edu{display:flex;justify-content:space-between;gap:12px;margin:1px 0}
 .edu span{color:#555;white-space:nowrap}
@@ -37,8 +37,9 @@ ul{margin:1px 0 0 14px;padding:0}li{margin:1px 0}
     <h1>Nityashree S</h1>
   </div>
   <div class="links">
-    <b><a href="https://nityashree.vercel.app">Portfolio &amp; case studies</a></b><span class="sep">·</span><a href="https://personal-website-rgag.vercel.app">Personal website</a><br>
-    <a href="https://www.linkedin.com/in/nityashree-s-b34b1b291">LinkedIn</a><span class="sep">·</span><a href="https://github.com/Nityaa08">GitHub</a><span class="sep">·</span><a href="mailto:nitya08shree@gmail.com">nitya08shree@gmail.com</a><!--PHONE-->
+    <b><a href="https://nityashree.vercel.app">nityashree.vercel.app</a></b> (portfolio &amp; case studies)<br>
+    <a href="https://www.linkedin.com/in/nityashree-s-b34b1b291">linkedin.com/in/nityashree-s-b34b1b291</a><span class="sep">·</span><a href="https://github.com/Nityaa08">github.com/Nityaa08</a><br>
+    <a href="mailto:nitya08shree@gmail.com">nitya08shree@gmail.com</a><!--PHONE-->
   </div>
 </header>
 
@@ -49,16 +50,33 @@ ul{margin:1px 0 0 14px;padding:0}li{margin:1px 0}
 <div class="job">
   <div class="jh"><span class="jt">AI Engineer</span><span class="jm">Jun 2026 – Present</span></div>
   <div class="co">AI Team · Yuno · Onsite</div>
+
+  <div class="grp">Platform and reliability</div>
   <ul>
     <li>Found why a production agent went offline (one badly formatted instruction file), proved it with a failing test, and fixed it so a single bad file can no longer take an agent down.</li>
     <li>Added time limits, metrics and clear logs to the gateway every agent tool call passes through. The new logs exposed a connector that had been failing silently, which I then fixed.</li>
+  </ul>
+
+  <div class="grp">Access and security</div>
+  <ul>
+    <li>Red-teamed the new agent engine before launch: chained a leaked system prompt into removing the agent’s safety rules and poisoning its memory, and filed 25 bug reports. The fix moved those rules out of the prompt and into the platform.</li>
     <li>Built guest access so people can safely share their AI assistant with teammates, across five services: each guest gets their own permissions and their own conversation.</li>
     <li>Built a connector where each employee signs in with their own account, so their agent can only see what they are allowed to see. Live in production.</li>
     <li>Closed security gaps: a link that could log users out from another website, chat events accepted without proof of origin, and checks that let requests through when a secret was missing (they now refuse).</li>
+  </ul>
+
+  <div class="grp">Evals and model behaviour</div>
+  <ul>
     <li>Built the step that decides which language each agent reply uses, and tested it silently beside the old logic on a labelled test set before release.</li>
     <li>Showed with a small A/B test (same prompt, different model) that the model, not the prompt, made agents ignore instructions; the team changed the default model.</li>
-    <li>Built finance agents: invoice intake, where the model reads and tested code decides, and a mailbox sorter whose projected model cost I cut by changing its schedule after measuring empty runs.</li>
   </ul>
+
+  <div class="grp">Agents for business teams</div>
+  <ul>
+    <li>Built finance agents: invoice intake, where the model reads and tested code decides, and a mailbox sorter whose projected model cost I cut by changing its schedule after measuring empty runs.</li>
+    <li>Worked day to day with teammates and stakeholders across India and Latin America.</li>
+  </ul>
+  <p class="lor">Letter of recommendation from Simón Martínez, VP of AI at Yuno, available on request.</p>
 </div>
 
 <div class="job">
@@ -70,11 +88,11 @@ ul{margin:1px 0 0 14px;padding:0}li{margin:1px 0}
   </ul>
 </div>
 
-<h2>Projects</h2>
+<h2 style="break-before:page;margin-top:0">Projects</h2>
 <ul class="proj">
-  <li><b>Smart Router</b> <span class="pl">· LLM gateway ·</span> <a href="https://github.com/Nityaa08/smart-router">Code</a> — Sends each prompt to a cheaper or stronger AI model by simple rules, falls back if a provider fails, and logs the estimated cost of every request.</li>
-  <li><b>Meridian</b> <span class="pl">· multi-agent research ·</span> <a href="https://github.com/Nityaa08/meridian">Code</a> — A planner agent splits a question, researcher agents search in parallel, a critic agent flags gaps, and every step streams live.</li>
-  <li><b>Cross-Border Fee API</b> <span class="pl">· payments ·</span> <a href="https://github.com/Nityaa08/cross-border-fee-api">Code</a><span class="sep">·</span><a href="https://cross-border-fee-api.vercel.app">Live demo</a> — An itemised price for a Latin American payment: currency spread, provider fees and local taxes.</li>
+  <li><b>Smart Router</b> <span class="pl">· LLM gateway ·</span> <a href="https://github.com/Nityaa08/smart-router">github.com/Nityaa08/smart-router</a> <br>Sends each prompt to a cheaper or stronger AI model by simple rules, falls back if a provider fails, and logs the estimated cost of every request.</li>
+  <li><b>Meridian</b> <span class="pl">· multi-agent research ·</span> <a href="https://github.com/Nityaa08/meridian">github.com/Nityaa08/meridian</a> <br>A planner agent splits a question, researcher agents search in parallel, a critic agent flags gaps, and every step streams live.</li>
+  <li><b>Cross-Border Fee API</b> <span class="pl">· payments ·</span> <a href="https://github.com/Nityaa08/cross-border-fee-api">github.com/Nityaa08/cross-border-fee-api</a><span class="sep">·</span>live: <a href="https://cross-border-fee-api.vercel.app">cross-border-fee-api.vercel.app</a> <br>An itemised price for a Latin American payment: currency spread, provider fees and local taxes.</li>
 </ul>
 
 <h2>Skills</h2>
@@ -83,7 +101,8 @@ ul{margin:1px 0 0 14px;padding:0}li{margin:1px 0}
   <dt>Evals and QA</dt><dd>LLM evals with labelled test sets, shadow testing, A/B model comparison, acceptance testing, root-cause analysis</dd>
   <dt>AI security</dt><dd>Red-teaming, prompt-injection defence, access control, OAuth sign-in, webhook verification</dd>
   <dt>Production</dt><dd>Logging and metrics, incident debugging, feature-flagged releases, LLM cost optimisation</dd>
-  <dt>Ways of working</dt><dd>AI-assisted development (Claude Code), gathering requirements from business teams, payments domain</dd>
+  <dt>Tools</dt><dd>Claude Code, Claude Design, Cursor, DeepSeek, Grok; personal agents in Slack for my pull-request workflow</dd>
+  <dt>Ways of working</dt><dd>Gathering requirements from business teams, payments domain</dd>
 </dl>
 
 <div class="two">
@@ -102,6 +121,8 @@ ul{margin:1px 0 0 14px;padding:0}li{margin:1px 0}
   </div>
 </div>
 
-<p style="margin:10px 0 0;color:#555">Letter of recommendation from Yuno's VP of AI available on request.</p>
 
+<h2>Outside work</h2>
+<p style="margin:0">Reading (a lot) · trained in two Indian classical dance forms since school · yoga · organised large college events with two student clubs and emceed on the main stage</p>
+<!--LANGUAGES-->
 </body></html>
