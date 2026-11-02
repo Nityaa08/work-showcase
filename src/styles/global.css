@@ -1023,3 +1023,15 @@ html { scroll-behavior: smooth; }
 @media (min-width: 961px) and (max-height: 820px) { .how-phone { min-height: 600px; } .phone-wrap { scale: 0.86; } }
 @media (min-width: 961px) and (max-height: 700px) { .how-phone { min-height: 520px; } .phone-wrap { scale: 0.74; } }
 @media (max-width: 680px) { .h-how h2 br { display: none; } }
+
+/* Home: tighter rhythm, no empty screens between sections */
+@media (min-width: 961px) {
+  .home { --sec-y: clamp(64px, 9svh, 96px); }
+  .h-path.light { padding-bottom: clamp(56px, 8svh, 88px); }
+  .h-how .how-phone { min-height: 0 !important; height: clamp(440px, 72svh, 540px); }
+  .h-how .phone-wrap { scale: clamp(0.72, calc(100svh / 1000), 0.9) !important; }
+  .how-row, .h-how { align-items: center; }
+}
+@media (max-width: 960px) { .h-how .how-phone { min-height: 520px; } }
+@media (max-width: 680px) { .h-how .how-phone { min-height: 470px; } }
+@media (min-width: 961px) { .h-how { padding-bottom: clamp(88px, 12svh, 120px) !important; } .h-how .how-phone { height: clamp(460px, 76svh, 560px); } }
