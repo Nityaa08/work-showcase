@@ -1018,3 +1018,8 @@ html { scroll-behavior: smooth; }
   .cs-hero, .mx-hero, .sx-hero { padding-bottom: 7svh !important; }
   .sx-hero { padding-top: 72px !important; }
 }
+
+/* How I work: the phone fits short laptop screens; heading wraps naturally on phones */
+@media (min-width: 961px) and (max-height: 820px) { .how-phone { min-height: 600px; } .phone-wrap { scale: 0.86; } }
+@media (min-width: 961px) and (max-height: 700px) { .how-phone { min-height: 520px; } .phone-wrap { scale: 0.74; } }
+@media (max-width: 680px) { .h-how h2 br { display: none; } }
