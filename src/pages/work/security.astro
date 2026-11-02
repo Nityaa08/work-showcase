@@ -4,6 +4,7 @@ import Nav from '../../components/Nav.astro';
 import Meta from '../../components/Meta.astro';
 import CaseNav from '../../components/CaseNav.astro';
 import Glance from '../../components/Glance.astro';
+import Lessons from '../../components/Lessons.astro';
 import Stage from '../../components/Stage.astro';
 import StagePlayer from '../../components/StagePlayer.astro';
 import { cases, type Stage as StageT } from '../../data/cases';
@@ -141,12 +142,6 @@ const sweep: StageT = { medium: 'shell', label: '~/agent-fleet', lines: [
         </div>
       </section>
 
-      <section class="mx-sec">
-        <div class="story-head"><p class="kicker">How I think about it</p><h2>Four rules I don’t bend.</h2></div>
-        <div class="rule-row">
-          {principles.map(([h, d], i) => <div><span>0{i + 1}</span><h3>{h}</h3><p>{d}</p></div>)}
-        </div>
-      </section>
 
       <section class="mx-sec mx-split">
         <div>
@@ -156,6 +151,7 @@ const sweep: StageT = { medium: 'shell', label: '~/agent-fleet', lines: [
         <Stage stage={sweep} />
       </section>
 
+      <Lessons items={principles.map(([h, d]) => [h.replace(/\.$/, ''), d] as [string, string])} />
       <CaseNav slug={c.slug} />
     </main>
     <StagePlayer />

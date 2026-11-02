@@ -988,3 +988,33 @@ html { scroll-behavior: smooth; }
 .w-card { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.13), inset 0 1px 0 rgba(255, 255, 255, 0.05); }
 .w-card:hover { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 40px 70px -40px rgba(0, 0, 0, 0.9); }
 .w-art { border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+
+/* ===== Case studies: every opening fits one screen (sized by height too) ===== */
+.cs-hero, .mx-hero, .sx-hero { min-height: 100svh !important; padding-top: 84px !important; padding-bottom: 28px !important; align-items: center !important; }
+/* Case 01: laptop never taller than the screen allows */
+.cs-hero .lap, .cs-hero .lp-lap { max-width: min(820px, calc((100svh - 150px) * 1.5)) !important; }
+.cs-hero h1 { font-size: clamp(40px, min(5vw, 10svh), 76px) !important; }
+/* Case 02: title, intro and all five steps sit beside the diagram */
+.mx-head h1 { font-size: clamp(38px, min(5vw, 9svh), 76px) !important; margin: 12px 0 14px !important; }
+.mx-head .cs-intro { font-size: clamp(15px, 2.4svh, 18px); line-height: 1.5; }
+.mx-head .mx-steps { margin-top: clamp(14px, 3svh, 32px); }
+.mx-steps li { padding: clamp(8px, 1.4svh, 14px) 0; }
+.mx-steps p { font-size: 14px; }
+/* Case 03: the six layers fit */
+.sx-head h1 { font-size: clamp(38px, min(5vw, 9svh), 76px) !important; }
+.layer { height: clamp(46px, 7.4svh, 64px); }
+.stack { gap: clamp(6px, 1.2svh, 10px); padding-top: clamp(60px, 9svh, 76px) !important; }
+.attack { height: clamp(44px, 6.6svh, 52px); }
+/* Case 01 features: heading above, demo centred beside all six options */
+.rail-head { margin-bottom: 36px !important; }
+.rail { align-items: center; }
+.rail-item button { padding: clamp(12px, 2.2svh, 22px) 0; }
+.rail-stage .demo { max-height: calc(100svh - 140px); }
+@media (max-width: 960px) {
+  .cs-hero, .mx-hero, .sx-hero { min-height: 0 !important; padding-top: 96px !important; }
+}
+/* Optical centring: content sits a little above the exact middle */
+@media (min-width: 961px) {
+  .cs-hero, .mx-hero, .sx-hero { padding-bottom: 7svh !important; }
+  .sx-hero { padding-top: 72px !important; }
+}
