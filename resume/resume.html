@@ -4,9 +4,9 @@
      The public copy has no phone number. The private copy (with phone) is built from the same file
      by replacing the PHONE marker below; it lives in the private ai-career-kit repo, never here. -->
 <style>
-@page{size:A4;margin:8mm 12mm 7mm}
+@page{size:A4;margin:11mm 13mm 10mm}
 *{box-sizing:border-box}
-body{font:9pt/1.27 "Helvetica Neue",Helvetica,Arial,sans-serif;color:#1a1a1a;margin:0;background:#fff}
+body{font:9.4pt/1.36 "Helvetica Neue",Helvetica,Arial,sans-serif;color:#1a1a1a;margin:0;background:#fff}
 a{color:#1a1a1a;text-decoration:none;border-bottom:1px solid #b9b9b9}
 header{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding-bottom:7px;border-bottom:1.5px solid #111}
 h1{font-size:22pt;line-height:1;margin:0;letter-spacing:-.3px;font-weight:700}
@@ -35,7 +35,7 @@ ul{margin:1px 0 0 14px;padding:0}li{margin:1px 0}
 <header>
   <div>
     <h1>Nityashree S</h1>
-    <div class="role">AI Engineer · AI agents, MCP connectors, guardrails and evals</div>
+    <div class="role">AI Engineer</div>
   </div>
   <div class="links">
     <b><a href="https://nityashree.vercel.app">Portfolio &amp; case studies</a></b><span class="sep">·</span><a href="https://personal-website-rgag.vercel.app">Personal website</a><br>
@@ -43,62 +43,48 @@ ul{margin:1px 0 0 14px;padding:0}li{margin:1px 0}
   </div>
 </header>
 
-<p class="summary">AI Engineer who builds and secures production AI agents: the platform, the tools they connect to, and the guardrails and evals around them. I direct AI coding agents and verify every change before it ships.</p>
+<p class="summary">AI Engineer who builds and secures production AI agents. I direct AI coding agents, and I review and test every change before it ships.</p>
 
 <h2>Experience</h2>
 
 <div class="job">
   <div class="jh"><span class="jt">AI Engineer</span><span class="jm">Jun 2026 – Present</span></div>
-  <div class="co">AI Team · Yuno (payment orchestration) · Onsite</div>
-
-  <div class="grp">Platform and reliability</div>
+  <div class="co">AI Team · Yuno · Onsite</div>
   <ul>
-    <li>Root-caused an outage where one malformed instruction file took a production agent offline; fixed it at save and read time with a failing test first, and stopped the error from echoing untrusted text to the model.</li>
-    <li>Audited the tool gateway every agent tool call passes through; shipped per-backend timeouts, cancellation isolation, metrics and structured logs. The new logs exposed a connector failing silently in production; I fixed its routing.</li>
-    <li>Fixed agent-session failures (orphaned or duplicate tool-call entries that providers rejected; failed turns that lost the user's message) and added a per-turn outcome record to measure agent success in production.</li>
-  </ul>
-
-  <div class="grp">Access and security</div>
-  <ul>
-    <li>Built guest access to personal AI assistants across five services, to rules set by our lead: per-guest permissions, separate credential custody and session isolation; released to production behind a feature switch.</li>
-    <li>Built a per-user OAuth (PKCE) connector so each employee's agent can search only what that employee may see; we chose per-user sign-in over a shared key. Live in production.</li>
-    <li>Closed web-security gaps (a cross-site request forgery logout, unverified webhook events, unset secrets that let calls through, now fail closed) and patched reachable dependency vulnerabilities across several services.</li>
-  </ul>
-
-  <div class="grp">Evals and model behaviour</div>
-  <ul>
-    <li>Built a reply-language resolver that decides which language each agent reply uses; ran it in shadow mode beside the old logic, measured it on a labelled test set, then shipped it to production.</li>
-    <li>Showed with a small A/B test, prompt held fixed, that the model, not the prompt, made prebuilt agents ignore instructions; the team changed the default model.</li>
-  </ul>
-
-  <div class="grp">Agents for business teams</div>
-  <ul>
-    <li>Built finance agents: invoice intake where the model reads and tested code applies the rules, and a mailbox sorter in production whose projected monthly model cost I cut by changing its schedule after measuring an empty run.</li>
+    <li>Found why a production agent went offline (one badly formatted instruction file), proved it with a failing test, and fixed it so a single bad file can no longer take an agent down.</li>
+    <li>Added time limits, metrics and clear logs to the gateway every agent tool call passes through. The new logs exposed a connector that had been failing silently, which I then fixed.</li>
+    <li>Built guest access so people can safely share their AI assistant with teammates, across five services: each guest gets their own permissions and their own conversation.</li>
+    <li>Built a connector where each employee signs in with their own account, so their agent can only see what they are allowed to see. Live in production.</li>
+    <li>Closed security gaps: a link that could log users out from another website, chat events accepted without proof of origin, and checks that let requests through when a secret was missing (they now refuse).</li>
+    <li>Built the step that decides which language each agent reply uses, and tested it silently beside the old logic on a labelled test set before release.</li>
+    <li>Showed with a small A/B test (same prompt, different model) that the model, not the prompt, made agents ignore instructions; the team changed the default model.</li>
+    <li>Built finance agents: invoice intake, where the model reads and tested code decides, and a mailbox sorter whose projected model cost I cut by changing its schedule after measuring empty runs.</li>
   </ul>
 </div>
 
 <div class="job">
   <div class="jh"><span class="jt">Payments Analyst Intern</span><span class="jm">Dec 2025 – Jun 2026</span></div>
-  <div class="co">Office of the CEO · Yuno (payment orchestration) · Onsite</div>
+  <div class="co">Office of the CEO · Yuno · Onsite</div>
   <ul>
-    <li>Built and maintained a payments-capability database of providers, payment methods and markets, and audited it with a documented error taxonomy: duplicates, category mismatches, region errors, unsupported methods.</li>
-    <li>Ran acceptance testing for an internal AI assistant that answers payment-coverage questions: collected test sets from Sales and Business Development, and caught a data error before launch.</li>
+    <li>Built and maintained a database of which payment providers and methods work in which markets, and audited it for errors (duplicates, wrong categories, wrong regions).</li>
+    <li>Tested an internal AI assistant before launch with real questions from Sales and Business Development, and caught a data error behind a wrong answer.</li>
   </ul>
 </div>
 
 <h2>Projects</h2>
 <ul class="proj">
-  <li><b>Smart Router</b> <span class="pl">· Python, FastAPI, PostgreSQL, Redis ·</span> <a href="https://github.com/Nityaa08/smart-router">Code</a> — An OpenAI-compatible LLM gateway: rules route each prompt to a cheaper or stronger model tier, a failing provider falls back to the next tier, and every request logs its estimated cost. Unit tests run in CI.</li>
-  <li><b>Meridian</b> <span class="pl">· Python, FastAPI, asyncio ·</span> <a href="https://github.com/Nityaa08/meridian">Code</a> — A multi-agent research API: a planner splits the question, researchers search in parallel, embeddings rank passages and a critic flags gaps; each stage streams live.</li>
-  <li><b>Cross-Border Fee API</b> <span class="pl">· TypeScript, Express, Jest ·</span> <a href="https://github.com/Nityaa08/cross-border-fee-api">Code</a><span class="sep">·</span><a href="https://cross-border-fee-api.vercel.app">Live demo</a> — An itemised price estimate for Latin American B2B payments (FX spread, provider fees, local taxes), with rates kept separate from the pricing engine; Jest tests.</li>
+  <li><b>Smart Router</b> <span class="pl">· LLM gateway ·</span> <a href="https://github.com/Nityaa08/smart-router">Code</a> — Sends each prompt to a cheaper or stronger AI model by simple rules, falls back if a provider fails, and logs the estimated cost of every request.</li>
+  <li><b>Meridian</b> <span class="pl">· multi-agent research ·</span> <a href="https://github.com/Nityaa08/meridian">Code</a> — A planner agent splits a question, researcher agents search in parallel, a critic agent flags gaps, and every step streams live.</li>
+  <li><b>Cross-Border Fee API</b> <span class="pl">· payments ·</span> <a href="https://github.com/Nityaa08/cross-border-fee-api">Code</a><span class="sep">·</span><a href="https://cross-border-fee-api.vercel.app">Live demo</a> — An itemised price for a Latin American payment: currency spread, provider fees and local taxes.</li>
 </ul>
 
 <h2>Skills</h2>
 <dl class="skills">
-  <dt>AI engineering</dt><dd>LLM agents and tool use, MCP, retrieval and ranking, evals (labelled sets, shadow mode, A/B), guardrails, prompt-injection defence</dd>
-  <dt>Security</dt><dd>OAuth 2.0 / PKCE, multi-tenant isolation, webhook signatures, CSRF, fail-closed design, dependency scanning</dd>
-  <dt>Shipped to</dt><dd>Go, TypeScript/React, Python · PostgreSQL, MongoDB, Redis · Docker, Kubernetes, AWS · Git, GitHub, CI (via AI coding agents)</dd>
-  <dt>How I work</dt><dd>AI-assisted development (Claude Code), failing test first, code review, feature-switched releases</dd>
+  <dt>AI agents</dt><dd>Agent design and tool use, MCP connectors, agent platforms</dd>
+  <dt>Evals</dt><dd>Labelled test sets, shadow testing, A/B tests between models</dd>
+  <dt>AI security</dt><dd>Prompt-injection defence, access control, per-user sign-in (OAuth)</dd>
+  <dt>How I build</dt><dd>Directing AI coding agents (Claude Code), test first, careful review before release</dd>
+  <dt>Domain</dt><dd>Payments</dd>
 </dl>
 
 <div class="two">
@@ -117,7 +103,6 @@ ul{margin:1px 0 0 14px;padding:0}li{margin:1px 0}
   </div>
 </div>
 
-<h2>Talks and recommendations</h2>
-<p style="margin:0">Speaker, internal AI talk series<span class="sep">·</span>Recommended by Simón Martínez, VP of AI at Yuno: “an exceptionally fast learner”, with work “well architected, thoroughly tested, and production-ready” (letter on request)</p>
+<p style="margin:10px 0 0;color:#555">Letter of recommendation from Yuno's VP of AI available on request.</p>
 
 </body></html>
