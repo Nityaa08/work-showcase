@@ -7,55 +7,11 @@ import Glance from '../../components/Glance.astro';
 import Lessons from '../../components/Lessons.astro';
 import Stage from '../../components/Stage.astro';
 import StagePlayer from '../../components/StagePlayer.astro';
-import { cases, type Stage as StageT } from '../../data/cases';
+import { cases } from '../../data/cases';
+import { intro, flow, chapters, nodeNo, tools, proof, connectors, fixes } from '../../data/mcp';
 
 const c = cases.find((x) => x.slug === 'mcp-connections')!;
 
-const flow = [
-  ['Agent asks for a tool', 'An agent decides it needs outside data, so it calls a tool over MCP.'],
-  ['Gateway checks the grant', 'The gateway confirms this agent holds that tool’s permission, and that the tool isn’t switched off.'],
-  ['Vault attaches the user’s token', 'The vault adds the signed-in person’s own token. The agent never sees it.'],
-  ['The MCP server calls the app', 'The connector turns the tool call into a request to the real app.'],
-  ['Only what this person may see', 'The app answers with what this person is allowed to read, and the answer flows back.'],
-];
-
-const chapters = [
-  { title: 'We refused a shared key', text: 'The quick route was one company key for everyone. We said no: apps check permissions against the token’s owner, so a shared key would have shown every person the same documents. Each user signs in with their own account instead, using OAuth with PKCE.', tag: 'Per-user access' },
-  { title: 'The vendor ignored our rules, so we moved them', text: 'Some servers are hosted by the vendor and run none of our code, so they simply ignore our permission headers. Rather than trust them, we made the gateway enforce permissions one step earlier, before the vendor is ever contacted.', tag: 'Gateway' },
-  { title: 'Then we built our own', text: 'A server we didn’t control couldn’t publish its own tool list or check permissions itself, and our copy of its tool list kept drifting. So we put our own MCP server in front: it publishes its tools, checks permissions itself, and never keeps a token between requests.', tag: 'Tested end to end' },
-];
-
-const tools = [
-  ['knowledge_search_query', 'Search', 'knowledge:search:read'],
-  ['knowledge_chat_ask', 'Ask a question', 'knowledge:chat:read'],
-  ['knowledge_documents_read', 'Read a document', 'knowledge:documents:read'],
-];
-
-const proof: StageT = { medium: 'shell', label: '~/connector-mcp', lines: [
-  { t: 'cmd', s: 'go test ./...' },
-  { t: 'ok', s: '✓ the user’s token becomes the outbound credential' },
-  { t: 'ok', s: '✓ two callers in a row never share a token' },
-  { t: 'ok', s: '✓ no credential → refused, the app is never called' },
-  { t: 'ok', s: '✓ a tool without permission never reaches the app' },
-  { t: 'ok', s: '✓ the tool catalog is served without credentials' },
-  { t: 'out', s: 'ok   connector-mcp   all green' },
-]};
-
-const connectors = [
-  ['Kn', 'Company knowledge', 'search, ask, read documents'],
-  ['Ob', 'Observability', 'logs, metrics, monitors'],
-  ['Ch', 'Team chat', 'read and write, scoped'],
-  ['Tr', 'Travel', 'flights and stays'],
-  ['Co', 'Code', 'repositories and pull requests'],
-  ['Da', 'Data', 'saved queries'],
-];
-
-const fixes = [
-  ['A cancelled call failed its neighbours', 'each caller isolated; the upstream wait bounded'],
-  ['A connector failed every call, silently', 'caught by the new logs; routing fixed'],
-  ['Callers could set control headers', 'stripped at the edge'],
-  ['Three status checks disagreed', 'aligned into one answer'],
-];
 ---
 <!doctype html>
 <html lang="en">
@@ -72,7 +28,7 @@ const fixes = [
         <div class="mx-head">
           <p class="kicker">Case {c.no}</p>
           <h1>{c.title}</h1>
-          <p class="cs-intro">MCP is the standard way an AI agent uses a real tool. I built connectors that speak it and hardened the gateway every call passes through, so agents could use company apps without ever holding a key.</p>
+          <p class="cs-intro">{intro}</p>
           <ol class="mx-steps">
             {flow.map(([t, d], i) => <li data-i={i} class:list={{ on: i === 0 }}><span>0{i + 1}</span><div><b>{t}</b><p>{d}</p></div></li>)}
           </ol>
@@ -96,6 +52,7 @@ const fixes = [
             ].map(([id, x, y, w, k, t, d]) => (
               <g class="node" id={String(id)}>
                 <rect x={Number(x)} y={Number(y)} width={Number(w)} height="110" rx="16" />
+                <circle class="nno-c" cx={Number(x) + Number(w) - 26} cy={Number(y) + 27} r="14" /><text class="nno" x={Number(x) + Number(w) - 26} y={Number(y) + 32} text-anchor="middle">{nodeNo[String(id)]}</text>
                 <text x={Number(x) + 18} y={Number(y) + 32} class="nk">{k}</text>
                 <text x={Number(x) + 18} y={Number(y) + 62} class="nt">{t}</text>
                 <text x={Number(x) + 18} y={Number(y) + 88} class="nd">{d}</text>
@@ -108,11 +65,11 @@ const fixes = [
             <path id="e1-m" class="edge dash" d="M240 198 L210 198" />
             <path id="e2-m" class="edge" d="M105 246 L105 300" />
             <path id="e3-m" class="edge" d="M105 396 L105 450" />
-              <g class="node" id="n0-m"><rect x="0" y="0" width="210" height="96" rx="16" /><text x="16" y="28" class="nk">AGENT</text><text x="16" y="58" class="nt">an agent</text><text x="16" y="80" class="nd">MCP client</text></g>
-              <g class="node" id="n1-m"><rect x="0" y="150" width="210" height="96" rx="16" /><text x="16" y="178" class="nk">GATEWAY</text><text x="16" y="208" class="nt">checks access</text><text x="16" y="230" class="nd">scopes · deadline</text></g>
-              <g class="node" id="n4-m"><rect x="240" y="150" width="140" height="96" rx="16" /><text x="256" y="178" class="nk">VAULT</text><text x="256" y="208" class="nt">user’s token</text><text x="256" y="230" class="nd">never shown</text></g>
-              <g class="node" id="n2-m"><rect x="0" y="300" width="210" height="96" rx="16" /><text x="16" y="328" class="nk">MCP SERVER</text><text x="16" y="358" class="nt">our connector</text><text x="16" y="380" class="nd">speaks MCP</text></g>
-              <g class="node" id="n3-m"><rect x="0" y="450" width="210" height="96" rx="16" /><text x="16" y="478" class="nk">APP</text><text x="16" y="508" class="nt">the real app</text><text x="16" y="530" class="nd">docs · logs · …</text></g>
+              <g class="node" id="n0-m"><rect x="0" y="0" width="210" height="96" rx="16" /><circle class="nno-c" cx="186" cy="26" r="13" /><text class="nno" x="186" y="31" text-anchor="middle">1</text><text x="16" y="28" class="nk">AGENT</text><text x="16" y="58" class="nt">an agent</text><text x="16" y="80" class="nd">MCP client</text></g>
+              <g class="node" id="n1-m"><rect x="0" y="150" width="210" height="96" rx="16" /><circle class="nno-c" cx="186" cy="176" r="13" /><text class="nno" x="186" y="181" text-anchor="middle">2</text><text x="16" y="178" class="nk">GATEWAY</text><text x="16" y="208" class="nt">checks access</text><text x="16" y="230" class="nd">scopes · deadline</text></g>
+              <g class="node" id="n4-m"><rect x="240" y="150" width="140" height="96" rx="16" /><circle class="nno-c" cx="356" cy="176" r="13" /><text class="nno" x="356" y="181" text-anchor="middle">3</text><text x="256" y="178" class="nk">VAULT</text><text x="256" y="208" class="nt">user’s token</text><text x="256" y="230" class="nd">never shown</text></g>
+              <g class="node" id="n2-m"><rect x="0" y="300" width="210" height="96" rx="16" /><circle class="nno-c" cx="186" cy="326" r="13" /><text class="nno" x="186" y="331" text-anchor="middle">4</text><text x="16" y="328" class="nk">MCP SERVER</text><text x="16" y="358" class="nt">our connector</text><text x="16" y="380" class="nd">speaks MCP</text></g>
+              <g class="node" id="n3-m"><rect x="0" y="450" width="210" height="96" rx="16" /><circle class="nno-c" cx="186" cy="476" r="13" /><text class="nno" x="186" y="481" text-anchor="middle">5</text><text x="16" y="478" class="nk">APP</text><text x="16" y="508" class="nt">the real app</text><text x="16" y="530" class="nd">docs · logs · …</text></g>
             <circle id="pkt-m" r="7" cx="105" cy="96" />
           </svg>
         </div>
@@ -126,7 +83,7 @@ const fixes = [
             <article class="chap">
               <div class="chap-top"><span class="chap-no">0{i + 1}</span></div>
               <h3>{ch.title}</h3>
-              <p>{ch.text}</p>
+              <p><b>{ch.key}</b> {ch.text}</p>
               <span class="chap-tag">{ch.tag}</span>
             </article>
           ))}
@@ -137,38 +94,48 @@ const fixes = [
         <div>
           <div class="story-head"><p class="kicker">The tools</p><h2>One name, one permission.</h2></div>
           <p class="mx-lede">Every tool is named <code>service_product_action</code> and carries exactly one permission. Moving to our own server was the chance to fix vague names. An agent can only call what its owner granted, checked before the app is contacted.</p>
-          <ul class="tool-list">
-            {tools.map(([n, d, sc]) => <li><code>{n}</code><span>{d}</span><em>{sc}</em></li>)}
-          </ul>
         </div>
-        <div>
-          <div class="story-head"><p class="kicker">The proof</p><h2>We tested it against a fake app first.</h2></div>
-          <Stage stage={proof} />
-        </div>
+        <ul class="tool-list">
+          {tools.map(([n, d, sc]) => <li><code>{n}</code><span>{d}</span><em>{sc}</em></li>)}
+        </ul>
       </section>
 
-      <section class="mx-sec mx-live">
-        <div class="story-head"><p class="kicker">Proven live</p><h2>Ask a question. Don’t name the tool.</h2></div>
-        <div class="live-grid">
+      <section class="mx-sec mx-tested">
+        <div class="story-head"><p class="kicker">How I tested it</p><h2>First against a fake app, then with a real teammate.</h2></div>
+        <div class="tst-part">
+          <div class="tst-text">
+            <p class="tst-no"><span>01</span>Against a fake app</p>
+            <h3>The token rules, proven in tests.</h3>
+            <p class="mx-lede">Before any real app was involved, a fake one checked that each person’s token is used only for them, and that a request without one is refused.</p>
+          </div>
+          <Stage stage={proof} />
+        </div>
+        <div class="tst-part">
+          <div class="tst-text">
+            <p class="tst-no"><span>02</span>With a real teammate</p>
+            <h3>Ask a question. Don’t name the tool.</h3>
+            <ol class="how-proved">
+              <li><span>01</span><div><b>I didn’t test it myself</b><p>A teammate who didn’t build it asked their own agent.</p></div></li>
+              <li><span>02</span><div><b>We never named the connector</b><p>Just a normal question, the way anyone at work would ask it.</p></div></li>
+              <li><span>03</span><div><b>The agent chose the tool</b><p>It picked the right connector by itself and found the answer in a ticket.</p></div></li>
+              <li><span>04</span><div><b>It showed its working</b><p>It named the tools it used, so the answer could be checked.</p></div></li>
+            </ol>
+          </div>
           <div class="live-card">
             <div class="bub you">What’s the account code for our newest customer?</div>
             <div class="tool-chip">used <b>knowledge_search_query</b> · found it in a ticket</div>
             <div class="bub bot">Found it in the onboarding ticket. Here are the tools I used.</div>
           </div>
-          <ol class="how-proved">
-            <li><span>01</span><div><b>I didn’t test it myself</b><p>A teammate who didn’t build it asked their own agent.</p></div></li>
-            <li><span>02</span><div><b>We never named the connector</b><p>Just a normal question, the way anyone at work would ask it.</p></div></li>
-            <li><span>03</span><div><b>The agent chose the tool</b><p>It picked the right connector by itself and found the answer in a ticket.</p></div></li>
-            <li><span>04</span><div><b>It showed its working</b><p>It named the tools it used, so the answer could be checked.</p></div></li>
-          </ol>
         </div>
       </section>
 
-      <section class="mx-sec">
-        <div class="story-head"><p class="kicker">Every connection</p><h2>Many apps, one gateway, and what broke along the way.</h2></div>
+      <section class="mx-sec mx-result">
+        <div class="story-head"><p class="kicker">The result</p><h2>Many apps, one gateway.</h2></div>
+        <p class="mx-lede">Six kinds of connector reach real apps through one gateway. Four things broke along the way, and each one got a fix.</p>
         <ul class="conn-list">
           {connectors.map(([, n, d]) => <li><b>{n}</b><span>{d}</span></li>)}
         </ul>
+        <p class="tst-no fx-head">What broke along the way</p>
         <ul class="fix-list">
           {fixes.map(([a, b]) => <li><span class="b-sym">✕ {a}</span><span class="b-fix">✓ {b}</span></li>)}
         </ul>
@@ -216,6 +183,18 @@ const fixes = [
         }
         if (!reduced && auto) timer = window.setTimeout(() => show((n + 1) % steps.length), Math.max(travel, 700) + 1300);
       }
+      // Reserve room for the longest step description, so switching steps never moves the layout.
+      const list = document.querySelector<HTMLElement>('.mx-steps')!;
+      const reserve = () => {
+        list.style.removeProperty('--mx-d');
+        const ps = [...list.querySelectorAll<HTMLElement>('p')];
+        ps.forEach((p) => (p.style.display = 'block'));
+        const h = Math.max(...ps.map((p) => p.offsetHeight));
+        ps.forEach((p) => (p.style.display = ''));
+        list.style.setProperty('--mx-d', `${h}px`);
+      };
+      reserve(); addEventListener('resize', reserve);
+      document.fonts?.ready.then(reserve);
       let auto = true;
       steps.forEach((s, k) => s.addEventListener('click', () => show(k)));
       show(0);

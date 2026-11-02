@@ -14,7 +14,12 @@
     const alive = () => token.get(f) === run && isActive(f);
     const lines = [...f.querySelectorAll<HTMLElement>('.ln')];
     const cursor = f.querySelector<HTMLElement>('.cursor');
-    lines.forEach((l) => { l.classList.remove('shown'); const t = l.querySelector<HTMLElement>('.txt')!; t.dataset.full ??= t.textContent ?? ''; });
+    // Reserve the finished height up front, so the window never grows while it types (and nothing below it moves).
+    const body = f.querySelector<HTMLElement>('.win-body');
+    lines.forEach((l) => { const t = l.querySelector<HTMLElement>('.txt')!; t.dataset.full ??= t.textContent ?? ''; t.textContent = t.dataset.full; l.classList.add('shown'); });
+    if (cursor && lines.length) lines[lines.length - 1].querySelector('.txt')!.after(cursor); // measure with the cursor where it ends up
+    if (body) { body.style.minHeight = ''; const h = body.offsetHeight; if (h) body.style.minHeight = `${h}px`; }
+    lines.forEach((l) => l.classList.remove('shown'));
     f.classList.add('playing');
     for (const l of lines) {
       if (!alive()) return false;

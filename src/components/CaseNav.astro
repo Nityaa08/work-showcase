@@ -1,33 +1,20 @@
 ---
-import { cases } from '../data/cases';
+// Previous / next case at the end of every case study. Loops around, so there is always a next case.
+import { cases, stackOf } from '../data/cases';
 interface Props { slug: string }
 const { slug } = Astro.props;
 const ready = cases.filter((c) => c.ready);
 const i = ready.findIndex((c) => c.slug === slug);
-const prev = ready[i - 1];
-const next = ready[i + 1];
+const prev = ready[(i - 1 + ready.length) % ready.length];
+const next = ready[(i + 1) % ready.length];
 ---
 <footer class="case-nav">
-  {prev ? (
-    <a class="cn prev" href={`/work/${prev.slug}/`}>
-      <span class="cn-btn" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 8H3M7 4L3 8l4 4"/></svg></span>
-      <span class="cn-meta"><em>Previous · Case {prev.no}</em><b>{prev.title}</b></span>
-    </a>
-  ) : (
-    <a class="cn prev" href="/#work">
-      <span class="cn-btn" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 8H3M7 4L3 8l4 4"/></svg></span>
-      <span class="cn-meta"><em>All work</em><b>Back to the overview</b></span>
-    </a>
-  )}
-  {next ? (
-    <a class="cn next" href={`/work/${next.slug}/`}>
-      <span class="cn-meta"><em>Next · Case {next.no}</em><b>{next.title}</b></span>
-      <span class="cn-btn" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
-    </a>
-  ) : (
-    <a class="cn next" href="/#work">
-      <span class="cn-meta"><em>That’s all three</em><b>Back to all work</b></span>
-      <span class="cn-btn" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 13V3M4 7l4-4 4 4"/></svg></span>
-    </a>
-  )}
+  <a class="cn prev" href={`/work/${prev.slug}/`}>
+    <span class="cn-btn" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 8H3M7 4L3 8l4 4"/></svg></span>
+    <span class="cn-meta"><em>Previous · Case {prev.no}</em><b>{prev.title}</b><span class="cn-stack">{stackOf(prev).map((t) => <i>{t}</i>)}</span></span>
+  </a>
+  <a class="cn next" href={`/work/${next.slug}/`}>
+    <span class="cn-meta"><em>Next · Case {next.no}</em><b>{next.title}</b><span class="cn-stack">{stackOf(next).map((t) => <i>{t}</i>)}</span></span>
+    <span class="cn-btn" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+  </a>
 </footer>

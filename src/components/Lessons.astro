@@ -1,10 +1,10 @@
 ---
-// Closing section for a case study: what the work taught me.
+// Closing section for a case study: what the work taught me. One heading, no separate label.
 interface Props { items: [string, string][]; title?: string }
-const { items, title = 'What this work taught me.' } = Astro.props;
+const { items, title = 'Lessons' } = Astro.props;
 ---
 <section class="lessons">
-  <div class="story-head"><p class="kicker">What I learnt</p><h2>{title}</h2></div>
+  <div class="story-head"><h2>{title}</h2></div>
   <ol class="ls-list">
     {items.map(([h, p], i) => <li><span>0{i + 1}</span><div><h3>{h}</h3><p>{p}</p></div></li>)}
   </ol>

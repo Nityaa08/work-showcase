@@ -1,11 +1,15 @@
 ---
 // Shared favicon and link-preview tags. Put inside <head>, after <title> and the description.
-interface Props { title: string; description: string; path?: string }
+interface Props { title: string; description: string; path?: string; md?: string | false }
 const { title, description, path = '/' } = Astro.props;
+// Plain-markdown twin of this page for AI agents and screeners (built by src/lib/markdown.ts).
+const md = Astro.props.md ?? (path === '/' ? '/index.md' : path.replace(/\/$/, '') + '.md');
 const abs = (p: string) => new URL(p, Astro.site).href;
 ---
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="canonical" href={abs(path)} />
+{md && <link rel="alternate" type="text/markdown" href={md} title="This page as markdown" />}
+<link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt" />
 <meta name="theme-color" content="#0b0b0c" />
 <meta name="author" content="Nityashree S" />
 <meta property="og:type" content="website" />

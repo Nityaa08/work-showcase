@@ -9,6 +9,8 @@ export type Case = {
   model?: ModelWork[];
   custom?: boolean;
   slug: string; no: string; title: string; intro: string; ready: boolean;
+  /** One-sentence opener shown under the case title. */
+  lede?: string;
   card: Stage;
   steps?: Step[];
   features?: Feature[];
@@ -24,6 +26,7 @@ export const cases: Case[] = [
   {
     slug: 'agent-platform', no: '01', ready: true,
     title: 'Building an AI agent platform',
+    lede: 'I worked on the platform under company-wide AI agents: the engine behind every turn, the studio where agents are made, and the gateways to chat and tools.',
     intro: 'Teams across the company built their own AI agents, with skills, memory and tools, inside their chat apps. I worked on what runs underneath: the engine behind every turn, the studio where agents are made, and the gateways to chat and tools.',
     glance: [
       ['My role', 'AI engineer on the platform team. I took fixes and features end to end: root cause, failing test, review, release, then watching it.'],
@@ -155,3 +158,7 @@ export const cases: Case[] = [
     ]},
   },
 ];
+
+/** The project's stack, from the "at a glance" strip, as a list of tags. */
+export const stackOf = (c: Case | undefined) =>
+  (c?.glance?.find(([k]) => k === 'Stack')?.[1] ?? '').split(' · ').map((t) => t.trim()).filter(Boolean);

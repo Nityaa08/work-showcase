@@ -15,7 +15,7 @@ import CaseNav from '../../components/CaseNav.astro';
 import Glance from '../../components/Glance.astro';
 import Lessons from '../../components/Lessons.astro';
 import Incidents from '../../components/Incidents.astro';
-import { cases } from '../../data/cases';
+import { cases, stackOf } from '../../data/cases';
 
 export function getStaticPaths() {
   return cases.filter((c) => c.ready && !c.custom).map((c) => ({ params: { slug: c.slug }, props: { c } }));
@@ -58,7 +58,8 @@ const process = (c.steps ?? []).map((s) => ({ label: s.state, heading: s.heading
         <div class="cs-hero-text">
           <p class="kicker">Case {c.no}</p>
           <h1>{c.title}</h1>
-          <p class="cs-intro">{c.intro}</p>
+          <p class="cs-intro">{c.lede ?? c.intro}</p>
+          <ul class="cs-stack" aria-label="Stack">{stackOf(c).map((t) => <li>{t}</li>)}</ul>
         </div>
         <div class="cs-hero-visual">{has3D ? <MacBook3D><Stage stage={c.steps?.[1]?.stage ?? c.card} /></MacBook3D> : <Laptop />}</div>
       </section>

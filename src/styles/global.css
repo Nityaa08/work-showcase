@@ -1035,3 +1035,177 @@ html { scroll-behavior: smooth; }
 @media (max-width: 960px) { .h-how .how-phone { min-height: 520px; } }
 @media (max-width: 680px) { .h-how .how-phone { min-height: 470px; } }
 @media (min-width: 961px) { .h-how { padding-bottom: clamp(88px, 12svh, 120px) !important; } .h-how .how-phone { height: clamp(460px, 76svh, 560px); } }
+
+/* =====================================================================
+   Round 6: Rishi's review (see REVIEW-RISHI.md). Appended last on purpose:
+   later rules win over everything above.
+   ===================================================================== */
+
+/* --- Nav (#3, #4): round photo instead of "NS", no subtitle, Resume link --- */
+.avatar { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; flex: none; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.16); background: #2a2a2c; }
+.nav.on-light .avatar { box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12); }
+.brand { gap: 10px; }
+@media (max-width: 680px) { .links { gap: 12px; } .links a:not(.cta) { padding: 13px 0; } }
+@media (max-width: 380px) { .links { gap: 10px; font-size: 13px; } .links .cta { padding: 7px 10px; } }
+
+/* --- Hero (#5 to #8): small hello, big role line, capability tags, three case links --- */
+.h-hi { margin: 0 0 18px; font: 500 clamp(17px, 1.5vw, 20px) var(--sans); letter-spacing: -0.01em; color: #55575c; }
+.h-open h1 { font-size: clamp(38px, 4.6vw, 70px); line-height: 1.02; letter-spacing: -0.045em; max-width: 13ch; margin: 0; }
+.h-tags { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 26px 0 0; padding: 0; }
+.h-tags li { font: 500 13px var(--mono); padding: 7px 12px; border-radius: 999px; color: #2c2d30; background: rgba(0, 0, 0, 0.045); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1); }
+.h-cases { display: grid; gap: 0; margin-top: 32px; max-width: 480px; border-top: 1px solid rgba(0, 0, 0, 0.1); }
+.h-case { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 52px; padding: 0 4px; border-bottom: 1px solid rgba(0, 0, 0, 0.1); font-size: 16.5px; font-weight: 600; letter-spacing: -0.01em; color: #0b0b0c; transition: padding 250ms var(--ease), color 250ms; }
+.h-case i { font-style: normal; font-weight: 400; color: #75777c; transition: transform 250ms var(--ease), color 250ms; }
+.h-case:hover { padding-left: 10px; } .h-case:hover i { transform: translateX(4px); color: #0b0b0c; }
+.h-resume { display: inline-block; margin-top: 18px; padding: 6px 0; font: 13.5px var(--mono); color: #55575c; text-decoration: underline; text-decoration-color: rgba(0, 0, 0, 0.2); text-underline-offset: 4px; }
+.h-resume:hover { color: #0b0b0c; text-decoration-color: currentColor; }
+@media (min-width: 961px) { .h-open { grid-template-columns: minmax(0, 1fr) minmax(0, 0.62fr); } .h-open-text { padding-top: 12px; } }
+.photo { width: min(405px, 100%); }
+@media (max-width: 960px) {
+  .h-open-text { padding-top: 0; }
+  .photo { width: min(300px, 70vw); }
+}
+@media (max-width: 680px) {
+  .photo { width: min(255px, 66vw); }
+  .h-open h1 { font-size: clamp(34px, 9.6vw, 44px); }
+  .h-case { font-size: 15.5px; }
+}
+
+/* --- Work (#11 to #14): plain heading, visible stack tags, an in-progress card --- */
+.h-work .story-head h2 { margin-top: 0; }
+.w-stack { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 0; padding: 0; }
+.w-stack li { font: 12px/1 var(--mono); padding: 6px 9px; border-radius: 7px; color: #e4e3df; background: rgba(255, 255, 255, 0.06); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12); }
+.w-no { font-size: 12px; }
+.w-wip { grid-column: 1 / -1; flex-direction: row; align-items: center; gap: 28px; padding: 22px 26px; background: transparent; box-shadow: none !important; border: 1px dashed rgba(255, 255, 255, 0.22); transform: none !important; }
+.w-wip .w-meta { padding: 0; gap: 6px; }
+.w-wip h3 { margin: 0; }
+.w-badge { flex: none; display: inline-flex; align-items: center; gap: 8px; font: 500 12px var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: #f0d08a; padding: 7px 12px; border-radius: 999px; background: rgba(245, 196, 81, 0.08); box-shadow: inset 0 0 0 1px rgba(245, 196, 81, 0.3); }
+.w-badge i { width: 7px; height: 7px; border-radius: 50%; background: #f5c451; animation: wip 1.8s ease-in-out infinite; }
+@keyframes wip { 50% { opacity: 0.35; } }
+@media (max-width: 1100px) and (min-width: 681px) { .w-wip { display: flex; } }
+@media (max-width: 680px) { .w-wip { flex-direction: column; align-items: flex-start; gap: 14px; padding: 20px; } }
+@media (prefers-reduced-motion: reduce) { .w-badge i { animation: none; } }
+
+/* --- How I work (#15): one honest tools line --- */
+.how-tools { max-width: 500px; margin: 28px 0 0 !important; padding-top: 18px; border-top: 1px solid var(--hair); font-size: 15px !important; line-height: 1.6; color: var(--ink-2); }
+
+/* --- Section rhythm (#9, #10): work and how (dark), then path, outside, contact (light) --- */
+.h-work { border-top: 0; }
+.h-how { border-top: 1px solid var(--hair); }
+.h-path.light { padding-top: var(--sec-y); border-top: 0; }
+.h-outside.light, .h-contact.light { border-top: 1px solid rgba(0, 0, 0, 0.07); }
+
+/* --- Outside work (#16, #17) --- */
+.h-outside { padding-top: var(--sec-y); padding-bottom: var(--sec-y); }
+.h-outside h2 { font-size: clamp(28px, 3vw, 42px); line-height: 1.05; letter-spacing: -0.035em; font-weight: 600; margin: 12px 0 0; }
+.ow-list { list-style: none; margin: 36px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+.ow-list li { display: grid; grid-template-columns: 22px 1fr; gap: 14px; align-items: start; padding: 20px; border-radius: 16px; background: #fff; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.07), 0 1px 2px rgba(0, 0, 0, 0.03); }
+.ow-list svg { color: #3f7a4c; margin-top: 1px; }
+.ow-list h3 { margin: 0 0 4px; font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
+.ow-list p { margin: 0; font-size: 14.5px; line-height: 1.5; color: var(--ink-2); }
+@media (max-width: 680px) { .ow-list { grid-template-columns: 1fr; gap: 10px; } .ow-list li { padding: 16px 18px; } }
+
+/* --- Contact (#18 to #20): quieter heading, icons, no subtitles --- */
+.h-contact, .h-contact.light { display: block; padding-top: clamp(56px, 8svh, 88px); padding-bottom: clamp(56px, 8svh, 88px); }
+.h-contact .ct-text h2 { font-size: clamp(24px, 2.2vw, 32px); letter-spacing: -0.03em; margin: 10px 0 24px; }
+.h-contact .ct-cards { grid-template-columns: minmax(0, 1.7fr) repeat(3, minmax(0, 1fr)); gap: 12px; }
+.h-contact .ct-card a { display: grid; grid-template-columns: 22px minmax(0, 1fr); grid-template-rows: auto auto; column-gap: 14px; row-gap: 2px; align-items: center; padding: 16px 18px; }
+.ct-ic { grid-row: span 2; color: #3a3b3f; }
+.ct-mail .ct-ic { color: #ecebe6; }
+.h-contact .ct-card b { font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.h-contact .ct-mail a { padding-right: 96px; }
+@media (max-width: 1100px) { .h-contact .ct-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); } .h-contact .ct-mail { grid-column: 1 / -1; } }
+@media (max-width: 680px) {
+  .h-contact .ct-cards { grid-template-columns: 1fr; }
+  .h-contact .ct-mail b { font-size: clamp(14px, 4.2vw, 16px); }
+}
+
+/* --- Terminals (#25): lines not yet typed keep their space, so a window never grows while it plays --- */
+[data-stage] .ln { display: block; visibility: hidden; }
+[data-stage] .ln.shown { visibility: visible; }
+[data-stage] .logrow, [data-stage] .logrow.shown { display: grid; }
+[data-stage].m-logs .t-cmd, [data-stage].m-logs .t-cmd.shown { display: flex; }
+@media (max-width: 680px) { [data-stage] .logrow, [data-stage] .logrow.shown { display: grid; } }
+
+/* --- Case 01 opening (#21, #22, #23): smaller title, one-line intro, stack tags, laptop caption --- */
+.cs-hero h1 { font-size: clamp(32px, min(3.6vw, 7.4svh), 54px) !important; line-height: 1.04; margin: 14px 0 16px; }
+.cs-hero .cs-intro { font-size: clamp(15px, 2.5svh, 17px); max-width: 420px; }
+.cs-stack, .cn-stack { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 22px 0 0; padding: 0; max-width: 440px; }
+.cs-stack li, .cn-stack i { font: normal 12px/1 var(--mono); padding: 6px 9px; border-radius: 7px; color: #e4e3df; background: rgba(255, 255, 255, 0.06); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12); }
+.cs-hero .lap, .cs-hero .lp-lap { max-width: min(800px, calc((100svh - 240px) * 1.5)) !important; }
+@media (max-width: 960px) { .cs-hero .lap { max-width: none !important; } }
+
+/* --- Case navigation (#27): loops around, with the next case's stack --- */
+.cn-stack { margin-top: 10px; gap: 5px; }
+.cn-stack i { font-size: 11px; padding: 5px 7px; }
+.cn.next .cn-stack { justify-content: flex-end; margin-left: auto; }
+.cn { align-items: center; }
+.lessons .story-head h2 { margin-top: 0; }
+
+/* --- Case 02 (#28 to #32) --- */
+/* steps: room for the longest description is reserved, so the list never jumps */
+.mx-steps li.on p { min-height: var(--mx-d, auto); }
+/* numbers on the diagram boxes match the numbered steps */
+.nno-c { fill: #0e0e10; stroke: rgba(255, 255, 255, 0.18); stroke-width: 1.2; transition: stroke 400ms, fill 400ms; }
+.nno { font: 500 13px var(--mono); fill: #8c8e92; transition: fill 400ms; }
+.node.on .nno-c { stroke: #9cc5a1; fill: rgba(156, 197, 161, 0.12); }
+.node.on .nno { fill: #cfe6d2; }
+/* decisions: one bold key line, shorter reason */
+.chap p b { display: block; margin-bottom: 8px; color: #ecebe6; font-weight: 600; font-size: 16.5px; line-height: 1.45; }
+/* the tools section stands alone now */
+.mx-split .tool-list { margin-top: 8px; }
+/* how I tested it: two parts */
+.tst-part { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 56px; align-items: start; padding: 36px 0; border-top: 1px solid var(--hair); }
+.tst-part:last-child { padding-bottom: 0; }
+.tst-no { display: flex; gap: 12px; margin: 0 0 12px; font: 500 12px var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+.tst-no span { color: #9cc5a1; }
+.tst-text h3 { margin: 0 0 14px; font-size: clamp(22px, 2.2vw, 30px); letter-spacing: -0.03em; line-height: 1.12; font-weight: 600; }
+.tst-text .mx-lede { margin-bottom: 0; }
+.tst-part .live-card { margin: 0; max-width: none; }
+.mx-tested .how-proved { margin-top: 4px; }
+/* the result */
+.mx-result .mx-lede { margin-bottom: 28px; }
+.fx-head { margin-top: 8px; }
+@media (max-width: 960px) { .tst-part { grid-template-columns: 1fr; gap: 28px; } }
+
+/* --- Case 03 (#33 to #35) --- */
+/* counter under the looping layer stack */
+.sx-count { display: flex; align-items: baseline; gap: 12px; margin: 4px 0 0; font: 12px var(--mono); color: var(--ink-3); }
+.sx-count b { font-weight: 500; color: #9cc5a1; min-width: 3.4em; }
+/* every finding in one table */
+.fx-table-wrap { margin: 0 0 40px; overflow-x: auto; }
+.fx-table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.45; }
+.fx-table caption { text-align: left; margin-bottom: 12px; font: 500 12px var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+.fx-table th { text-align: left; padding: 0 16px 10px 0; font: 500 11.5px var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); border-bottom: 1px solid rgba(255, 255, 255, 0.14); }
+.fx-table td { padding: 11px 16px 11px 0; border-bottom: 1px solid var(--hair); vertical-align: top; }
+.fx-l { font: 12px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); white-space: nowrap; padding-top: 13px !important; }
+.fx-a { color: #e4e3df; width: 34%; }
+.fx-b, .fx-n { font: 12.5px/1.5 var(--mono); }
+.fx-b { color: #e5a198; } .fx-n { color: #9cc5a1; }
+.fx-b::before { content: '✕ '; } .fx-n::before { content: '✓ '; }
+/* replay: obvious that rows are clickable, and which one is playing */
+.fd-hint { display: flex; align-items: center; gap: 10px; margin: 0 0 16px; font-size: 14.5px; color: var(--ink-2); }
+.fd-hint-ic { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; font-size: 9px; color: #0b0b0b; background: #9cc5a1; }
+.fd { position: relative; grid-template-columns: 62px 74px minmax(0, 1fr) auto; }
+.fd-go { font: 11.5px var(--mono); color: var(--ink-3); white-space: nowrap; }
+.fd-now { display: none; color: #9cc5a1; }
+.fd.on .fd-now { display: inline; } .fd.on .fd-play { display: none; }
+.fd:hover .fd-play { color: #ecebe6; }
+.fd-txt { grid-column: 2 / -1; }
+.fd-bar { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; overflow: hidden; pointer-events: none; }
+.fd-bar i { display: block; height: 100%; background: #9cc5a1; transform: scaleX(0); transform-origin: left; }
+.fd.on.run .fd-bar i { animation: fdbar var(--fd-step, 6500ms) linear forwards; }
+@keyframes fdbar { to { transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) { .fd.on.run .fd-bar i { animation: none; } }
+@media (max-width: 680px) {
+  .fd { grid-template-columns: 72px minmax(0, 1fr) auto; }
+  .fx-table, .fx-table tbody, .fx-table tr, .fx-table td { display: block; width: auto; }
+  .fx-table thead { display: none; }
+  .fx-table tr { padding: 12px 0; border-bottom: 1px solid var(--hair); }
+  .fx-table td { padding: 2px 0 !important; border: 0; }
+}
+/* the phone's shadow stays inside its dark section now that a light section follows */
+.h-how { overflow: clip; }
+/* before a terminal first plays, its cursor takes no line of its own (so the reserved height is the final height) */
+.win-body > .cursor { position: absolute; visibility: hidden; }
+@media (max-width: 680px) { .fx-table caption { display: block; width: auto; } }

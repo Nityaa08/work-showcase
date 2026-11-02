@@ -4,13 +4,14 @@ const { crumb, active } = Astro.props;
 ---
 <header class="nav" id="nav">
   <a class="brand" href="/">
-    <span class="mark">NS</span>
-    <span class="brand-who"><b>Nityashree S</b><i>AI Engineer</i></span>
+    <img class="avatar" src="/avatar.webp" alt="" width="34" height="34" />
+    <span class="brand-who"><b>Nityashree S</b></span>
   </a>
   {crumb && <span class="crumb"><a href="/#work">Work</a><span>/</span>{crumb}</span>}
   <nav class="links" aria-label="Main">
-    <a href="/#about" aria-current={active === 'about' ? 'page' : undefined}>About</a>
     <a href="/#work" aria-current={active === 'work' ? 'page' : undefined}>Work</a>
+    <a href="/#about" aria-current={active === 'about' ? 'page' : undefined}>About</a>
+    <a href="/Nityashree_S_Resume.pdf" target="_blank" rel="noopener">Resume</a>
     <a class="cta" href="/#contact">Contact</a>
   </nav>
 </header>
