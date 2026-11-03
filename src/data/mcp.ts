@@ -12,7 +12,7 @@ export const flow = [
 
 // Each decision: the one line that matters (bold), then the reason in a sentence.
 export const chapters = [
-  { title: 'We refused a shared key', key: 'Each person signs in with their own account, using OAuth with PKCE.', text: 'Apps check permissions against the token’s owner, so one company key would have shown everyone the same documents.', tag: 'Per-user access' },
+  { title: 'We refused a shared key', key: 'Each person signs in with their own account, using OAuth with PKCE.', text: 'Apps check permissions against the token’s owner, so a shared company key would have shown everyone the same documents.', tag: 'Per-user access' },
   { title: 'The vendor ignored our rules, so we moved them', key: 'The gateway enforces permissions before the vendor is ever contacted.', text: 'Vendor-hosted servers run none of our code, so they ignored our permission headers.', tag: 'Gateway' },
   { title: 'Then we built our own', key: 'Our own MCP server publishes its tools, checks permissions itself, and never keeps a token between requests.', text: 'The vendor’s server couldn’t, and our copy of its tool list kept drifting.', tag: 'Tested end to end' },
 ];
@@ -28,7 +28,7 @@ export const tools = [
 export const proof: StageT = { medium: 'shell', label: '~/connector-mcp', lines: [
   { t: 'cmd', s: 'go test ./...' },
   { t: 'ok', s: '✓ the user’s token becomes the outbound credential' },
-  { t: 'ok', s: '✓ two callers in a row never share a token' },
+  { t: 'ok', s: '✓ back-to-back callers never share a token' },
   { t: 'ok', s: '✓ no credential → refused, the app is never called' },
   { t: 'ok', s: '✓ a tool without permission never reaches the app' },
   { t: 'ok', s: '✓ the tool catalog is served without credentials' },
@@ -48,5 +48,5 @@ export const fixes = [
   ['A cancelled call failed its neighbours', 'each caller isolated; the upstream wait bounded'],
   ['A connector failed every call, silently', 'caught by the new logs; routing fixed'],
   ['Callers could set control headers', 'stripped at the edge'],
-  ['Three status checks disagreed', 'aligned into one answer'],
+  ['Status checks disagreed', 'aligned into a single answer'],
 ];

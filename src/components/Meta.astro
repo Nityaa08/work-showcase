@@ -7,6 +7,10 @@ const md = Astro.props.md ?? (path === '/' ? '/index.md' : path.replace(/\/$/, '
 const abs = (p: string) => new URL(p, Astro.site).href;
 ---
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+<link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 <link rel="canonical" href={abs(path)} />
 {md && <link rel="alternate" type="text/markdown" href={md} title="This page as markdown" />}
 <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt" />

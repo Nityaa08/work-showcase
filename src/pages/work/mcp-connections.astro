@@ -26,6 +26,7 @@ const c = cases.find((x) => x.slug === 'mcp-connections')!;
     <main>
       <section class="mx-hero">
         <div class="mx-head">
+          <a class="cs-back" href="/#work"><span aria-hidden="true">←</span> All work</a>
           <p class="kicker">Case {c.no}</p>
           <h1>{c.title}</h1>
           <p class="cs-intro">{intro}</p>
@@ -77,7 +78,7 @@ const c = cases.find((x) => x.slug === 'mcp-connections')!;
       {c.glance && <section class="glance-sec"><Glance items={c.glance} /></section>}
 
       <section class="mx-sec">
-        <div class="story-head"><p class="kicker">How we decided</p><h2>Three decisions that shaped every connector.</h2></div>
+        <div class="story-head"><p class="kicker">How we decided</p><h2>The decisions that shaped every connector.</h2></div>
         <div class="chapters-row">
           {chapters.map((ch, i) => (
             <article class="chap">
@@ -131,7 +132,7 @@ const c = cases.find((x) => x.slug === 'mcp-connections')!;
 
       <section class="mx-sec mx-result">
         <div class="story-head"><p class="kicker">The result</p><h2>Many apps, one gateway.</h2></div>
-        <p class="mx-lede">Six kinds of connector reach real apps through one gateway. Four things broke along the way, and each one got a fix.</p>
+        <p class="mx-lede">Connectors for many kinds of app, all reached through the same gateway. Some things broke along the way, and each one got a fix.</p>
         <ul class="conn-list">
           {connectors.map(([, n, d]) => <li><b>{n}</b><span>{d}</span></li>)}
         </ul>

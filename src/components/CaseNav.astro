@@ -1,20 +1,23 @@
 ---
-// Previous / next case at the end of every case study. Loops around, so there is always a next case.
-import { cases, stackOf } from '../data/cases';
+// Previous / next case at the end of every case study. No loop-around: the first case
+// points back to all work, the last one back home.
+import { cases } from '../data/cases';
 interface Props { slug: string }
 const { slug } = Astro.props;
 const ready = cases.filter((c) => c.ready);
 const i = ready.findIndex((c) => c.slug === slug);
-const prev = ready[(i - 1 + ready.length) % ready.length];
-const next = ready[(i + 1) % ready.length];
+const prev = ready[i - 1];
+const next = ready[i + 1];
+const left = prev ? { href: `/work/${prev.slug}/`, k: 'Previous case', t: prev.title } : { href: '/#work', k: '', t: 'All work' };
+const right = next ? { href: `/work/${next.slug}/`, k: 'Next case', t: next.title } : { href: '/', k: '', t: 'Back to home' };
 ---
 <footer class="case-nav">
-  <a class="cn prev" href={`/work/${prev.slug}/`}>
+  <a class="cn prev" href={left.href}>
     <span class="cn-btn" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 8H3M7 4L3 8l4 4"/></svg></span>
-    <span class="cn-meta"><em>Previous · Case {prev.no}</em><b>{prev.title}</b><span class="cn-stack">{stackOf(prev).map((t) => <i>{t}</i>)}</span></span>
+    <span class="cn-meta">{left.k && <em>{left.k}</em>}<b>{left.t}</b></span>
   </a>
-  <a class="cn next" href={`/work/${next.slug}/`}>
-    <span class="cn-meta"><em>Next · Case {next.no}</em><b>{next.title}</b><span class="cn-stack">{stackOf(next).map((t) => <i>{t}</i>)}</span></span>
+  <a class="cn next" href={right.href}>
+    <span class="cn-meta">{right.k && <em>{right.k}</em>}<b>{right.t}</b></span>
     <span class="cn-btn" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
   </a>
 </footer>

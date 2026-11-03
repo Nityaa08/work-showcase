@@ -2,7 +2,7 @@
 import StatusIcons from './StatusIcons.astro';
 const layers = Array.from({ length: 14 }, (_, i) => i);
 const work = [
-  { s: 'ok', name: 'feat/guest-access', repo: '5 services', act: '$ go test ./... — ok', href: '/work/agent-platform/' },
+  { s: 'ok', name: 'feat/guest-access', repo: 'across services', act: '$ go test ./... — ok', href: '/work/agent-platform/' },
   { s: 'run', name: 'fix/untrusted-fence-on-trim', repo: 'agent-platform', act: 'claude · fence kept after trimming', href: '/work/agent-platform/' },
   { s: 'ok', name: 'feat/mcp-connector', repo: 'connectors', act: 'tests green · verified on dev' },
   { s: 'wait', name: 'fix/tool-gateway-timeouts', repo: 'gateway', act: 'in review · bounded upstream wait' },
@@ -19,7 +19,7 @@ const work = [
         <div class="list-head"><i class="d ok" /><b>MacBook Pro</b><span>connected</span></div>
         <div class="live" id="live">
           <p class="cap">Running now</p>
-          <div class="agent-row" data-agent="0"><i class="d run" /><b>planner</b><span class="a-act">splitting the task in 3</span></div>
+          <div class="agent-row" data-agent="0"><i class="d run" /><b>planner</b><span class="a-act">splitting the task</span></div>
           <div class="agent-row" data-agent="1"><i class="d idle" /><b>coder</b><span class="a-act">queued</span></div>
           <div class="agent-row" data-agent="2"><i class="d idle" /><b>reviewer</b><span class="a-act">queued</span></div>
         </div>
@@ -43,7 +43,7 @@ const work = [
   const phone = document.getElementById('phone')!;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const script: [number, string, string][] = [
-    [0, 'run', 'splitting the task in 3'], [0, 'ok', 'plan ready'], [1, 'run', 'writing trim.go'],
+    [0, 'run', 'splitting the task'], [0, 'ok', 'plan ready'], [1, 'run', 'writing trim.go'],
     [2, 'run', 'reading the diff'], [1, 'run', '$ go test ./... '], [1, 'ok', 'tests pass'],
     [2, 'wait', 'asks: does the fence survive a cut?'], [2, 'ok', 'approved · PR opened'],
   ];
@@ -56,7 +56,7 @@ const work = [
   if (!reduced) {
     (async () => {
       while (true) {
-        rows.forEach((_, n) => set(n, n ? 'idle' : 'run', n ? 'queued' : 'splitting the task in 3'));
+        rows.forEach((_, n) => set(n, n ? 'idle' : 'run', n ? 'queued' : 'splitting the task'));
         for (const [n, s, t] of script) { await new Promise((r) => setTimeout(r, 1500)); set(n, s, t); }
         await new Promise((r) => setTimeout(r, 3500));
       }

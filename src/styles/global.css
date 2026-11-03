@@ -474,7 +474,7 @@ body.studio::before { opacity: 0.06 !important; }
 .cn { display: flex; align-items: center; gap: 18px; padding: 16px 18px; border-radius: 18px; min-width: min(420px, 48%); background: linear-gradient(180deg, #161618, #111113); box-shadow: 0 0 0 1px var(--hair), inset 0 1px 0 rgba(255, 255, 255, 0.06); transition: box-shadow 300ms; }
 .cn.next { justify-content: space-between; text-align: right; }
 .cn:hover { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.06); }
-.cn-meta em { display: block; font: normal 11px var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: #77787b; margin-bottom: 4px; }
+.cn-meta em { display: block; font: normal 500 13px var(--sans); letter-spacing: 0; color: #77787b; margin-bottom: 4px; }
 .cn-meta b { font-size: 17px; font-weight: 600; letter-spacing: -0.02em; }
 .cn-btn { flex: none; width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; background: #ecebe6; color: #0b0b0b; font-size: 17px; transition: transform 400ms var(--ease); }
 .cn.next:hover .cn-btn { transform: translateX(4px); } .cn.prev:hover .cn-btn { transform: translateX(-4px); }
@@ -1041,24 +1041,14 @@ html { scroll-behavior: smooth; }
    later rules win over everything above.
    ===================================================================== */
 
-/* --- Nav (#3, #4): round photo instead of "NS", no subtitle, Resume link --- */
-.avatar { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; flex: none; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.16); background: #2a2a2c; }
-.nav.on-light .avatar { box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12); }
+/* --- Nav: name only, Resume link --- */
 .brand { gap: 10px; }
 @media (max-width: 680px) { .links { gap: 12px; } .links a:not(.cta) { padding: 13px 0; } }
 @media (max-width: 380px) { .links { gap: 10px; font-size: 13px; } .links .cta { padding: 7px 10px; } }
 
-/* --- Hero (#5 to #8): small hello, big role line, capability tags, three case links --- */
+/* --- Hero: small hello, big role line, a plain sub-sentence, Resume + scroll link --- */
 .h-hi { margin: 0 0 18px; font: 500 clamp(17px, 1.5vw, 20px) var(--sans); letter-spacing: -0.01em; color: #55575c; }
 .h-open h1 { font-size: clamp(38px, 4.6vw, 70px); line-height: 1.02; letter-spacing: -0.045em; max-width: 13ch; margin: 0; }
-.h-tags { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 26px 0 0; padding: 0; }
-.h-tags li { font: 500 13px var(--mono); padding: 7px 12px; border-radius: 999px; color: #2c2d30; background: rgba(0, 0, 0, 0.045); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1); }
-.h-cases { display: grid; gap: 0; margin-top: 32px; max-width: 480px; border-top: 1px solid rgba(0, 0, 0, 0.1); }
-.h-case { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 52px; padding: 0 4px; border-bottom: 1px solid rgba(0, 0, 0, 0.1); font-size: 16.5px; font-weight: 600; letter-spacing: -0.01em; color: #0b0b0c; transition: padding 250ms var(--ease), color 250ms; }
-.h-case i { font-style: normal; font-weight: 400; color: #75777c; transition: transform 250ms var(--ease), color 250ms; }
-.h-case:hover { padding-left: 10px; } .h-case:hover i { transform: translateX(4px); color: #0b0b0c; }
-.h-resume { display: inline-block; margin-top: 18px; padding: 6px 0; font: 13.5px var(--mono); color: #55575c; text-decoration: underline; text-decoration-color: rgba(0, 0, 0, 0.2); text-underline-offset: 4px; }
-.h-resume:hover { color: #0b0b0c; text-decoration-color: currentColor; }
 @media (min-width: 961px) { .h-open { grid-template-columns: minmax(0, 1fr) minmax(0, 0.62fr); } .h-open-text { padding-top: 12px; } }
 .photo { width: min(405px, 100%); }
 @media (max-width: 960px) {
@@ -1068,24 +1058,13 @@ html { scroll-behavior: smooth; }
 @media (max-width: 680px) {
   .photo { width: min(255px, 66vw); }
   .h-open h1 { font-size: clamp(34px, 9.6vw, 44px); }
-  .h-case { font-size: 15.5px; }
 }
 
-/* --- Work (#11 to #14): plain heading, visible stack tags, an in-progress card --- */
+/* --- Work: plain heading, visible stack tags --- */
 .h-work .story-head h2 { margin-top: 0; }
 .w-stack { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 0; padding: 0; }
-.w-stack li { font: 12px/1 var(--mono); padding: 6px 9px; border-radius: 7px; color: #e4e3df; background: rgba(255, 255, 255, 0.06); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12); }
+.w-stack li { font: 500 12.5px/1 var(--sans); padding: 6px 9px; border-radius: 7px; color: #e4e3df; background: rgba(255, 255, 255, 0.06); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12); }
 .w-no { font-size: 12px; }
-.w-wip { grid-column: 1 / -1; flex-direction: row; align-items: center; gap: 28px; padding: 22px 26px; background: transparent; box-shadow: none !important; border: 1px dashed rgba(255, 255, 255, 0.22); transform: none !important; }
-.w-wip .w-meta { padding: 0; gap: 6px; }
-.w-wip h3 { margin: 0; }
-.w-badge { flex: none; display: inline-flex; align-items: center; gap: 8px; font: 500 12px var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: #f0d08a; padding: 7px 12px; border-radius: 999px; background: rgba(245, 196, 81, 0.08); box-shadow: inset 0 0 0 1px rgba(245, 196, 81, 0.3); }
-.w-badge i { width: 7px; height: 7px; border-radius: 50%; background: #f5c451; animation: wip 1.8s ease-in-out infinite; }
-@keyframes wip { 50% { opacity: 0.35; } }
-@media (max-width: 1100px) and (min-width: 681px) { .w-wip { display: flex; } }
-@media (max-width: 680px) { .w-wip { flex-direction: column; align-items: flex-start; gap: 14px; padding: 20px; } }
-@media (prefers-reduced-motion: reduce) { .w-badge i { animation: none; } }
-
 /* --- How I work (#15): one honest tools line --- */
 .how-tools { max-width: 500px; margin: 28px 0 0 !important; padding-top: 18px; border-top: 1px solid var(--hair); font-size: 15px !important; line-height: 1.6; color: var(--ink-2); }
 
@@ -1127,18 +1106,16 @@ html { scroll-behavior: smooth; }
 [data-stage].m-logs .t-cmd, [data-stage].m-logs .t-cmd.shown { display: flex; }
 @media (max-width: 680px) { [data-stage] .logrow, [data-stage] .logrow.shown { display: grid; } }
 
-/* --- Case 01 opening (#21, #22, #23): smaller title, one-line intro, stack tags, laptop caption --- */
+/* --- Case 01 opening: smaller title, one-line intro, stack tags --- */
 .cs-hero h1 { font-size: clamp(32px, min(3.6vw, 7.4svh), 54px) !important; line-height: 1.04; margin: 14px 0 16px; }
 .cs-hero .cs-intro { font-size: clamp(15px, 2.5svh, 17px); max-width: 420px; }
-.cs-stack, .cn-stack { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 22px 0 0; padding: 0; max-width: 440px; }
-.cs-stack li, .cn-stack i { font: normal 12px/1 var(--mono); padding: 6px 9px; border-radius: 7px; color: #e4e3df; background: rgba(255, 255, 255, 0.06); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12); }
+/* stack tags are plain labels, in the sans */
+.cs-stack { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 22px 0 0; padding: 0; max-width: 440px; }
+.cs-stack li { font: 500 12.5px/1 var(--sans); padding: 6px 9px; border-radius: 7px; color: #e4e3df; background: rgba(255, 255, 255, 0.06); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12); }
 .cs-hero .lap, .cs-hero .lp-lap { max-width: min(800px, calc((100svh - 240px) * 1.5)) !important; }
 @media (max-width: 960px) { .cs-hero .lap { max-width: none !important; } }
 
-/* --- Case navigation (#27): loops around, with the next case's stack --- */
-.cn-stack { margin-top: 10px; gap: 5px; }
-.cn-stack i { font-size: 11px; padding: 5px 7px; }
-.cn.next .cn-stack { justify-content: flex-end; margin-left: auto; }
+/* --- Case navigation: names only, no loop-around --- */
 .cn { align-items: center; }
 .lessons .story-head h2 { margin-top: 0; }
 
@@ -1147,7 +1124,7 @@ html { scroll-behavior: smooth; }
 .mx-steps li.on p { min-height: var(--mx-d, auto); }
 /* numbers on the diagram boxes match the numbered steps */
 .nno-c { fill: #0e0e10; stroke: rgba(255, 255, 255, 0.18); stroke-width: 1.2; transition: stroke 400ms, fill 400ms; }
-.nno { font: 500 13px var(--mono); fill: #8c8e92; transition: fill 400ms; }
+.nno { font: 600 13px var(--sans); fill: #8c8e92; transition: fill 400ms; }
 .node.on .nno-c { stroke: #9cc5a1; fill: rgba(156, 197, 161, 0.12); }
 .node.on .nno { fill: #cfe6d2; }
 /* decisions: one bold key line, shorter reason */
@@ -1155,9 +1132,9 @@ html { scroll-behavior: smooth; }
 /* the tools section stands alone now */
 .mx-split .tool-list { margin-top: 8px; }
 /* how I tested it: two parts */
-.tst-part { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 56px; align-items: start; padding: 36px 0; border-top: 1px solid var(--hair); }
+.tst-part { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 56px; align-items: center; padding: 36px 0; border-top: 1px solid var(--hair); }
 .tst-part:last-child { padding-bottom: 0; }
-.tst-no { display: flex; gap: 12px; margin: 0 0 12px; font: 500 12px var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+.tst-no { display: flex; gap: 12px; margin: 0 0 12px; font: 600 13px var(--sans); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
 .tst-no span { color: #9cc5a1; }
 .tst-text h3 { margin: 0 0 14px; font-size: clamp(22px, 2.2vw, 30px); letter-spacing: -0.03em; line-height: 1.12; font-weight: 600; }
 .tst-text .mx-lede { margin-bottom: 0; }
@@ -1169,28 +1146,29 @@ html { scroll-behavior: smooth; }
 @media (max-width: 960px) { .tst-part { grid-template-columns: 1fr; gap: 28px; } }
 
 /* --- Case 03 (#33 to #35) --- */
-/* counter under the looping layer stack */
-.sx-count { display: flex; align-items: baseline; gap: 12px; margin: 4px 0 0; font: 12px var(--mono); color: var(--ink-3); }
-.sx-count b { font-weight: 500; color: #9cc5a1; min-width: 3.4em; }
 /* every finding in one table */
 .fx-table-wrap { margin: 0 0 40px; overflow-x: auto; }
 .fx-table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.45; }
-.fx-table caption { text-align: left; margin-bottom: 12px; font: 500 12px var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
-.fx-table th { text-align: left; padding: 0 16px 10px 0; font: 500 11.5px var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); border-bottom: 1px solid rgba(255, 255, 255, 0.14); }
+.fx-table caption { text-align: left; margin-bottom: 12px; font: 600 13px var(--sans); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
+.fx-table th { text-align: left; padding: 0 16px 10px 0; font: 600 12px var(--sans); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); border-bottom: 1px solid rgba(255, 255, 255, 0.14); }
 .fx-table td { padding: 11px 16px 11px 0; border-bottom: 1px solid var(--hair); vertical-align: top; }
-.fx-l { font: 12px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); white-space: nowrap; padding-top: 13px !important; }
+.fx-l { font: 600 12px var(--sans); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); white-space: nowrap; padding-top: 13px !important; }
 .fx-a { color: #e4e3df; width: 34%; }
-.fx-b, .fx-n { font: 12.5px/1.5 var(--mono); }
+.fx-b, .fx-n { font: 14px/1.45 var(--sans); }
 .fx-b { color: #e5a198; } .fx-n { color: #9cc5a1; }
 .fx-b::before { content: '✕ '; } .fx-n::before { content: '✓ '; }
-/* replay: obvious that rows are clickable, and which one is playing */
-.fd-hint { display: flex; align-items: center; gap: 10px; margin: 0 0 16px; font-size: 14.5px; color: var(--ink-2); }
-.fd-hint-ic { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; font-size: 9px; color: #0b0b0b; background: #9cc5a1; }
-.fd { position: relative; grid-template-columns: 62px 74px minmax(0, 1fr) auto; }
-.fd-go { font: 11.5px var(--mono); color: var(--ink-3); white-space: nowrap; }
-.fd-now { display: none; color: #9cc5a1; }
-.fd.on .fd-now { display: inline; } .fd.on .fd-play { display: none; }
-.fd:hover .fd-play { color: #ecebe6; }
+/* replay: the whole row is the button; a small play icon sits centred at its right edge */
+.fd-hint { margin: 0 0 14px; font-size: 14.5px; color: var(--ink-2); }
+.fd { position: relative; grid-template-columns: 62px 74px minmax(0, 1fr); padding-right: 52px; }
+.fd-go { position: absolute; right: 14px; top: 50%; translate: 0 -50%; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; color: var(--ink-3); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16); transition: color 200ms, background 200ms, box-shadow 200ms; }
+.fd-go svg { display: block; }
+.fd-ic-play { translate: 1px 0; }
+.fd-go .fd-ic-on { display: none; fill: currentColor; }
+.fd:hover { background: rgba(255, 255, 255, 0.045); color: #e9e8e4; }
+.fd:hover .fd-go { color: #0b0b0b; background: #ecebe6; box-shadow: none; }
+.fd.on .fd-go { color: #0b0b0b; background: #9cc5a1; box-shadow: none; }
+.fd.on .fd-go .fd-ic-play { display: none; } .fd.on .fd-go .fd-ic-on { display: block; }
+.fd:focus-visible { outline: 2px solid #9cc5a1; outline-offset: -2px; }
 .fd-txt { grid-column: 2 / -1; }
 .fd-bar { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; overflow: hidden; pointer-events: none; }
 .fd-bar i { display: block; height: 100%; background: #9cc5a1; transform: scaleX(0); transform-origin: left; }
@@ -1198,7 +1176,7 @@ html { scroll-behavior: smooth; }
 @keyframes fdbar { to { transform: scaleX(1); } }
 @media (prefers-reduced-motion: reduce) { .fd.on.run .fd-bar i { animation: none; } }
 @media (max-width: 680px) {
-  .fd { grid-template-columns: 72px minmax(0, 1fr) auto; }
+  .fd { grid-template-columns: 72px minmax(0, 1fr); }
   .fx-table, .fx-table tbody, .fx-table tr, .fx-table td { display: block; width: auto; }
   .fx-table thead { display: none; }
   .fx-table tr { padding: 12px 0; border-bottom: 1px solid var(--hair); }
@@ -1209,3 +1187,65 @@ html { scroll-behavior: smooth; }
 /* before a terminal first plays, its cursor takes no line of its own (so the reserved height is the final height) */
 .win-body > .cursor { position: absolute; visibility: hidden; }
 @media (max-width: 680px) { .fx-table caption { display: block; width: auto; } }
+
+/* =====================================================================
+   Round 7: Nitya's review. Appended last on purpose: later rules win.
+   ===================================================================== */
+
+/* --- Tighter section rhythm, home and case pages (about 30% less) --- */
+:root { --sec-y: 80px; }
+@media (min-width: 1920px) { :root { --sec-y: 100px; } }
+@media (max-width: 680px) { :root { --sec-y: 56px; } }
+@media (min-width: 961px) {
+  .home { --sec-y: clamp(48px, 6.5svh, 68px); }
+  .h-path.light { padding-bottom: var(--sec-y); }
+}
+.h-contact, .h-contact.light { padding-top: clamp(44px, 6svh, 64px); padding-bottom: clamp(44px, 6svh, 64px); }
+.h-open.light { padding-top: clamp(96px, 11vh, 132px); }
+.h-open-text { padding-bottom: clamp(36px, 5vw, 72px); }
+.case-nav { padding-bottom: 72px; }
+@media (max-width: 680px) { .case-nav { padding-bottom: 48px; } .h-open.light { padding-top: 88px; } }
+
+/* --- Hero: one sub-sentence in prose, one quiet primary action --- */
+.h-sub { margin: 22px 0 0; max-width: 34em; font: 400 clamp(16.5px, 1.35vw, 19px)/1.55 var(--sans); color: #55575c; }
+.h-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 26px; margin-top: 30px; }
+.h-resume { display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 999px; font: 600 15px var(--sans); letter-spacing: -0.005em; color: #f2f1ee; background: #0b0b0c; transition: background 200ms; }
+.h-resume:hover { background: #2a2b2e; }
+.h-more { display: inline-flex; align-items: center; gap: 6px; padding: 12px 0; font: 500 15px var(--sans); color: #55575c; transition: color 200ms; }
+.h-more:hover { color: #0b0b0c; }
+.h-more span { transition: transform 200ms var(--ease); } .h-more:hover span { transform: translateY(2px); }
+@media (max-width: 680px) { .h-sub { font-size: 16.5px; } .h-actions { margin-top: 24px; } }
+
+/* --- Nav: text-only brand --- */
+.brand-who b { font-size: 15px; letter-spacing: -0.01em; }
+
+/* --- How I work: the phone sits fully inside its section, centred on the text column --- */
+@media (min-width: 961px) {
+  .h-how { align-items: center; padding-top: var(--sec-y) !important; padding-bottom: var(--sec-y) !important; }
+  .h-how .how-phone { min-height: 0 !important; height: 600px !important; }
+  .h-how .phone-wrap { scale: 0.8 !important; translate: 0 -14px; }
+}
+@media (min-width: 961px) and (max-height: 820px) {
+  .h-how .how-phone { height: 540px !important; }
+  .h-how .phone-wrap { scale: 0.72 !important; translate: 0 -40px; }
+}
+@media (max-width: 960px) {
+  .h-how .how-phone { min-height: 0 !important; height: 560px !important; margin-top: 8px; }
+  .h-how .phone-wrap { scale: 0.8 !important; translate: 0 -30px; }
+}
+@media (max-width: 680px) {
+  .h-how .how-phone { height: 520px !important; }
+  .h-how .phone-wrap { scale: 0.74 !important; translate: 0 -40px; }
+}
+
+/* --- Case pages: a way back to all work, above the title --- */
+.cs-back { display: inline-flex; align-items: center; gap: 8px; margin: 0 0 18px; padding: 6px 0; font: 500 14px var(--sans); color: var(--ink-3); transition: color 200ms; }
+.cs-back span { transition: transform 200ms var(--ease); }
+.cs-back:hover { color: #ecebe6; } .cs-back:hover span { transform: translateX(-3px); }
+.cs-back + .kicker { margin-top: 0; }
+/* the name is the only brand mark now, so it stays visible on phones */
+@media (max-width: 440px) { .brand-who { display: block; } .brand-who b { font-size: 14.5px; } .links { gap: 14px; font-size: 14px; } .links .cta { padding: 7px 11px; } }
+@media (max-width: 360px) { .brand-who b { font-size: 13.5px; } .links { gap: 10px; font-size: 13px; } .links .cta { padding: 6px 9px; } }
+@media (max-width: 340px) { .links a[href$=".pdf"] { display: none; } }
+/* case 03 layer stack on phones: the "blocked" stamp starts after the longest layer name */
+@media (max-width: 680px) { .layer b { font-size: 16px; } .stamp-b { left: 172px; right: 12px; gap: 8px; } .stamp-b em { font-size: 12.5px; line-height: 1.3; } }

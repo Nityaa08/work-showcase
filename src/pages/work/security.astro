@@ -26,6 +26,7 @@ const c = cases.find((x) => x.slug === 'security')!;
     <main>
       <section class="sx-hero">
         <div class="sx-head">
+          <a class="cs-back" href="/#work"><span aria-hidden="true">←</span> All work</a>
           <p class="kicker">Case {c.no}</p>
           <h1>{c.title}</h1>
           <p class="cs-intro">{intro}</p>
@@ -40,7 +41,6 @@ const c = cases.find((x) => x.slug === 'security')!;
               <span class="stamp-b"><i>blocked</i><em data-stop={i}></em></span>
             </div>
           ))}
-          <p class="sx-count" aria-live="off"><b id="sx-n">1 / {attacks.length}</b><span>One attack per layer, on a loop</span></p>
         </div>
       </section>
       {c.glance && <section class="glance-sec"><Glance items={c.glance} /></section>}
@@ -56,13 +56,13 @@ const c = cases.find((x) => x.slug === 'security')!;
             </tbody>
           </table>
         </div>
-        <p class="fd-hint"><span class="fd-hint-ic" aria-hidden="true">▶</span>Pick any row to replay that attack in the terminal. It moves to the next one by itself.</p>
+        <p class="fd-hint">Pick an attack to replay it.</p>
         <div class="replay">
           <ol class="findings" role="tablist">
             {findings.map((f, i) => (
               <li><button type="button" class:list={['fd', { on: i === 0 }]} data-i={i} aria-label={`Replay ${f.id}`}>
                 <span class="fd-st">closed</span><span class="fd-layer">{f.layer}</span><span class="fd-id">{f.id}</span>
-                <span class="fd-go" aria-hidden="true"><span class="fd-now">replaying</span><span class="fd-play">▶ replay</span></span>
+                <span class="fd-go" aria-hidden="true"><svg class="fd-ic-play" width="10" height="10" viewBox="0 0 10 10"><path d="M2.5 1.5v7l6-3.5z" fill="currentColor" /></svg><svg class="fd-ic-on" width="12" height="10" viewBox="0 0 12 10"><rect x="1" y="3" width="2" height="6" rx="1" /><rect x="5" y="1" width="2" height="8" rx="1" /><rect x="9" y="4" width="2" height="5" rx="1" /></svg></span>
                 <span class="fd-txt">{f.risk} <em>→ {f.fix}</em></span>
                 <span class="fd-bar" aria-hidden="true"><i /></span>
               </button></li>
@@ -116,10 +116,8 @@ const c = cases.find((x) => x.slug === 'security')!;
       const layersEl = [...document.querySelectorAll('.layer')];
       const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
       let k = 0;
-      const count = document.getElementById('sx-n');
       function run() {
         const a = attacks[k % attacks.length];
-        count.textContent = `${(k % attacks.length) + 1} / ${attacks.length}`;
         const target = layersEl[a.layer];
         layersEl.forEach((l) => l.classList.remove('hit', 'pass'));
         atk.classList.remove('drop', 'stopped');
@@ -140,7 +138,7 @@ const c = cases.find((x) => x.slug === 'security')!;
         }, 1250);
         k++;
       }
-      if (reduced) { count.textContent = `${attacks.length} layers`; layersEl.forEach((l, i) => { l.querySelector('[data-stop]').textContent = attacks[i].stop; l.classList.add('hit'); }); atk.style.display = 'none'; }
+      if (reduced) { layersEl.forEach((l, i) => { l.querySelector('[data-stop]').textContent = attacks[i].stop; l.classList.add('hit'); }); atk.style.display = 'none'; }
       else {
         let t = 0;
         const start = () => { if (!t) { run(); t = setInterval(run, 4600); } };

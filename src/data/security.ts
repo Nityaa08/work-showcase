@@ -43,7 +43,7 @@ export const findings: Finding[] = [
     { t: 'cmd', s: 'curl https://agents.example/orgs/acme/sessions -H "Authorization: Bearer $MEMBER_WITHOUT_ROLE"' },
     { t: 'err', s: 'shortcut  200 OK · another team’s sessions returned' },
     { t: 'ok', s: 'kept      404 · not visible without the role' } ] },
-  { layer: 'tenant', id: 'skill-name-clash', risk: 'Two owners saving the same skill name could share it.', fix: 'Names are per owner; a clash is a clear conflict.', lines: [
+  { layer: 'tenant', id: 'skill-name-clash', risk: 'Owners saving the same skill name could share it.', fix: 'Names are per owner; a clash is a clear conflict.', lines: [
     { t: 'cmd', s: "curl -X POST https://studio.example/skills -d '{\"name\":\"query-logs\"}'   # as a second owner" },
     { t: 'err', s: 'before  200 OK · linked to the first owner’s skill' },
     { t: 'ok', s: 'now     409 Conflict · choose another name' } ] },
@@ -59,7 +59,7 @@ export const findings: Finding[] = [
     { t: 'cmd', s: 'echo hi > /etc/agent.conf' },
     { t: 'err', s: 'before  written' },
     { t: 'ok', s: 'now     read-only file system · writes allowed in /workspace only' } ] },
-  { layer: 'deps', id: 'reachable-vulnerability', risk: 'Alerts piled up; a few were actually reachable.', fix: 'Fix what our code reaches, then re-scan.', lines: [
+  { layer: 'deps', id: 'reachable-vulnerability', risk: 'Alerts piled up; only some were actually reachable.', fix: 'Fix what our code reaches, then re-scan.', lines: [
     { t: 'cmd', s: 'govulncheck ./...' },
     { t: 'err', s: 'before  vulnerability reachable from your code' },
     { t: 'ok', s: 'now     No vulnerabilities found.' } ] },
@@ -78,7 +78,7 @@ export const principles = [
 
 export const sweep: StageT = { medium: 'shell', label: '~/agent-fleet', lines: [
   { t: 'cmd', s: 'govulncheck ./...' },
-  { t: 'err', s: 'Vulnerability #1 — reachable from your code' },
+  { t: 'err', s: 'Vulnerability — reachable from your code' },
   { t: 'dim', s: '# most alerts can’t reach our code — this one can' },
   { t: 'cmd', s: 'go get example.org/lib@patched && go test ./...' },
   { t: 'ok', s: 'ok   all packages' },

@@ -12,7 +12,7 @@ const steps = { share: 4, memory: 4, guard: 4, skills: 4, schedule: 4, tools: 4 
         <span class="pointer" aria-hidden="true"></span>
         <button class="d-share-btn" tabindex="-1">Share</button>
         <div class="bub you">Which merchants failed checkout yesterday?</div>
-        <div class="bub bot">Three merchants: two card declines, one timeout.</div>
+        <div class="bub bot">Mostly card declines, plus the odd timeout.</div>
         <div class="d-sheet">
           <p class="d-h">Share this chat</p>
           <div class="opt"><i />Only me</div>
@@ -24,12 +24,12 @@ const steps = { share: 4, memory: 4, guard: 4, skills: 4, schedule: 4, tools: 4 
     )}
     {kind === 'memory' && (
       <>
-        <div class="bub you">Keep your answers to three bullet points.</div>
-        <div class="toast t-top">Saved to memory · answer style = 3 bullets</div>
+        <div class="bub you">Keep your answers short, in bullet points.</div>
+        <div class="toast t-top">Saved to memory · answer style = short bullets</div>
         <div class="sep">next day</div>
         <div class="bub you">What failed overnight?</div>
         <div class="typing"><i /><i /><i /></div>
-        <div class="bub bot">• 14 checkouts failed<br />• 9 were card declines<br />• 2 timeouts need a look <span class="tag">from memory</span></div>
+        <div class="bub bot">• Some checkouts failed<br />• Most were card declines<br />• The timeouts need a look <span class="tag">from memory</span></div>
       </>
     )}
     {kind === 'guard' && (
@@ -57,7 +57,7 @@ const steps = { share: 4, memory: 4, guard: 4, skills: 4, schedule: 4, tools: 4 
           <div class="row"><span>Post to</span><b class="pick">#ops</b></div>
         </div>
         <div class="clock">09:00 · running…</div>
-        <div class="bub bot post"><b>ops-agent</b><br />Morning summary: 14 failed checkouts, 2 need a look.</div>
+        <div class="bub bot post"><b>ops-agent</b><br />Morning summary: failed checkouts are down, and the timeouts need a look.</div>
       </>
     )}
     {kind === 'tools' && (
@@ -67,7 +67,7 @@ const steps = { share: 4, memory: 4, guard: 4, skills: 4, schedule: 4, tools: 4 
             <div class="conn"><span class="c-logo">{k}</span><span class="c-name"><b>{n}</b><em>{d}</em></span><span class="c-state"><span class="c-connect">Connect</span><span class="c-wait"><i />Connecting</span><span class="c-ok">Connected</span></span></div>
           ))}
         </div>
-        <p class="hint">Every connection runs through one gateway. That is case 02 →</p>
+        <p class="hint">Every connection runs through the same gateway. That is case 02 →</p>
       </>
     )}
   </div>

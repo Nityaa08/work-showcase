@@ -3,11 +3,11 @@
 // The screen replays one calm product moment: a question, a plain-English run, an answer.
 // Everything on the screen is sized in "u" units (1u = 1/1024 of the screen width), so it scales with the laptop.
 const steps = [
-  { label: 'Remembered how Nitya likes answers', tag: 'memory', at: 0.6, cap: 'Memory', note: 'The agent recalls how this person likes their answers.' },
-  { label: 'Loaded the “summarise failures” skill', tag: 'skills', at: 1.4, cap: 'Skill', note: 'It loads the instruction file its owner wrote for this kind of task.' },
-  { label: 'Searched logs, payments and docs', tag: 'tools', at: 2.6, cap: 'Tools', note: 'It searches logs, payments and docs through the tool gateway.' },
-  { label: 'Wrote the answer', tag: 'model', at: 4.0, cap: 'Model', note: 'The model writes the answer from what the tools returned.' },
-  { label: 'Checked it is in Nitya’s language', tag: 'guard', at: 4.7, cap: 'Language check', note: 'A check confirms the reply is in the language the person wrote in.' },
+  { label: 'Remembered how Nitya likes answers', tag: 'memory', at: 0.6 },
+  { label: 'Loaded the “summarise failures” skill', tag: 'skills', at: 1.4 },
+  { label: 'Searched logs, payments and docs', tag: 'tools', at: 2.6 },
+  { label: 'Wrote the answer', tag: 'model', at: 4.0 },
+  { label: 'Checked it is in Nitya’s language', tag: 'guard', at: 4.7 },
 ];
 const agents: [string, boolean][] = [['support-agent', true], ['ops-agent', false], ['finance-helper', false], ['research', false]];
 ---
@@ -44,7 +44,7 @@ const agents: [string, boolean][] = [['support-agent', true], ['ops-agent', fals
               </div>
               <div class="lp-msg lp-ans" data-answer>
                 <span class="lp-av lp-ok">✦</span>
-                <div><p class="lp-who">support-agent</p><p class="lp-a">14 failed — 9 card declines, 3 timeouts.</p><p class="lp-a">Two merchants account for most of them.</p></div>
+                <div><p class="lp-who">support-agent</p><p class="lp-a">Most were card declines, and the rest were timeouts.</p><p class="lp-a">A small group of merchants accounts for most of them.</p></div>
               </div>
             </div>
           </div>
@@ -54,12 +54,6 @@ const agents: [string, boolean][] = [['support-agent', true], ['ops-agent', fals
     </div>
   </div>
   <div class="lp-base" aria-hidden="true"><span class="lp-groove"></span></div>
-  <figcaption class="lp-cap" data-cap aria-live="off">
-    <span class="lp-cap-n" data-cap-n>1 / {steps.length}</span>
-    <span class="lp-cap-t"><b data-cap-h>{steps[0].cap}</b> <span data-cap-d>{steps[0].note}</span></span>
-  </figcaption>
-  <ol class="lp-cap-steps" aria-hidden="true">{steps.map((s, i) => <li data-cap-i={i}>{s.cap}</li>)}</ol>
-  <script type="application/json" data-cap-json set:html={JSON.stringify(steps.map((s) => [s.cap, s.note]))} />
 </figure>
 
 <style>
@@ -112,16 +106,7 @@ const agents: [string, boolean][] = [['support-agent', true], ['ops-agent', fals
   .lp-ans { opacity: 0; translate: 0 calc(var(--u) * 6); transition: opacity 500ms, translate 500ms; }
   .lp-ans.lp-show { opacity: 1; translate: 0 0; }
   @keyframes spin { to { rotate: 360deg; } }
-  /* caption under the laptop: what the agent is doing right now (fixed height, so nothing shifts) */
-  .lp-cap { display: flex; align-items: baseline; gap: 12px; margin: 26px 6% 0; min-height: 3.2em; font-size: 14.5px; line-height: 1.5; color: #a2a3a6; }
-  .lp-cap-n { flex: none; font: 12px 'IBM Plex Mono', ui-monospace, monospace; color: #9cc5a1; }
-  .lp-cap-t b { color: #ecebe6; font-weight: 600; }
-  .lp-cap-steps { list-style: none; display: flex; gap: 6px; margin: 10px 6% 0; padding: 0; }
-  .lp-cap-steps li { flex: 1; padding-top: 7px; border-top: 2px solid rgba(255, 255, 255, 0.1); font: 11px 'IBM Plex Mono', ui-monospace, monospace; color: #6a6c70; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: border-color 300ms, color 300ms; }
-  .lp-cap-steps li.lp-past { border-top-color: rgba(156, 197, 161, 0.45); }
-  .lp-cap-steps li.lp-now { border-top-color: #9cc5a1; color: #dcebdd; }
-  @media (max-width: 960px) { .lp-lap, .lap { width: 88%; margin: 8px auto 0; } .lp-cap, .lp-cap-steps { margin-left: 0; margin-right: 0; } }
-  @media (max-width: 520px) { .lp-cap-steps { display: none; } .lp-cap { font-size: 14px; min-height: 4.6em; } }
+  @media (max-width: 960px) { .lp-lap, .lap { width: 88%; margin: 8px auto 0; } }
 </style>
 
 <script>
@@ -131,30 +116,14 @@ const agents: [string, boolean][] = [['support-agent', true], ['ops-agent', fals
     const steps = [...lap.querySelectorAll<HTMLElement>('.lp-step')];
     const head = lap.querySelector<HTMLElement>('[data-head]')!;
     const answer = lap.querySelector<HTMLElement>('[data-answer]')!;
-    // Caption: which step is running, in plain words, in sync with the screen.
-    const caps: [string, string][] = JSON.parse(lap.querySelector('[data-cap-json]')!.textContent || '[]');
-    const capN = lap.querySelector<HTMLElement>('[data-cap-n]')!, capH = lap.querySelector<HTMLElement>('[data-cap-h]')!, capD = lap.querySelector<HTMLElement>('[data-cap-d]')!;
-    const ticks = [...lap.querySelectorAll<HTMLElement>('[data-cap-i]')];
-    let shown = -1;
-    const caption = (t: number) => {
-      // the step that is running now; once the answer is out, the last step stays up
-      let k = steps.findIndex((s) => t < Number(s.dataset.at));
-      if (k === -1) k = steps.length - 1;
-      if (k === shown) return;
-      shown = k;
-      capN.textContent = `${k + 1} / ${steps.length}`;
-      capH.textContent = caps[k][0]; capD.textContent = caps[k][1];
-      ticks.forEach((el, i) => { el.classList.toggle('lp-now', i === k); el.classList.toggle('lp-past', i < k); });
-    };
     const render = (t: number) => {
-      caption(t);
       steps.forEach((s, i) => {
         const at = Number(s.dataset.at), prev = i ? Number(steps[i - 1].dataset.at) : 0;
         s.classList.toggle('lp-done', t >= at);
         s.classList.toggle('lp-run-now', t < at && t >= prev);
       });
       const finished = t >= ANSWER_AT;
-      head.textContent = finished ? 'Done in 4.2 s' : 'Working on it…';
+      head.textContent = finished ? 'Done' : 'Working on it…';
       head.classList.toggle('lp-done', finished);
       answer.classList.toggle('lp-show', finished);
     };

@@ -12,11 +12,16 @@ const numbered = (xs: string[]) => xs.map((x, i) => `${i + 1}. ${x}`).join('\n')
 const code = (lines: Line[]) => '```\n' + lines.map((l) => (l.t === 'log' ? l.s.split('|').join('  ') : l.s)).join('\n') + '\n```';
 const glance = (c: Case) => (c.glance ?? []).map(([k, v]) => `- **${k}:** ${v}`).join('\n');
 const lessons = (items: [string, string][], title = 'Lessons') => `## ${title}\n\n` + items.map(([h, p]) => `- **${h}.** ${p}`).join('\n');
+// Same order as the case nav at the end of each page: no loop-around.
 const caseFooter = (site: URL | undefined, c: Case) => {
   const ready = cases.filter((x) => x.ready);
   const i = ready.findIndex((x) => x.slug === c.slug);
-  const prev = ready[(i - 1 + ready.length) % ready.length], next = ready[(i + 1) % ready.length];
-  return `## More\n\n- Previous: [Case ${prev.no}: ${prev.title}](${abs(site, `/work/${prev.slug}.md`)})\n- Next: [Case ${next.no}: ${next.title}](${abs(site, `/work/${next.slug}.md`)})\n- [Home](${abs(site, '/index.md')}) · [Resume (PDF)](${abs(site, home.contact.resume)})`;
+  const prev = ready[i - 1], next = ready[i + 1];
+  const links = [
+    prev ? `- Previous: [${prev.title}](${abs(site, `/work/${prev.slug}.md`)})` : `- [All work](${abs(site, '/index.md')})`,
+    next ? `- Next: [${next.title}](${abs(site, `/work/${next.slug}.md`)})` : `- [Back to home](${abs(site, '/index.md')})`,
+  ];
+  return `## More\n\n${links.join('\n')}\n- [Resume (PDF)](${abs(site, home.contact.resume)})`;
 };
 
 export function homeMd(site?: URL) {
@@ -25,17 +30,13 @@ export function homeMd(site?: URL) {
 
 ${home.hero.hi} ${home.hero.headline}
 
-Focus: ${home.hero.tags.join(' · ')}
+${home.hero.sub}
 
 Resume: ${abs(site, home.contact.resume)}
 
 ## Selected work
 
 ${work.map((c) => `### Case ${c.no}: ${c.title}\n\n${home.blurbs[c.slug]}\n\n- Stack: ${stackOf(c).join(', ')}\n- Case study: ${abs(site, `/work/${c.slug}/`)} (markdown: ${abs(site, `/work/${c.slug}.md`)})`).join('\n\n')}
-
-### In progress: ${home.inProgress.title}
-
-${home.inProgress.text}
 
 ## How I work
 
@@ -110,7 +111,7 @@ ${mcp.flow.map(([t, d], i) => `${i + 1}. **${t}.** ${d}`).join('\n')}
 
 ${glance(c)}
 
-## Three decisions that shaped every connector
+## The decisions that shaped every connector
 
 ${mcp.chapters.map((ch, i) => `${i + 1}. **${ch.title}.** ${ch.key} ${ch.text} (${ch.tag})`).join('\n')}
 
@@ -153,7 +154,7 @@ ${sec.intro}
 
 Stack: ${stackOf(c).join(', ')}
 
-## Six layers, each closed by default
+## Every layer closed by default
 
 ${sec.layers.map(([n, d], i) => `${i + 1}. **${n}** (${d}). Attack: ${sec.attacks[i].try}. Blocked: ${sec.attacks[i].stop}.`).join('\n')}
 
@@ -194,7 +195,7 @@ export function llmsTxt(site?: URL) {
   const work = cases.filter((c) => c.ready);
   return `# ${SITE_NAME}
 
-> AI engineer. ${home.hero.headline} Focus: ${home.hero.tags.join(', ')}. Every page on this site also has a plain markdown version, linked below.
+> AI engineer. ${home.hero.headline} ${home.hero.sub} Every page on this site also has a plain markdown version, linked below.
 
 ## Pages
 
