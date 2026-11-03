@@ -36,7 +36,7 @@ Resume: ${abs(site, home.contact.resume)}
 
 ## Selected work
 
-${work.map((c) => `### Case ${c.no}: ${c.title}\n\n${home.blurbs[c.slug]}\n\n- Stack: ${stackOf(c).join(', ')}\n- Case study: ${abs(site, `/work/${c.slug}/`)} (markdown: ${abs(site, `/work/${c.slug}.md`)})`).join('\n\n')}
+${work.map((c) => `### Case ${c.no}: ${home.cards[c.slug].headline}\n\n**${c.title}.** ${home.cards[c.slug].text}\n\n- Stack: ${stackOf(c).join(', ')}\n- Case study: ${abs(site, `/work/${c.slug}/`)} (markdown: ${abs(site, `/work/${c.slug}.md`)})`).join('\n\n')}
 
 ## How I work
 
@@ -50,11 +50,15 @@ ${home.how.tools}
 
 ${home.path.map((p) => `${Number(p.when)}. **${p.title}.** ${p.line}`).join('\n')}
 
-## Outside work
+## ${home.outsideIntro.title}
+
+${home.outsideIntro.text}
 
 ${home.outside.map((o) => `- **${o.t}.** ${o.d}`).join('\n')}
 
 ## Contact
+
+${home.contactLine}
 
 - Email: ${home.contact.email}
 - LinkedIn: ${home.contact.linkedin}
@@ -199,7 +203,7 @@ export function llmsTxt(site?: URL) {
 
 ## Pages
 
-- [Home](${abs(site, '/index.md')}): who I am, selected work, how I work, my path, outside work, contact
+- [Home](${abs(site, '/index.md')}): who I am, selected work, how I work, my path, life outside work, contact
 ${work.map((c) => `- [Case ${c.no}: ${c.title}](${abs(site, `/work/${c.slug}.md`)}): ${home.blurbs[c.slug]}`).join('\n')}
 
 ## Contact

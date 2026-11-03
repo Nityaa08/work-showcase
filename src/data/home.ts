@@ -2,11 +2,11 @@
 export const hero = {
   hi: 'Hi, I’m Nitya.',
   headline: 'I build AI agents that hold up in production.',
-  sub: 'I work on AI agents, the MCP connectors they use, the evals that check them and the security around them, from the first failing test to production.',
+  sub: 'Most of my days go into AI agents: the connectors they use, the evals that tell me they work, and the guardrails that keep people safe. I like the quiet part of the job, where you prove something works before anyone has to trust it.',
 };
 export const how = {
   title: 'One laptop, a team of agents, and me in the loop.',
-  text: 'Subagents research, challenge and review in parallel. I set the bar, read every line, and own what ships.',
+  text: 'I don’t hand-write code. I direct AI coding agents, and I prove every change before it ships. Subagents research, challenge and review in parallel, while I set the bar, read every line and own what goes out.',
   steps: ['Plan', 'Delegate', 'Prove', 'Own'],
   tools: 'Tools I work with: Claude Code, Claude Design, Cursor, DeepSeek and Grok, plus personal agents in Slack that run my pull-request workflow.',
 };
@@ -17,20 +17,29 @@ export const contact = {
   resume: '/Nityashree_S_Resume.pdf',
 };
 export const path = [
-  { when: '01', title: 'Studied', line: 'Computer science (AI & Data Science) at SASTRA University.' },
-  { when: '02', title: 'Payments data', line: 'Built the payments database an AI assistant answered from.' },
-  { when: '03', title: 'Testing AI', line: 'Caught its wrong answers before launch. That’s how I found AI engineering.' },
-  { when: '04', title: 'Shipping agents', line: 'Building and securing AI agents in production: platform, tools, guardrails.' },
+  { when: '01', title: 'Studied', line: 'I studied computer science, with a focus on AI and data science, at SASTRA University.' },
+  { when: '02', title: 'Payments data', line: 'I looked after the payments data an AI assistant answered from, and learned how much an answer depends on its data.' },
+  { when: '03', title: 'Testing AI', line: 'I tested that assistant before launch and caught its wrong answers. That’s when AI engineering clicked for me.' },
+  { when: '04', title: 'Shipping agents', line: 'Then I moved to building and securing AI agents that people relied on at work: the platform, the tools and the guardrails.' },
 ];
-export const blurbs: Record<string, string> = {
-  'agent-platform': 'The engine, studio and gateways behind company-wide AI agents, and how I kept them running.',
-  'mcp-connections': 'Connectors that let agents use real apps, with each person’s own access and no shared keys.',
-  security: 'Every layer closed by default, and every fix proven by replaying the attack.',
+// Work cards on home: an outcome headline in my voice; the topic and one line underneath.
+export const cards: Record<string, { headline: string; text: string }> = {
+  'agent-platform': { headline: 'An agent went offline. I found the one file that did it.', text: 'The engine, studio and gateways behind company-wide AI agents, and how I kept them running.' },
+  'mcp-connections': { headline: 'Agents that see only what you’re allowed to see.', text: 'Connectors that let agents use real apps with each person’s own access, never a shared key.' },
+  security: { headline: 'I attacked our agents before anyone else could.', text: 'Every layer closed by default, and every fix proven by replaying the attack.' },
 };
+/** One-line summary per case, for markdown and llms.txt. */
+export const blurbs: Record<string, string> = Object.fromEntries(Object.entries(cards).map(([k, v]) => [k, `${v.headline} ${v.text}`]));
+export const outsideIntro = {
+  title: 'When I’m not working',
+  text: 'Away from the screen I’m usually reading, dancing or on a yoga mat. I love bringing people together, and some of my favourite work has been with people far from home.',
+};
+// Each card has a small animated illustration (src/components/OutsideArt.astro), keyed by `art`.
 export const outside = [
-  { t: 'Reading', d: 'I read a lot.', icon: 'M4 5.5C6.5 4.5 9.5 4.5 12 6c2.5-1.5 5.5-1.5 8-.5V19c-2.5-1-5.5-1-8 .5-2.5-1.5-5.5-1.5-8-.5ZM12 6v13.5' },
-  { t: 'Classical dance', d: 'Trained in Indian classical dance since school.', icon: 'M12 4.5a1.5 1.5 0 1 0 0 .01M12 7v6l-4 6M12 13l4 6M7 9.5l5-1 5-2' },
-  { t: 'Yoga', d: 'Part of how I unwind and stay focused.', icon: 'M12 4.5a1.5 1.5 0 1 0 0 .01M12 7.5v5M5 10l7 2.5 7-2.5M8 19l4-6.5 4 6.5M6 19h12' },
-  { t: 'Events and the stage', d: 'Organised big, fun events with college clubs, and emceed on the main stage.', icon: 'M9 10a3 3 0 1 1 6 0v2a3 3 0 1 1-6 0ZM12 15v4M8.5 19h7M6 11a6 6 0 0 0 12 0' },
-  { t: 'Working across borders', d: 'Comfortable working with international clients and coworkers in Latin America.', icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18ZM3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3Z' },
-];
+  { t: 'Reading', d: 'I read a lot, and there’s nearly always a book on the go.', art: 'read' },
+  { t: 'Classical dance', d: 'I’ve trained in Indian classical dance since school.', art: 'dance' },
+  { t: 'Yoga', d: 'It’s how I slow down and come back to focus.', art: 'yoga' },
+  { t: 'Events and the stage', d: 'I organised big, fun events with college clubs, and emceed on the main stage.', art: 'stage' },
+  { t: 'Working across borders', d: 'I enjoy working with people across India and Latin America.', art: 'globe' },
+] as const;
+export const contactLine = 'Whether it’s a role, an idea or a question about agents, I’d love to hear from you.';
