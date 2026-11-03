@@ -43,3 +43,4 @@ export const outside = [
   { t: 'Working across borders', d: 'I enjoy working with people across India and Latin America.', art: 'globe' },
 ] as const;
 export const contactLine = 'Whether it’s a role, an idea or a question about agents, I’d love to hear from you.';
+export const contactOpen = 'Open to AI engineer and forward-deployed engineer roles.';

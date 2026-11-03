@@ -6,11 +6,11 @@ interface Props { id: string; kicker: string; title: string; items: Item[] }
 const { id, kicker, title, items } = Astro.props;
 ---
 <section class="story" id={id} data-story>
+  <div class="story-head"><p class="kicker">{kicker}</p><h2>{title}</h2></div>
   <div class="story-grid">
     <div class="story-steps">
       {items.map((it, n) => (
         <article class="step" data-step={n}>
-          {n === 0 && <div class="story-head in-step"><p class="kicker">{kicker}</p><h2>{title}</h2></div>}
           <p class="step-state"><span>0{n + 1}</span>{it.label}</p>
           <h3>{it.heading}</h3>
           <p>{it.text}</p>

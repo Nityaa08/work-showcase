@@ -1,7 +1,7 @@
 ---
 interface Props { kind: 'share' | 'memory' | 'guard' | 'skills' | 'schedule' | 'tools'; manual?: boolean }
 const { kind, manual = false } = Astro.props;
-const titles = { share: 'support-bot · chat', memory: 'ops-agent · chat', guard: 'support-bot · chat', skills: 'query-logs.md', schedule: 'ops-agent · schedule', tools: 'support-agent · toolkits' };
+const titles = { share: 'support-agent · chat', memory: 'ops-agent · chat', guard: 'support-agent · chat', skills: 'query-logs.md', schedule: 'ops-agent · schedule', tools: 'support-agent · toolkits' };
 const steps = { share: 4, memory: 4, guard: 4, skills: 4, schedule: 4, tools: 4 };
 ---
 <figure class:list={['demo', `d-${kind}`]} data-demo data-manual={manual ? '' : undefined} data-steps={steps[kind]} data-step="0">
@@ -19,7 +19,7 @@ const steps = { share: 4, memory: 4, guard: 4, skills: 4, schedule: 4, tools: 4 
           <div class="opt on"><i />Specific people<span class="ppl"><em>ops team</em><em>support</em></span></div>
           <div class="opt"><i />Everyone in the workspace</div>
         </div>
-        <div class="toast">Shared · each guest gets their own session</div>
+        <div class="toast">Shared · each guest gets their own access and session</div>
       </>
     )}
     {kind === 'memory' && (

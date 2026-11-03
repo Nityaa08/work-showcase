@@ -58,7 +58,7 @@ ${home.outside.map((o) => `- **${o.t}.** ${o.d}`).join('\n')}
 
 ## Contact
 
-${home.contactLine}
+${home.contactLine} ${home.contactOpen}
 
 - Email: ${home.contact.email}
 - LinkedIn: ${home.contact.linkedin}
