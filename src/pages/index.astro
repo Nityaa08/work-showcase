@@ -64,7 +64,7 @@ const work = cases.filter((c) => c.ready);
                   <div class="mini-flow"><span>agent</span><b /><span>gateway</span><b /><span>connector</span><b /><span>app</span></div>
                 )}
                 {c.slug === 'security' && (
-                  <div class="mini-stack">{['edge', 'identity', 'tenant', 'model', 'sandbox', 'dependencies'].map((l, i) => <span class:list={{ hit: i === 2 }}>{l}{i === 2 && <em>blocked</em>}</span>)}</div>
+                  <div class="mini-stack"><i class="ms-trail" aria-hidden="true" />{['edge', 'identity', 'tenant', 'model', 'sandbox', 'dependencies'].map((l, i) => <span class:list={{ pass: i < 2, hit: i === 2 }}>{l}{i === 2 && <em>blocked</em>}</span>)}</div>
                 )}
               </div>
               <div class="w-meta">

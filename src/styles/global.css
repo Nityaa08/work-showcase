@@ -458,30 +458,38 @@ body.studio::before { opacity: 0.06 !important; }
 /* ===== case 03: security (custom layout) ===== */
 .sx-hero { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 64px; align-items: center; padding: 140px var(--sec-x) 40px; min-height: 92svh; background: radial-gradient(55% 60% at 75% 45%, #151517 0%, var(--bg) 70%); }
 .sx-head h1 { font-size: clamp(42px, 5vw, 76px); line-height: 1; letter-spacing: -0.045em; font-weight: 600; margin: 18px 0 20px; }
-.stack { position: relative; display: grid; gap: 10px; padding-top: 96px; }
-.layer { position: relative; display: grid; grid-template-columns: 38px 130px 1fr; align-items: center; gap: 10px; height: 64px; padding: 0 20px; border-radius: 14px; background: linear-gradient(180deg, #17171a, #111113); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.055), inset 0 1px 0 rgba(255, 255, 255, 0.07); overflow: hidden; transition: box-shadow var(--t-base); }
-.layer::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(156, 197, 161, 0.14), transparent 70%); opacity: 0; transition: opacity var(--t-base); }
-.layer.pass { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.07); }
+/* The hero stack. A caption above the layers names the attack (it never overlaps a layer). A red marker steps down the
+   gutter on the left; each layer it gets through keeps a thin red edge; the layer that stops it lights green with its reason. */
+.stack { --gut: 22px; position: relative; display: grid; gap: 10px; }
+.layer { position: relative; margin-left: var(--gut); display: grid; grid-template-columns: 38px 130px 1fr; align-items: center; gap: 10px; height: 64px; padding: 0 20px; border-radius: 14px; background: linear-gradient(180deg, #17171a, #111113); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.055), inset 0 1px 0 rgba(255, 255, 255, 0.07); overflow: hidden; transition: box-shadow var(--t-base) var(--ease); }
+.layer::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(156, 197, 161, 0.14), transparent 70%); opacity: 0; transition: opacity var(--t-base) var(--ease); }
+/* red: "the attack got through here". A faint tint while the marker is on the layer, and a red left edge that stays. */
+.layer::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(214, 120, 108, 0.17), transparent 60%); opacity: 0; transition: opacity var(--t-base) var(--ease); }
+.layer.at::after { opacity: 1; }
+.layer.pass { box-shadow: inset 3px 0 0 rgba(214, 120, 108, 0.85), 0 0 0 1px rgba(214, 120, 108, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.07); }
 .layer.hit { box-shadow: 0 0 0 1px rgba(156, 197, 161, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.07); }
 .layer.hit::before { opacity: 1; }
 .l-no { font: 12px var(--sans); color: #5d5f63; }
-.layer b { font-size: 17px; font-weight: 600; }
-.l-d { color: var(--ink-3); font-size: 14px; transition: opacity var(--t-base); }
+.layer b { font-size: 17px; font-weight: 600; transition: translate var(--t-base) var(--ease); }
+.l-d { color: var(--ink-3); font-size: 14px; transition: opacity var(--t-base) var(--ease); }
 .layer.hit .l-d { opacity: 0; }
-.stamp-b { position: absolute; left: 188px; right: 18px; display: flex; align-items: center; gap: 12px; opacity: 0; transform: translateX(12px); transition: opacity var(--t-base), transform var(--t-slow) var(--ease); }
+.stamp-b { position: absolute; left: 188px; right: 18px; display: flex; align-items: center; gap: 12px; opacity: 0; transform: translateX(12px); transition: opacity var(--t-base) var(--ease), transform var(--t-slow) var(--ease); }
 .layer.hit .stamp-b { opacity: 1; transform: none; }
 .stamp-b i { font: normal 600 11px var(--sans); letter-spacing: 0.14em; text-transform: uppercase; color: #0b0b0b; background: #9cc5a1; padding: 4px 8px; border-radius: 6px; flex: none; }
 .stamp-b em { font-style: normal; font-size: 14px; color: #dcebdd; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.attack { position: absolute; top: 0; left: 0; right: 0; height: 52px; display: flex; align-items: center; gap: 12px; padding: 0 18px; border-radius: 12px; background: #1e1514; box-shadow: inset 0 0 0 1px rgba(214, 120, 108, 0.5), 0 14px 30px -10px rgba(0,0,0,0.8); color: #f0c4bd; font-size: 14.5px; z-index: 3; transition: opacity 400ms; }
-/* While it drops, the banner folds into a thin red line that slides down the gaps between layers, so it never covers a layer's name. */
-.attack { transform-origin: 50% 50%; }
-.attack > * { transition: opacity var(--t-fast) var(--ease); }
-/* It folds quickly (scale), then travels (translate). */
-.attack.drop { background: #d6786c; transition: translate 750ms var(--ease-in-out), scale 260ms var(--ease), opacity var(--t-base) var(--ease), background var(--t-fast) var(--ease); }
-.attack.drop > * { opacity: 0; }
-.attack.stopped { opacity: 0; }
-.attack.reset, .attack.reset > * { transition: none !important; opacity: 0; }
-.a-tag { font: 600 10.5px var(--sans); letter-spacing: 0.14em; text-transform: uppercase; color: #0b0b0b; background: #d6786c; padding: 3px 7px; border-radius: 5px; }
+/* the caption: a fixed slot above the stack, so nothing moves when the text changes */
+.attack { margin: 0 0 6px; height: 56px; display: flex; align-items: center; gap: 12px; padding: 0 18px; border-radius: 12px; background: #1e1514; box-shadow: inset 0 0 0 1px rgba(214, 120, 108, 0.45); color: #f0c4bd; font-size: 14.5px; line-height: 1.35; }
+.a-tag { flex: none; font: 600 10.5px var(--sans); letter-spacing: 0.14em; text-transform: uppercase; color: #0b0b0b; background: #d6786c; padding: 3px 7px; border-radius: 5px; }
+.a-text { min-width: 0; transition: opacity var(--t-base) var(--ease); }
+.stack.out .a-text { opacity: 0; }
+/* the gutter: a faint track, the red trail of where the attack has been, and the marker */
+.a-rail { display: none; }
+.stack.js .a-rail { display: block; position: absolute; left: 0; top: 0; width: var(--gut); height: 100%; pointer-events: none; }
+.a-track, .a-trail { position: absolute; left: calc(var(--gut) / 2 - 3px); width: 1px; top: var(--rail-top, 72px); height: var(--rail-h, 0px); background: rgba(255, 255, 255, 0.09); }
+.a-trail { width: 2px; left: calc(var(--gut) / 2 - 3.5px); background: rgba(214, 120, 108, 0.75); transform-origin: 50% 0; scale: 1 var(--trail, 0); transition: scale var(--t-base) var(--ease-in-out), opacity var(--t-base) var(--ease); }
+.a-dot { position: absolute; left: calc(var(--gut) / 2 - 7.5px); top: 0; width: 10px; height: 10px; border-radius: 50%; background: #d6786c; box-shadow: 0 0 0 4px rgba(214, 120, 108, 0.18); translate: 0 var(--dot-y, 0px); transition: translate var(--t-base) var(--ease-in-out), opacity var(--t-base) var(--ease); }
+.stack.out .a-dot, .stack.out .a-trail { opacity: 0; }
+.stack.snap .a-dot, .stack.snap .a-trail { transition: none; }
 @media (max-width: 960px) { .sx-hero { grid-template-columns: 1fr; } }
 
 /* shared case navigation */
@@ -503,7 +511,6 @@ body.studio::before { opacity: 0.06 !important; }
 .story-head.in-step { margin-bottom: 6vh !important; }
 .cs-hero h1, .mx-head h1, .sx-head h1 { font-size: clamp(44px, 5vw, 76px) !important; }
 .cs-hero, .mx-hero, .sx-hero { align-items: center; padding-top: 130px !important; }
-.stack { padding-top: 76px !important; }
 .stamp-b em { white-space: normal; }
 .cn.next .cn-meta { text-align: right; }
 .cn-meta { display: block; } .cn-meta em, .cn-meta b { display: block; }
@@ -1018,8 +1025,8 @@ html { scroll-behavior: smooth; }
 /* Case 03: the six layers fit */
 .sx-head h1 { font-size: clamp(38px, min(5vw, 9svh), 76px) !important; }
 .layer { height: clamp(46px, 7.4svh, 64px); }
-.stack { gap: clamp(6px, 1.2svh, 10px); padding-top: clamp(60px, 9svh, 76px) !important; }
-.attack { height: clamp(44px, 6.6svh, 52px); }
+.stack { gap: clamp(6px, 1.2svh, 10px); }
+.attack { height: clamp(48px, 7svh, 56px); }
 /* Case 01 features: heading above, demo centred beside all six options */
 .rail-head { margin-bottom: 36px !important; }
 .rail { align-items: center; }
@@ -1257,7 +1264,18 @@ html { scroll-behavior: smooth; }
 @media (max-width: 360px) { .brand-who b { font-size: 13.5px; } .links { gap: 10px; font-size: 13px; } .links .cta { padding: 6px 9px; } }
 @media (max-width: 340px) { .links a[href$=".pdf"] { display: none; } }
 /* case 03 layer stack on phones: the "blocked" stamp starts after the longest layer name */
-@media (max-width: 680px) { .layer b { font-size: 16px; } .stamp-b { left: 172px; right: 12px; gap: 8px; } .stamp-b em { font-size: 12.5px; line-height: 1.3; } }
+/* On phones a blocked layer uses two lines: name and BLOCKED on top, the reason underneath, so nothing is squeezed. */
+@media (max-width: 680px) {
+  .stack { --gut: 18px; }
+  .layer { height: 60px; padding: 0 12px 0 14px; }
+  .layer b { font-size: 16px; }
+  .layer.hit b { translate: 0 -10px; }
+  .stamp-b { inset: 0; display: block; transform: translateY(4px); }
+  .layer.hit .stamp-b { transition-delay: var(--t-fast); } /* the name moves up first, then the reason appears under it */
+  .stamp-b i { position: absolute; right: 12px; top: 11px; font-size: 10.5px; padding: 3px 7px; }
+  .stamp-b em { position: absolute; left: 54px; right: 12px; bottom: 7px; font-size: 13px; line-height: 1.3; white-space: nowrap; }
+  .attack { height: 68px; padding: 0 14px; font-size: 14px; }
+}
 
 /* =====================================================================
    Round 8: a calmer, warmer home page. Appended last on purpose.
@@ -1354,6 +1372,11 @@ html { scroll-behavior: smooth; }
 @media (max-width: 960px) { .story > .story-head { margin-bottom: 8px !important; } }
 /* home card 03: six layers fit the same art box as the other cards */
 .mini-stack { gap: 5px; } .mini-stack span { padding: 5px 12px; }
+/* home card 03 mirrors the case hero: a red trail in the gutter passes edge and identity (red edges) and stops at tenant */
+.mini-stack { position: relative; padding-left: 14px; }
+.mini-stack span.pass { box-shadow: inset 2px 0 0 rgba(214, 120, 108, 0.85), 0 0 0 1px rgba(214, 120, 108, 0.22); }
+.ms-trail { position: absolute; left: 4px; top: 0; width: 2px; height: calc((100% + 5px) * 2.5 / 6 - 2.5px); background: rgba(214, 120, 108, 0.75); border-radius: 1px; }
+.ms-trail::after { content: ''; position: absolute; left: -3px; bottom: -4px; width: 8px; height: 8px; border-radius: 50%; background: #d6786c; }
 /* case 02 tools / case 03 sweep: the paragraph sits close under its heading */
 .mx-split .story-head { margin-bottom: 22px !important; }
 @media (max-width: 960px) { .mx-split { gap: 28px; } }
@@ -1755,5 +1778,5 @@ html { scroll-behavior: smooth; }
 /* Reduced motion: the work-card flow line holds still, and step and feature lists switch instantly. */
 @media (prefers-reduced-motion: reduce) {
   .mini-flow b { animation: none; }
-  .mx-steps p, .mx-steps li, .r-more, .rail-slot, .chev, .layer, .layer::before, .stamp-b, .l-d { transition: none !important; }
+  .mx-steps p, .mx-steps li, .r-more, .rail-slot, .chev, .layer, .layer::before, .layer::after, .layer b, .stamp-b, .l-d, .a-text, .a-dot, .a-trail { transition: none !important; }
 }
