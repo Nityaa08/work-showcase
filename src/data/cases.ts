@@ -56,10 +56,10 @@ export const cases: Case[] = [
         ]},
       },
       { state: 'Diagnose', heading: 'Find the real cause', text: 'A release had gone out that day, and it looked guilty. Instead of rolling it back on a hunch, I compared the broken agent with the healthy ones. The real cause was a single badly formatted file.',
-        stage: { medium: 'claude', label: 'agent-platform — claude', lines: [
+        stage: { medium: 'claude', label: 'agent-platform · claude', lines: [
           { t: 'you', s: 'Only support-agent fails. What does it have that the healthy agents do not?' },
           { t: 'tool', s: 'Bash(git diff --stat previous-release..this-release -- skills/)' },
-          { t: 'out', s: '(empty — the deploy did not touch skills)' },
+          { t: 'out', s: '(empty: the deploy did not touch skills)' },
           { t: 'tool', s: 'Search logs("parse frontmatter", 3 days, by agent)' },
           { t: 'out', s: 'support-agent only' },
           { t: 'ai', s: 'Its skill header has a second ": " in the description line. YAML cannot parse it, so the engine fails the whole agent.' },
@@ -74,7 +74,7 @@ export const cases: Case[] = [
           { t: 'ok', s: 'ok    internal/skills    0.41s' },
         ]},
       },
-      { state: 'Ship', heading: 'Ship it safely', text: 'Tested and reviewed before merging, then checked on dev before production, so the fix didn’t break anything else.',
+      { state: 'Ship', heading: 'Ship it safely', text: 'It was tested and reviewed before merging. Then I checked it on dev before production, so the fix didn’t break anything else.',
         stage: { medium: 'shell', label: '~/agent-platform', lines: [
           { t: 'cmd', s: 'git push origin fix/skill-header' },
           { t: 'ok', s: '✓ all tests pass   ✓ review approved' },
@@ -97,7 +97,7 @@ export const cases: Case[] = [
       { name: 'Reply language', demo: 'guard', icon: 'M4 5h9M8.5 3v2M6 5c.6 3.2 2.6 5.7 5.5 7M11 5c-.8 3.5-3.4 6.4-7 8M13 21l4-9 4 9M14.5 18h5', text: 'People write in many languages. I built the resolver that picks each reply’s language, ran it in shadow mode, scored it on a labelled test set, then shipped it.' },
       { name: 'Skills', demo: 'skills', icon: 'M7 4h7l4 4v12H7zM14 4v4h4M10 13h5M10 16h5', text: 'Owners teach agents with small instruction files. The studio checks each one on save and points to the line to fix.' },
       { name: 'Scheduled runs', demo: 'schedule', icon: 'M12 7v5l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z', text: 'Morning summaries without asking: a scheduled run posts a single clean message to the channel.' },
-      { name: 'Toolkits', demo: 'tools', icon: 'M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4Z', text: 'Agents reach real apps (logs, code, docs, travel) through a single tool gateway, covered in the MCP case study.' },
+      { name: 'Toolkits', demo: 'tools', icon: 'M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4Z', text: 'Agents reach real apps (logs, code, docs, travel) through a single tool gateway, covered in case 02.' },
     ],
     model: [
       { title: 'How the model runs', lane: 'runs', items: [
@@ -116,7 +116,7 @@ export const cases: Case[] = [
     bugs: [
       { title: 'A job said “ok” after doing part of its work', where: 'engine · scheduled runs', symptom: 'a scheduled job stopped early and still logged success', fix: 'cause found: the step limit, not the rate limit', deep: 'A scheduled job hit its step limit partway through and still recorded success. The chat app’s rate limit looked guilty; the real cause was the step limit. A job that says ok when it isn’t is worse than one that fails loudly.' },
       { title: 'A release broke credentials for ordinary agents', where: 'tool gateway', symptom: 'tool calls lost their credentials', fix: 'rolled back the same day; the missing test now exists', deep: 'A gateway change refused calls without an identity, on the premise that every caller sends one. Some callers never did. The release was rolled back the same day, and the test that was missing covers exactly that caller: a call that arrives without an identity.' },
-      { title: 'My own change caused a retry loop', where: 'engine · model catalog', symptom: 'an empty model name was rejected and re-sent every few minutes', fix: 'my mistake, found and fixed', deep: 'A catalog row was missing, so my change sent an empty model name. The engine rejected it, and the request was re-sent every few minutes. It was my mistake. I found it, fixed it, and now check for missing rows before I trust a lookup.' },
+      { title: 'My own change caused a retry loop', where: 'engine · model catalogue', symptom: 'an empty model name was rejected and re-sent every few minutes', fix: 'my mistake, found and fixed', deep: 'A catalogue row was missing, so my change sent an empty model name. The engine rejected it, and the request was re-sent every few minutes. It was my mistake. I found it, fixed it, and now check for missing rows before I trust a lookup.' },
       { title: 'A message vanished when a turn stopped early', where: 'engine · chat', symptom: 'the user’s message was never saved', fix: 'save the message the moment the turn is accepted', deep: 'When a turn stopped before the model ran, the user’s message was never written, so it disappeared from the chat. The message is now saved the moment the turn is accepted, and tests cover both early-failure paths.' },
     ],
   },

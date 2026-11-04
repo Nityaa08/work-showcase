@@ -52,6 +52,13 @@ const { features } = Astro.props;
     }
     if (me === run && inView) show((i + 1) % items.length);
   }
+  // Every description reserves the height of the longest one, so opening a feature never moves the list or the demo.
+  const list = document.querySelector<HTMLElement>('.rail-list')!;
+  const reserve = () => {
+    list.style.removeProperty('--rail-d');
+    list.style.setProperty('--rail-d', `${Math.max(...items.map((el) => el.querySelector<HTMLElement>('.r-more p')!.offsetHeight))}px`);
+  };
+  reserve(); addEventListener('resize', reserve); document.fonts?.ready.then(reserve);
   items.forEach((el, n) => el.querySelector('button')!.addEventListener('click', () => show(n)));
   new IntersectionObserver(([e]) => {
     inView = e.isIntersecting;

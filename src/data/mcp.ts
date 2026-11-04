@@ -31,7 +31,7 @@ export const proof: StageT = { medium: 'shell', label: '~/connector-mcp', lines:
   { t: 'ok', s: '✓ back-to-back callers never share a token' },
   { t: 'ok', s: '✓ no credential → refused, the app is never called' },
   { t: 'ok', s: '✓ a tool without permission never reaches the app' },
-  { t: 'ok', s: '✓ the tool catalog is served without credentials' },
+  { t: 'ok', s: '✓ the tool catalogue is served without credentials' },
   { t: 'out', s: 'ok   connector-mcp   all green' },
 ]};
 

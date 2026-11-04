@@ -2,7 +2,7 @@
 import StatusIcons from './StatusIcons.astro';
 const layers = Array.from({ length: 14 }, (_, i) => i);
 const work = [
-  { s: 'ok', name: 'feat/guest-access', repo: 'across services', act: '$ go test ./... — ok', href: '/work/agent-platform/' },
+  { s: 'ok', name: 'feat/guest-access', repo: 'across services', act: '$ go test ./... · ok', href: '/work/agent-platform/' },
   { s: 'run', name: 'fix/untrusted-fence-on-trim', repo: 'agent-platform', act: 'coder · fence kept after trimming', href: '/work/agent-platform/' },
   { s: 'ok', name: 'feat/mcp-connector', repo: 'connectors', act: 'tests green · verified on dev' },
   { s: 'wait', name: 'fix/tool-gateway-timeouts', repo: 'gateway', act: 'in review · bounded upstream wait' },
@@ -53,15 +53,24 @@ const work = [
     const a = r.querySelector<HTMLElement>('.a-act')!; a.textContent = text;
     r.classList.remove('flash'); void r.offsetWidth; r.classList.add('flash');
   };
+  // Everything here pauses while the phone is off screen: the float, the agent script and the pointer tilt.
+  let onScreen = false, wake: (() => void) | null = null;
+  new IntersectionObserver(([e]) => {
+    onScreen = e.isIntersecting;
+    phone.classList.toggle('off', !onScreen);
+    if (onScreen && wake) { wake(); wake = null; }
+  }).observe(phone);
+  const pause = (ms: number) => new Promise<void>((r) => setTimeout(r, ms)).then(() => (onScreen ? undefined : new Promise<void>((r) => (wake = r))));
   if (!reduced) {
     (async () => {
       while (true) {
         rows.forEach((_, n) => set(n, n ? 'idle' : 'run', n ? 'queued' : 'splitting the task'));
-        for (const [n, s, t] of script) { await new Promise((r) => setTimeout(r, 1500)); set(n, s, t); }
-        await new Promise((r) => setTimeout(r, 3500));
+        for (const [n, s, t] of script) { await pause(1500); set(n, s, t); }
+        await pause(3500);
       }
     })();
     addEventListener('pointermove', (e) => {
+      if (!onScreen) return;
       const x = e.clientX / innerWidth - 0.5, y = e.clientY / innerHeight - 0.5;
       phone.style.setProperty('--ry', `${-24 + x * 10}deg`);
       phone.style.setProperty('--rx', `${8 - y * 8}deg`);

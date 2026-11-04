@@ -122,13 +122,16 @@ const c = cases.find((x) => x.slug === 'security')!;
         layersEl.forEach((l) => l.classList.remove('hit', 'pass'));
         atk.classList.remove('drop', 'stopped');
         atk.classList.add('reset');
-        atk.style.transform = 'translateY(0)';
+        atk.style.translate = '0 0'; atk.style.scale = '1';
         atext.textContent = a.try;
         void atk.offsetWidth;
         atk.classList.remove('reset');
         setTimeout(() => {
           atk.classList.add('drop');
-          atk.style.transform = `translateY(${target.offsetTop - atk.offsetHeight - 8}px)`;
+          // Fold to a 3px line and land it in the gap just above the target layer.
+          const gap = parseFloat(getComputedStyle(stack).rowGap) || 8;
+          const y = target.offsetTop - gap / 2 - atk.offsetHeight / 2;
+          atk.style.translate = `0 ${y}px`; atk.style.scale = `1 ${3 / atk.offsetHeight}`;
           layersEl.slice(0, a.layer).forEach((l, i) => setTimeout(() => l.classList.add('pass'), 110 * (i + 1)));
         }, 450);
         setTimeout(() => {

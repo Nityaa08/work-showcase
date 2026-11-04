@@ -45,7 +45,7 @@ const steps = { share: 4, memory: 4, guard: 4, skills: 4, schedule: 4, tools: 4 
       <>
         <pre class="code"><span>1  ---</span><span>2  name: query-logs</span><span class="bad">3  description: Query logs: by user</span><span class="good">3  description: "Query logs: by user"</span><span>4  ---</span></pre>
         <div class="d-actions"><button tabindex="-1">Save</button></div>
-        <div class="banner err">Line 3: quote the value — a second ": " breaks the header</div>
+        <div class="banner err">Line 3: quote the value. A second ": " breaks the header.</div>
         <div class="banner ok">Saved · the agent can use this skill now</div>
       </>
     )}
@@ -67,7 +67,7 @@ const steps = { share: 4, memory: 4, guard: 4, skills: 4, schedule: 4, tools: 4 
             <div class="conn"><span class="c-logo">{k}</span><span class="c-name"><b>{n}</b><em>{d}</em></span><span class="c-state"><span class="c-connect">Connect</span><span class="c-wait"><i />Connecting</span><span class="c-ok">Connected</span></span></div>
           ))}
         </div>
-        <p class="hint">Every connection runs through the same gateway. That is case 02 →</p>
+        <p class="hint">Every connection runs through the same gateway. That’s case 02 →</p>
       </>
     )}
   </div>

@@ -2,7 +2,7 @@
 export const hero = {
   hi: 'Hi, I’m Nitya.',
   headline: 'I build AI agents that hold up in production.',
-  sub: 'Most of my days go into AI agents: the connectors they use, the evals that tell me they work, and the guardrails that keep people safe. I like the quiet part of the job, where you prove something works before anyone has to trust it.',
+  sub: 'Most of my days go into AI agents: the connectors they use, the evals that tell me they work, and the guardrails that keep people safe. I like the quiet part of the job, where I prove something works before anyone has to trust it.',
 };
 export const how = {
   title: 'One laptop, a team of agents, and me in the loop.',
@@ -18,9 +18,9 @@ export const contact = {
 };
 export const path = [
   { when: '01', title: 'Studied', line: 'I studied computer science, with a focus on AI and data science, at SASTRA University.' },
-  { when: '02', title: 'Payments data', line: 'I looked after the payments data an AI assistant answered from, and learned how much an answer depends on its data.' },
+  { when: '02', title: 'Payments data', line: 'I looked after the payments data an AI assistant answered from, and learnt how much an answer depends on its data.' },
   { when: '03', title: 'Testing AI', line: 'I tested that assistant before launch and caught its wrong answers. That’s when AI engineering clicked for me.' },
-  { when: '04', title: 'Shipping agents', line: 'Then I moved to building and securing AI agents that people relied on at work: the platform, the tools and the guardrails.' },
+  { when: '04', title: 'Shipping agents', line: 'Then I moved to building and securing AI agents that people rely on at work: the platform, the tools and the guardrails.' },
 ];
 // Work cards on home: an outcome headline in my voice; the topic and one line underneath.
 export const cards: Record<string, { headline: string; text: string }> = {
@@ -49,13 +49,13 @@ export const outsideIntro = {
  *    "…and I have opinions." such as "Current favourite: …", and you can make its `ask` "Ask me why I loved …".
  */
 export const desk = [
-  { id: 'books', name: 'Books', label: 'My stack of books', note: 'Books over movies, always. If it’s been adapted, I’ve read it first, and I have opinions.', ask: 'Ask me: the book or the movie?' },
+  { id: 'books', name: 'Books', label: 'My stack of books', note: 'Books over movies, always. If it’s been adapted, I’ve read it first, and I have opinions.', ask: 'Ask me which is better: the book or the movie.' },
   { id: 'ghungroo', name: 'Ghungroo', label: 'My ghungroo, the ankle bells of Indian classical dance', note: 'Dance is the first thing I ever picked up, and I went all in: not one but two Indian classical forms, all the way to competition stages.', ask: 'Ask me which is harder: classical dance or debugging.' },
   { id: 'mat', name: 'Yoga mat', label: 'My yoga mat', note: 'Yoga started as a daily routine and turned into competitions. Best reset button I know.', ask: 'Ask me which pose is harder than it looks.' },
   { id: 'mug', name: 'Mug', label: 'My mug', note: 'Every good desk needs a mug. This one’s for you: pull up a chair.', ask: 'Ask me anything, really.' },
   { id: 'globe', name: 'Globe', label: 'A small globe', note: 'Work took me from India to Mexico. People from all over the world at one table? Count me in, every time.', ask: 'Ask me what I learnt working across borders.' },
   { id: 'events', name: 'Run-sheet', label: 'An event run-sheet on a clipboard', note: 'Clipboard, run-sheet, a hall full of students: the fun and management events I ran in college. Best bonding there is.', ask: 'Ask me what makes an event actually fun.' },
-  { id: 'mic', name: 'The mic', label: 'A stage mic under a spotlight', note: 'Hand me a mic and I’m home: my college club’s main stage, and every event I ran.', ask: 'Ask me how to fill an awkward pause on stage.' },
+  { id: 'mic', name: 'Mic', label: 'A stage mic under a spotlight', note: 'Hand me a mic and I’m home: my college club’s main stage, and every event I ran.', ask: 'Ask me how to fill an awkward pause on stage.' },
 ] as const;
 export const contactLine = 'Whether it’s a role, an idea or a question about agents, I’d love to hear from you.';
 /*

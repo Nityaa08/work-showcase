@@ -59,7 +59,7 @@
       }
     }, { threshold: 0.4 });
     frames.forEach((f) => io.observe(f));
-    addEventListener('slot:active', ((e: CustomEvent<HTMLElement>) => e.detail.querySelectorAll<HTMLElement>('[data-stage]').forEach(loop)) as EventListener);
+    addEventListener('slot:active', ((e: CustomEvent<HTMLElement>) => e.detail.querySelectorAll<HTMLElement>('[data-stage]').forEach((f) => f.getClientRects().length && loop(f))) as EventListener);
   }
 
   const demos = [...document.querySelectorAll<HTMLElement>('[data-demo]:not([data-manual])')];

@@ -33,6 +33,20 @@ const c = cases.find((x) => x.slug === 'mcp-connections')!;
           <ol class="mx-steps">
             {flow.map(([t, d], i) => <li data-i={i} class:list={{ on: i === 0 }}><span>0{i + 1}</span><div><b>{t}</b><p>{d}</p></div></li>)}
           </ol>
+          <script is:inline>
+            // Reserve room for the longest step description before first paint, so switching steps never moves the layout.
+            (() => {
+              const list = document.querySelector('.mx-steps');
+              const reserve = () => {
+                const ps = [...list.querySelectorAll('p')];
+                ps.forEach((p) => (p.style.height = 'auto'));
+                const h = Math.max(...ps.map((p) => p.offsetHeight));
+                ps.forEach((p) => (p.style.height = ''));
+                list.style.setProperty('--mx-d', `${h}px`);
+              };
+              reserve(); addEventListener('resize', reserve); document.fonts && document.fonts.ready.then(reserve);
+            })();
+          </script>
         </div>
 
         <div class="mx-diagram" id="mx">
@@ -184,18 +198,6 @@ const c = cases.find((x) => x.slug === 'mcp-connections')!;
         }
         if (!reduced && auto) timer = window.setTimeout(() => show((n + 1) % steps.length), Math.max(travel, 700) + 1300);
       }
-      // Reserve room for the longest step description, so switching steps never moves the layout.
-      const list = document.querySelector<HTMLElement>('.mx-steps')!;
-      const reserve = () => {
-        list.style.removeProperty('--mx-d');
-        const ps = [...list.querySelectorAll<HTMLElement>('p')];
-        ps.forEach((p) => (p.style.display = 'block'));
-        const h = Math.max(...ps.map((p) => p.offsetHeight));
-        ps.forEach((p) => (p.style.display = ''));
-        list.style.setProperty('--mx-d', `${h}px`);
-      };
-      reserve(); addEventListener('resize', reserve);
-      document.fonts?.ready.then(reserve);
       let auto = true;
       steps.forEach((s, k) => s.addEventListener('click', () => show(k)));
       show(0);

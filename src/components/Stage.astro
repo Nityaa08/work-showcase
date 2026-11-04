@@ -17,13 +17,15 @@ const isPhone = stage.medium === 'phone';
   )}
   {!mini && !isPhone && <span class="progress" />}
   <div class="win-body">
-    {stage.lines.map((l) => {
+    {stage.lines.map((l, i) => {
+      // The cursor starts where it ends up (in the last line), so the window is its final size before it plays.
+      const caret = !mini && i === stage.lines.length - 1 && l.t !== 'log';
       if (l.t === 'log') {
         const [time, level, service, msg] = l.s.split('|');
         return <div class:list={['ln', 'logrow', `lv-${level.toLowerCase()}`]} data-t="log"><span class="lg-time">{time}</span><span class="lg-level">{level}</span><span class="lg-svc">{service}</span><span class="txt">{msg}</span></div>;
       }
-      return <div class:list={['ln', `t-${l.t}`]} data-t={l.t}>{stage.medium === 'logs' && l.t === 'cmd' && <span class="lg-q">⌕</span>}<span class="pfx">{prompts[stage.medium]?.[l.t] ?? ''}</span><span class="txt">{l.s}</span></div>;
+      return <div class:list={['ln', `t-${l.t}`]} data-t={l.t}>{stage.medium === 'logs' && l.t === 'cmd' && <span class="lg-q">⌕</span>}<span class="pfx">{prompts[stage.medium]?.[l.t] ?? ''}</span><span class="txt">{l.s}</span>{caret && <span class="cursor" aria-hidden="true" />}</div>;
     })}
-    {!mini && <span class="cursor" aria-hidden="true" />}
+    {!mini && stage.lines[stage.lines.length - 1]?.t === 'log' && <span class="cursor" aria-hidden="true" />}
   </div>
 </figure>

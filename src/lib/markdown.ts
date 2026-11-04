@@ -86,7 +86,7 @@ ${(c.steps ?? []).map((s, i) => `### ${i + 1}. ${s.state}: ${s.heading}\n\n${s.t
 
 ${(c.features ?? []).map((f) => `- **${f.name}.** ${f.text}`).join('\n')}
 
-## The AI part isn't just calling a model
+## The AI part isn’t just calling a model
 
 ${(c.model ?? []).map((col) => `### ${col.title}\n\n${col.items.map(([br, t, d]) => `- **${t}** (\`${br}\`). ${d}`).join('\n')}`).join('\n\n')}
 
@@ -129,13 +129,13 @@ ${mcp.tools.map(([n, d, sc]) => `- \`${n}\`: ${d} (permission \`${sc}\`)`).join(
 
 ### 1. Against a fake app
 
-Before any real app was involved, a fake one checked that each person's token is used only for them, and that a request without one is refused.
+Before any real app was involved, a fake one checked that each person’s token is used only for them, and that a request without one is refused.
 
 ${code(mcp.proof.lines)}
 
 ### 2. With a real teammate
 
-A teammate who didn't build it asked their own agent a normal question, without naming the connector. The agent chose the right tool by itself, found the answer in a ticket, and named the tools it used so the answer could be checked.
+A teammate who didn’t build it asked their own agent a normal question, without naming the connector. The agent chose the right tool by itself, found the answer in a ticket, and named the tools it used so the answer could be checked.
 
 ## The result: many apps, one gateway
 

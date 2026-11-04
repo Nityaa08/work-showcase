@@ -2,7 +2,7 @@
 import type { Stage as StageT } from './cases';
 
 export const intro = 'The agents I worked on read text from strangers, act with people’s own accounts and run code. So every layer has to say no by default, and every fix is proven by attacking it.';
-export const sweepText = 'Dependency alerts pile up fast, and most can’t touch the code. I scanned for the vulnerabilities the code actually calls, upgraded those first, and re-scanned to prove they were gone, across several services.';
+export const sweepText = 'Dependency alerts pile up fast, and most can’t touch the code. I scanned for the vulnerabilities the code actually calls and upgraded those first. Then I re-scanned to prove they were gone, across several services.';
 export const layers = [
   ['Edge', 'what comes in'],
   ['Identity', 'who is calling'],
@@ -79,7 +79,7 @@ export const principles = [
 export const sweep: StageT = { medium: 'shell', label: '~/agent-fleet', lines: [
   { t: 'cmd', s: 'govulncheck ./...' },
   { t: 'err', s: 'vulnerability reachable from your code' },
-  { t: 'dim', s: '# most alerts can’t reach our code — this one can' },
+  { t: 'dim', s: '# most alerts can’t reach our code, but this one can' },
   { t: 'cmd', s: 'go get example.org/lib@patched && go test ./...' },
   { t: 'ok', s: 'ok   all packages' },
   { t: 'cmd', s: 'govulncheck ./...' },
