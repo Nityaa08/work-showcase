@@ -1,0 +1,163 @@
+---
+// "When I'm not working": a hand-drawn desk. Inline SVG line art (dark grey ink, one green accent).
+// Every object has a real <button> laid over it (positioned in % of the drawing, so it scales).
+// The page script (src/pages/index.astro) adds .hot (hover/focus) and .open (note showing) to the
+// matching .dk-obj, and .in to .desk while it is on screen. Motion lives in global.css ("Round 10").
+import { desk } from '../data/home';
+
+const W = 600, H = 400;
+// Hit areas in drawing units: centre x/y, width, height. CSS keeps each at least 44px on screen.
+const hits: Record<string, [number, number, number, number]> = {
+  books: [137, 132, 140, 100],
+  globe: [285, 126, 96, 108],
+  ghungroo: [124, 312, 156, 50],
+  mug: [255, 292, 72, 84],
+  mat: [368, 312, 128, 48],
+  mic: [510, 248, 84, 176],
+};
+const pct = (v: number, of: number) => `${((v / of) * 100).toFixed(3)}%`;
+
+// Ghungroo: rows of small bells along the front of each coiled strap.
+type Bell = { x: number; y: number; r: number; d: number };
+const ring = (cx: number, cy: number, rx: number, ry: number, from: number, to: number, n: number, r: number, seed: number): Bell[] =>
+  Array.from({ length: n }, (_, i) => {
+    const a = ((from + ((to - from) * i) / (n - 1)) * Math.PI) / 180;
+    return { x: +(cx + rx * Math.cos(a)).toFixed(2), y: +(cy + ry * Math.sin(a)).toFixed(2), r, d: +(((i * 7 + seed) % 10) * 0.07).toFixed(2) };
+  });
+const coilB = { cx: 154, cy: 309, rx: 38, ry: 8 };
+const coilA = { cx: 100, cy: 316, rx: 44, ry: 9 };
+const backB = ring(coilB.cx, coilB.cy - 2, coilB.rx - 2, coilB.ry, 205, 335, 6, 3.2, 3);
+const frontB = [...ring(coilB.cx, coilB.cy + 3, coilB.rx, coilB.ry, 12, 168, 11, 3.5, 1), ...ring(coilB.cx, coilB.cy + 9, coilB.rx - 4, coilB.ry, 20, 160, 9, 3.3, 5)];
+const backA = ring(coilA.cx, coilA.cy - 2, coilA.rx - 2, coilA.ry, 200, 340, 7, 3.2, 2);
+const frontA = [...ring(coilA.cx, coilA.cy + 3, coilA.rx, coilA.ry, 10, 170, 13, 3.6, 4), ...ring(coilA.cx, coilA.cy + 10, coilA.rx - 4, coilA.ry, 18, 162, 11, 3.4, 6)];
+const bell = (b: Bell) => `<g class="dk-bell" style="--d:${b.d}s"><circle cx="${b.x}" cy="${b.y}" r="${b.r}"/><circle class="dk-bell-mouth" cx="${b.x}" cy="${(b.y + b.r * 0.42).toFixed(2)}" r="${(b.r * 0.26).toFixed(2)}"/></g>`;
+const strap = (c: typeof coilA) => `<ellipse class="dk-strap" cx="${c.cx}" cy="${c.cy}" rx="${c.rx}" ry="${c.ry}"/><ellipse class="dk-strap-ln" cx="${c.cx}" cy="${c.cy}" rx="${c.rx + 3.5}" ry="${c.ry + 3.5}"/><ellipse class="dk-strap-ln" cx="${c.cx}" cy="${c.cy}" rx="${c.rx - 3.5}" ry="${c.ry - 3.5}"/>`;
+const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(''), backA.map(bell).join(''), strap(coilA), frontA.map(bell).join('')].join('');
+---
+<div class="desk" data-desk>
+  <svg class="dk-svg" viewBox={`0 0 ${W} ${H}`} aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="dk-beam" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#3f7a4c" stop-opacity="0.05" />
+        <stop offset="1" stop-color="#3f7a4c" stop-opacity="0.26" />
+      </linearGradient>
+      <clipPath id="dk-globe-clip"><circle cx="285" cy="118" r="33.2" /></clipPath>
+      <clipPath id="dk-grille-clip"><circle cx="505" cy="190" r="11.2" /></clipPath>
+    </defs>
+
+    <!-- the room: a shelf on the wall, the desk, the floor -->
+    <g class="dk-room">
+      <path class="dk-faint" d="M0 398 H600" />
+      <rect class="dk-wood" x="52" y="176" width="290" height="9" rx="2" />
+      <path class="dk-line" d="M92 185 v18 l16 -18 M302 185 v18 l-16 -18" />
+      <rect class="dk-wood" x="22" y="330" width="556" height="12" rx="3" />
+      <path class="dk-line" d="M46 342 V398 M554 342 V398 M46 362 H554" />
+    </g>
+
+    <!-- the spotlight belongs to the mic, but sits behind everything on the desk -->
+    <g class="dk-obj dk-mic-light" data-for="mic">
+      <path class="dk-line" d="M497 0 V9" />
+      <g class="dk-beam"><path d="M487 37 L507 37 L562 330 L450 330 Z" fill="url(#dk-beam)" /><ellipse class="dk-pool" cx="506" cy="330" rx="56" ry="5" /></g>
+      <rect class="dk-can" x="485" y="8" width="24" height="28" rx="5" /><ellipse class="dk-lens" cx="497" cy="36" rx="10" ry="3" />
+    </g>
+
+    <!-- books, one open on top -->
+    <g class="dk-obj dk-books" data-obj="books">
+      <g class="dk-lift">
+        <rect class="dk-paper" x="72" y="150" width="128" height="26" rx="3" />
+        <path class="dk-line" d="M86 150 V176 M92 150 V176 M184 157 H194 M184 163 H194 M184 169 H194" />
+        <rect class="dk-green-fill" x="84" y="128" width="108" height="22" rx="3" />
+        <path class="dk-green" d="M98 128 V150 M104 128 V150" />
+        <rect class="dk-paper" x="76" y="110" width="120" height="18" rx="3" />
+        <path class="dk-line" d="M180 115 H190 M180 120 H190" />
+        <path class="dk-ribbon" d="M146 108 V138 L150 134 L154 138 V108 Z" />
+        <path class="dk-paper" d="M136 104 C118 95 98 94 80 98 V108 C98 104 118 105 136 112 Z" />
+        <path class="dk-paper" d="M136 104 C154 95 174 94 192 98 V108 C174 104 154 105 136 112 Z" />
+        <path class="dk-faint" d="M90 101 C104 99 116 100 128 104 M90 105 C104 103 116 104 128 108 M144 104 C156 100 168 99 182 101 M144 108 C156 104 168 103 182 105" />
+        <path class="dk-page" d="M136 104 C152 92 170 90 188 93 V103 C170 100 152 102 136 112 Z" />
+        <path class="dk-line" d="M136 104 V112" />
+      </g>
+    </g>
+
+    <!-- a small globe -->
+    <g class="dk-obj dk-globe" data-obj="globe">
+      <g class="dk-lift">
+        <ellipse class="dk-paper" cx="285" cy="172" rx="24" ry="5" />
+        <path class="dk-line" d="M285 167 V154" />
+        <path class="dk-line" d="M285 157 A39 39 0 0 1 285 79" />
+        <circle class="dk-paper" cx="285" cy="118" r="34" />
+        <g clip-path="url(#dk-globe-clip)">
+          <g transform="rotate(-16 285 118)">
+            <path class="dk-land" d="M297 101 l13 2 l-3 13 l-6 8 l-3 -10 l-5 -6 Z" />
+            <path class="dk-land" d="M263 114 l11 -2 l5 8 l-6 15 l-5 4 l-2 -13 l-5 -6 Z" />
+            <ellipse class="dk-faint dk-mer" cx="285" cy="118" rx="14" ry="34" />
+            <ellipse class="dk-faint dk-mer dk-mer2" cx="285" cy="118" rx="26" ry="34" />
+            <path class="dk-faint" d="M251 118 H319 M256 100 H314 M256 136 H314" />
+            <path class="dk-arc" pathLength="100" d="M267 127 C270 98 292 92 303 108" />
+            <circle class="dk-pin" cx="303" cy="108" r="3" />
+            <circle class="dk-pin dk-pin2" cx="267" cy="127" r="3" />
+          </g>
+        </g>
+        <circle class="dk-ink" cx="285" cy="118" r="34" fill="none" />
+      </g>
+    </g>
+
+    <!-- ghungroo: a pair of ankle bells -->
+    <g class="dk-obj dk-ghungroo" data-obj="ghungroo">
+      <ellipse class="dk-shadow" cx="122" cy="331" rx="78" ry="3" />
+      <g class="dk-lift">
+        <path class="dk-line" d="M192 309 C202 304 206 314 214 312 M192 312 C200 318 204 322 212 321" />
+        <g set:html={ghungroo} />
+        <path class="dk-spark" d="M58 292 l-6 -6 M100 286 V278 M144 290 l6 -7 M182 294 l7 -4" />
+      </g>
+    </g>
+
+    <!-- a mug -->
+    <g class="dk-obj dk-mug" data-obj="mug">
+      <ellipse class="dk-shadow" cx="252" cy="331" rx="26" ry="3" />
+      <g class="dk-steam"><path d="M243 280 c-5 -7 5 -11 0 -18" /><path d="M252 277 c-5 -7 5 -11 0 -18" /><path d="M261 280 c-5 -7 5 -11 0 -18" /></g>
+      <g class="dk-lift">
+        <path class="dk-line" d="M270 298 C285 298 285 320 270 320 M270 303 C279 303 279 315 270 315" />
+        <path class="dk-paper" d="M230 290 H270 V318 Q270 330 258 330 H242 Q230 330 230 318 Z" />
+        <path class="dk-heart" d="M250 317 C243 312 242 306.5 246 305.5 C248 305 249.5 306.5 250 308 C250.5 306.5 252 305 254 305.5 C258 306.5 257 312 250 317 Z" />
+        <ellipse class="dk-rim" cx="250" cy="290" rx="20" ry="3.6" />
+      </g>
+    </g>
+
+    <!-- a rolled yoga mat -->
+    <g class="dk-obj dk-mat" data-obj="mat">
+      <ellipse class="dk-shadow" cx="362" cy="331" rx="58" ry="3" />
+      <rect class="dk-tongue" x="408" y="326" width="44" height="4" rx="1" />
+      <g class="dk-lift"><g class="dk-roll">
+        <path class="dk-mat-body" d="M312 294 H410 V330 H312 A7 18 0 0 1 312 294 Z" />
+        <path class="dk-line" d="M334 294.5 Q331 312 334 329.5 M339 294.5 Q336 312 339 329.5 M384 294.5 Q381 312 384 329.5 M389 294.5 Q386 312 389 329.5" />
+        <ellipse class="dk-mat-end" cx="410" cy="312" rx="7.5" ry="18" />
+        <path class="dk-green" d="M410 312 m0 -3 a2 3.5 0 1 1 -0.5 6.5 a4 8 0 1 0 0.6 -13 a6 13 0 1 1 -0.4 25" />
+      </g></g>
+    </g>
+
+    <!-- a stage mic on a small stand, under the spotlight -->
+    <g class="dk-obj dk-mic" data-obj="mic">
+      <g class="dk-lift">
+        <path class="dk-paper" d="M480 327 v-3.5 a25 5 0 0 1 50 0 v3.5 a25 5 0 0 1 -50 0 Z" />
+        <path class="dk-stand" d="M505 322 V236" />
+        <g transform="rotate(-14 505 236)">
+          <path class="dk-paper" d="M501.5 238 L498.5 200 H511.5 L508.5 238 Z" />
+          <rect class="dk-green-solid" x="497.5" y="198" width="15" height="4" rx="1" />
+          <circle class="dk-paper" cx="505" cy="190" r="12" />
+          <g clip-path="url(#dk-grille-clip)"><path class="dk-faint" d="M493 184 H517 M493 189 H517 M493 194 H517 M499 178 V202 M505 178 V202 M511 178 V202" /></g>
+        </g>
+      </g>
+    </g>
+  </svg>
+
+  {desk.map((d) => {
+    const [x, y, w, h] = hits[d.id];
+    return (
+      <button type="button" class="dk-hit" data-k={d.id} aria-label={`${d.label}: open my note`} aria-expanded="false" aria-controls="dk-card"
+        style={`--x:${pct(x, W)};--y:${pct(y, H)};--w:${pct(w, W)};--h:${pct(h, H)}`}>
+        <span class="dk-tip" aria-hidden="true">{d.name}</span>
+      </button>
+    );
+  })}
+</div>
