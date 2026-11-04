@@ -2,7 +2,9 @@
 // "When I'm not working": a hand-drawn desk. Inline SVG line art (dark grey ink, one green accent).
 // Every object has a real <button> laid over it (positioned in % of the drawing, so it scales).
 // The page script (src/pages/index.astro) adds .hot (hover/focus) and .open (note showing) to the
-// matching .dk-obj, and .in to .desk while it is on screen. Motion lives in global.css ("Round 10").
+// matching .dk-obj, and .in to .desk while it is on screen. Motion lives in global.css ("Round 10", refined in "Round 11").
+// Opening a note plays that object's own reveal once (pages flip, bells ring, the mat unrolls, the spotlight
+// sweeps to the mic, confetti pops, a plane flies India to Mexico); the end state holds while the note is open.
 import { desk } from '../data/home';
 
 const W = 600, H = 400;
@@ -13,6 +15,7 @@ const hits: Record<string, [number, number, number, number]> = {
   ghungroo: [124, 312, 156, 50],
   mug: [255, 292, 72, 84],
   mat: [368, 312, 128, 48],
+  events: [400, 140, 76, 104],
   mic: [510, 248, 84, 176],
 };
 const pct = (v: number, of: number) => `${((v / of) * 100).toFixed(3)}%`;
@@ -32,6 +35,17 @@ const backA = ring(coilA.cx, coilA.cy - 2, coilA.rx - 2, coilA.ry, 200, 340, 7, 
 const frontA = [...ring(coilA.cx, coilA.cy + 3, coilA.rx, coilA.ry, 10, 170, 13, 3.6, 4), ...ring(coilA.cx, coilA.cy + 10, coilA.rx - 4, coilA.ry, 18, 162, 11, 3.4, 6)];
 const bell = (b: Bell) => `<g class="dk-bell" style="--d:${b.d}s"><circle cx="${b.x}" cy="${b.y}" r="${b.r}"/><circle class="dk-bell-mouth" cx="${b.x}" cy="${(b.y + b.r * 0.42).toFixed(2)}" r="${(b.r * 0.26).toFixed(2)}"/></g>`;
 const strap = (c: typeof coilA) => `<ellipse class="dk-strap" cx="${c.cx}" cy="${c.cy}" rx="${c.rx}" ry="${c.ry}"/><ellipse class="dk-strap-ln" cx="${c.cx}" cy="${c.cy}" rx="${c.rx + 3.5}" ry="${c.ry + 3.5}"/><ellipse class="dk-strap-ln" cx="${c.cx}" cy="${c.cy}" rx="${c.rx - 3.5}" ry="${c.ry - 3.5}"/>`;
+// Confetti for the run-sheet: where each piece flies to (dx, dy), its spin and its look.
+const confetti = [
+  [-46, -30, 160, 'r'], [-30, -48, -120, 'c'], [-10, -58, 90, 'r'], [12, -54, -200, 't'], [32, -46, 140, 'r'], [48, -28, -90, 'c'],
+  [-54, -6, 220, 't'], [56, -4, -160, 'r'], [-22, -36, 60, 'c'], [24, -30, -60, 'r'], [-38, 6, 120, 'r'], [40, 8, -140, 'c'],
+].map(([x, y, r, k], i) => {
+  const shape = k === 'c' ? '<circle r="2.2"/>' : k === 't' ? '<path d="M-3 2.5 L0 -3 L3 2.5 Z"/>' : '<rect x="-1.6" y="-3.4" width="3.2" height="6.8" rx="0.6"/>';
+  return `<g class="dk-bit dk-bit-${i % 3}" style="--tx:${x}px;--ty:${y}px;--r:${r}deg;--d:${((i % 6) * 0.04).toFixed(2)}s">${shape}</g>`;
+}).join('');
+// Applause: tiny dots that pop around the mic once the spotlight lands.
+const claps = [[478, 172], [486, 154], [503, 146], [522, 152], [532, 168], [470, 192], [540, 188]]
+  .map(([x, y], i) => `<circle class="dk-clap" cx="${x}" cy="${y}" r="2.6" style="--d:${(1.45 + (i % 4) * 0.12).toFixed(2)}s"/>`).join('');
 const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(''), backA.map(bell).join(''), strap(coilA), frontA.map(bell).join('')].join('');
 ---
 <div class="desk" data-desk>
@@ -41,6 +55,7 @@ const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(
         <stop offset="0" stop-color="#3f7a4c" stop-opacity="0.05" />
         <stop offset="1" stop-color="#3f7a4c" stop-opacity="0.26" />
       </linearGradient>
+      <radialGradient id="dk-breath-g"><stop offset="0" stop-color="#3f7a4c" stop-opacity="0.32" /><stop offset="1" stop-color="#3f7a4c" stop-opacity="0" /></radialGradient>
       <clipPath id="dk-globe-clip"><circle cx="285" cy="118" r="33.2" /></clipPath>
       <clipPath id="dk-grille-clip"><circle cx="505" cy="190" r="11.2" /></clipPath>
     </defs>
@@ -57,8 +72,38 @@ const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(
     <!-- the spotlight belongs to the mic, but sits behind everything on the desk -->
     <g class="dk-obj dk-mic-light" data-for="mic">
       <path class="dk-line" d="M497 0 V9" />
-      <g class="dk-beam"><path d="M487 37 L507 37 L562 330 L450 330 Z" fill="url(#dk-beam)" /><ellipse class="dk-pool" cx="506" cy="330" rx="56" ry="5" /></g>
-      <rect class="dk-can" x="485" y="8" width="24" height="28" rx="5" /><ellipse class="dk-lens" cx="497" cy="36" rx="10" ry="3" />
+      <g class="dk-sweep">
+        <g class="dk-beam"><path d="M487 37 L507 37 L562 330 L450 330 Z" fill="url(#dk-beam)" /><ellipse class="dk-pool" cx="506" cy="330" rx="56" ry="5" /></g>
+        <rect class="dk-can" x="485" y="8" width="24" height="28" rx="5" /><ellipse class="dk-lens" cx="497" cy="36" rx="10" ry="3" />
+      </g>
+    </g>
+
+    <!-- the run-sheet: a clipboard on a nail, under a little bunting -->
+    <g class="dk-obj dk-events" data-obj="events">
+      <g class="dk-bunting">
+        <path class="dk-line" d="M352 62 Q400 84 448 62" />
+        <circle class="dk-nail" cx="352" cy="62" r="2" /><circle class="dk-nail" cx="448" cy="62" r="2" />
+        <path class="dk-flag dk-flag-g" style="--d:0s" d="M364 67.6 L374 71.6 L367 82 Z" />
+        <path class="dk-flag" style="--d:.08s" d="M380 71.8 L391 73.6 L384.5 85 Z" />
+        <path class="dk-flag dk-flag-g" style="--d:.16s" d="M396 73 L407 73 L401.5 85 Z" />
+        <path class="dk-flag" style="--d:.24s" d="M412 72.8 L423 70.4 L418 82.6 Z" />
+        <path class="dk-flag dk-flag-g" style="--d:.32s" d="M428 69.6 L438 65.4 L435.5 77.6 Z" />
+      </g>
+      <g class="dk-lift"><g class="dk-swing">
+        <circle class="dk-nail" cx="400" cy="92" r="2" />
+        <path class="dk-line" d="M400 92 L390 102 M400 92 L410 102" />
+        <rect class="dk-wood" x="370" y="101" width="60" height="86" rx="5" />
+        <rect class="dk-paper" x="376" y="109" width="48" height="72" rx="1.5" />
+        <rect class="dk-can" x="388" y="98" width="24" height="9" rx="2" />
+        <path class="dk-line" d="M382 120 H410" />
+        <path class="dk-faint" d="M392 134 H418 M392 146 H416 M392 158 H418 M392 170 H412" />
+        <rect class="dk-box" x="381" y="130" width="7" height="7" rx="1" /><rect class="dk-box" x="381" y="142" width="7" height="7" rx="1" />
+        <rect class="dk-box" x="381" y="154" width="7" height="7" rx="1" /><rect class="dk-box" x="381" y="166" width="7" height="7" rx="1" />
+        <path class="dk-tick" style="--d:.15s" pathLength="10" d="M382.4 133.6 l2 2.4 l4.4 -5.4" />
+        <path class="dk-tick" style="--d:.35s" pathLength="10" d="M382.4 145.6 l2 2.4 l4.4 -5.4" />
+        <path class="dk-tick" style="--d:.55s" pathLength="10" d="M382.4 157.6 l2 2.4 l4.4 -5.4" />
+      </g></g>
+      <g class="dk-pop" transform="translate(400 112)" set:html={confetti} />
     </g>
 
     <!-- books, one open on top -->
@@ -75,7 +120,20 @@ const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(
         <path class="dk-paper" d="M136 104 C154 95 174 94 192 98 V108 C174 104 154 105 136 112 Z" />
         <path class="dk-faint" d="M90 101 C104 99 116 100 128 104 M90 105 C104 103 116 104 128 108 M144 104 C156 100 168 99 182 101 M144 108 C156 104 168 103 182 105" />
         <path class="dk-page" d="M136 104 C152 92 170 90 188 93 V103 C170 100 152 102 136 112 Z" />
+        <path class="dk-flip" style="--d:0s" d="M136 104 C152 92 170 90 188 93 V103 C170 100 152 102 136 112 Z" />
+        <path class="dk-flip" style="--d:.2s" d="M136 104 C152 92 170 90 188 93 V103 C170 100 152 102 136 112 Z" />
+        <path class="dk-flip" style="--d:.4s" d="M136 104 C152 92 170 90 188 93 V103 C170 100 152 102 136 112 Z" />
         <path class="dk-line" d="M136 104 V112" />
+      </g>
+      <!-- the verdict: a film strip, crossed out -->
+      <g class="dk-verdict">
+        <g transform="rotate(-6 116 68)">
+          <rect class="dk-paper" x="92" y="58" width="48" height="20" rx="2" />
+          <path class="dk-line" d="M108 61.5 V74.5 M124 61.5 V74.5" />
+          <path class="dk-holes" d="M95 60 h3 M101 60 h3 M107 60 h3 M113 60 h3 M119 60 h3 M125 60 h3 M131 60 h3 M95 76 h3 M101 76 h3 M107 76 h3 M113 76 h3 M119 76 h3 M125 76 h3 M131 76 h3" />
+        </g>
+        <path class="dk-strike" pathLength="10" d="M88 80 L146 52" />
+        <text class="dk-say" x="150" y="73"><tspan class="dk-say-g">book</tspan> &gt; movie</text>
       </g>
     </g>
 
@@ -93,22 +151,27 @@ const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(
             <ellipse class="dk-faint dk-mer" cx="285" cy="118" rx="14" ry="34" />
             <ellipse class="dk-faint dk-mer dk-mer2" cx="285" cy="118" rx="26" ry="34" />
             <path class="dk-faint" d="M251 118 H319 M256 100 H314 M256 136 H314" />
-            <path class="dk-arc" pathLength="100" d="M267 127 C270 98 292 92 303 108" />
-            <circle class="dk-pin" cx="303" cy="108" r="3" />
-            <circle class="dk-pin dk-pin2" cx="267" cy="127" r="3" />
           </g>
         </g>
         <circle class="dk-ink" cx="285" cy="118" r="34" fill="none" />
+        <!-- India to Mexico: the route draws while a little plane flies it -->
+        <path class="dk-arc" id="dk-route" pathLength="100" d="M299.5 103.4 C300 56 270 56 270.2 131.6" />
+        <circle class="dk-pin" cx="299.5" cy="103.4" r="3" />
+        <circle class="dk-pin dk-pin2" cx="270.2" cy="131.6" r="3" />
+        <g class="dk-plane"><path d="M6 0 L-5 -4.4 L-2.4 0 L-5 4.4 Z" /><animateMotion begin="indefinite" dur="1.8s" fill="freeze" rotate="auto" calcMode="spline" keyTimes="0;1" keyPoints="0;1" keySplines="0.45 0 0.55 1"><mpath href="#dk-route" /></animateMotion></g>
       </g>
     </g>
 
     <!-- ghungroo: a pair of ankle bells -->
     <g class="dk-obj dk-ghungroo" data-obj="ghungroo">
       <ellipse class="dk-shadow" cx="122" cy="331" rx="78" ry="3" />
+      <ellipse class="dk-wave" cx="124" cy="310" rx="70" ry="16" style="--d:0s" />
+      <ellipse class="dk-wave" cx="124" cy="310" rx="70" ry="16" style="--d:.45s" />
+      <ellipse class="dk-wave" cx="124" cy="310" rx="70" ry="16" style="--d:.9s" />
       <g class="dk-lift">
         <path class="dk-line" d="M192 309 C202 304 206 314 214 312 M192 312 C200 318 204 322 212 321" />
         <g set:html={ghungroo} />
-        <path class="dk-spark" d="M58 292 l-6 -6 M100 286 V278 M144 290 l6 -7 M182 294 l7 -4" />
+        <path class="dk-spark" d="M58 292 l-6 -6 M100 286 V278 M144 290 l6 -7 M182 294 l7 -4" /><path class="dk-spark dk-spark2" d="M44 306 h-8 M78 284 l-3 -7 M124 282 V274 M166 286 l4 -7 M200 300 h8" />
       </g>
     </g>
 
@@ -127,7 +190,8 @@ const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(
     <!-- a rolled yoga mat -->
     <g class="dk-obj dk-mat" data-obj="mat">
       <ellipse class="dk-shadow" cx="362" cy="331" rx="58" ry="3" />
-      <rect class="dk-tongue" x="408" y="326" width="44" height="4" rx="1" />
+      <ellipse class="dk-breath" cx="380" cy="322" rx="84" ry="16" fill="url(#dk-breath-g)" />
+      <g class="dk-flat"><rect class="dk-mat-body" x="312" y="325" width="132" height="5" rx="1.5" /><path class="dk-line" d="M334 325.5 V329.5 M339 325.5 V329.5 M384 325.5 V329.5 M389 325.5 V329.5" /></g>
       <g class="dk-lift"><g class="dk-roll">
         <path class="dk-mat-body" d="M312 294 H410 V330 H312 A7 18 0 0 1 312 294 Z" />
         <path class="dk-line" d="M334 294.5 Q331 312 334 329.5 M339 294.5 Q336 312 339 329.5 M384 294.5 Q381 312 384 329.5 M389 294.5 Q386 312 389 329.5" />
@@ -148,6 +212,7 @@ const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(
           <g clip-path="url(#dk-grille-clip)"><path class="dk-faint" d="M493 184 H517 M493 189 H517 M493 194 H517 M499 178 V202 M505 178 V202 M511 178 V202" /></g>
         </g>
       </g>
+      <g class="dk-claps" set:html={claps} />
     </g>
   </svg>
 

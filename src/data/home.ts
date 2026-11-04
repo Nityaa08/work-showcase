@@ -32,7 +32,7 @@ export const cards: Record<string, { headline: string; text: string }> = {
 export const blurbs: Record<string, string> = Object.fromEntries(Object.entries(cards).map(([k, v]) => [k, `${v.headline} ${v.text}`]));
 export const outsideIntro = {
   title: 'When I’m not working',
-  text: 'Away from the screen I’m usually reading, dancing or on a yoga mat. I love bringing people together, and some of my favourite work has been with people far from home.',
+  text: 'Away from the screen: books, classical dance, yoga, a stage and a mic. Everything on my desk comes with a note.',
   hint: 'Tap anything on my desk.',
   hintSub: 'Each thing opens a little note from me.',
 };
@@ -40,35 +40,37 @@ export const outsideIntro = {
  * "When I'm not working": the things on my desk (src/components/Desk.astro).
  * Each item is one object in the drawing. Edit `note` (what I say) and `ask` (the "Ask me…" prompt) freely.
  * `id` ties the item to its drawing, so leave it as it is. Keep every line true, and no numbers.
+ * Keep the wording timeless: no "used to", "in school" or "nowadays".
  *
  * Spots to add more later:
  *  - My dance forms: the `note` of the item with id 'ghungroo'. For example, change
- *    "I’ve trained in Indian classical dance since school." to name the forms there.
+ *    "not one but two Indian classical forms" to "not one but two Indian classical forms, … and …".
  *  - My favourite books: the `note` of the item with id 'books'. Add a line after
- *    "…a book on the go." such as "Lately it’s …", and you can make its `ask` "Ask me why I loved …".
+ *    "…and I have opinions." such as "Current favourite: …", and you can make its `ask` "Ask me why I loved …".
  */
 export const desk = [
-  { id: 'books', name: 'Books', label: 'My stack of books', note: 'I read a lot, and there’s nearly always a book on the go.', ask: 'Ask me what I’m reading.' },
-  { id: 'ghungroo', name: 'Ghungroo', label: 'My ghungroo, the ankle bells of Indian classical dance', note: 'Hear that jingle? These are ghungroo, the ankle bells of Indian classical dance. I’ve trained in Indian classical dance since school.', ask: 'Ask me which is harder: classical dance or debugging.' },
-  { id: 'mat', name: 'Yoga mat', label: 'My rolled-up yoga mat', note: 'Yoga is how I slow down and come back to focus. It’s the one reset button I never have to debug.', ask: 'Ask me how I reset after a long day.' },
-  { id: 'mug', name: 'Mug', label: 'My mug', note: 'Every good desk needs a mug. Pull up a chair and let’s talk.', ask: 'Ask me anything, really.' },
-  { id: 'globe', name: 'Globe', label: 'A small globe', note: 'I enjoy working with people across India and Latin America. Different time zones, one team.', ask: 'Ask me about working across time zones.' },
-  { id: 'mic', name: 'The mic', label: 'A stage mic under a spotlight', note: 'Backstage or in the spotlight, I’ve done both. I organised big, fun college events with student clubs and emceed on the main stage.', ask: 'Ask me about running an event for a packed auditorium.' },
+  { id: 'books', name: 'Books', label: 'My stack of books', note: 'Books over movies, always. If it’s been adapted, I’ve read it first, and I have opinions.', ask: 'Ask me: the book or the movie?' },
+  { id: 'ghungroo', name: 'Ghungroo', label: 'My ghungroo, the ankle bells of Indian classical dance', note: 'Dance is the first thing I ever picked up, and I went all in: not one but two Indian classical forms, all the way to competition stages.', ask: 'Ask me which is harder: classical dance or debugging.' },
+  { id: 'mat', name: 'Yoga mat', label: 'My yoga mat', note: 'Yoga started as a daily routine and turned into competitions. Best reset button I know.', ask: 'Ask me which pose is harder than it looks.' },
+  { id: 'mug', name: 'Mug', label: 'My mug', note: 'Every good desk needs a mug. This one’s for you: pull up a chair.', ask: 'Ask me anything, really.' },
+  { id: 'globe', name: 'Globe', label: 'A small globe', note: 'Work took me from India to Mexico. People from all over the world at one table? Count me in, every time.', ask: 'Ask me what I learnt working across borders.' },
+  { id: 'events', name: 'Run-sheet', label: 'An event run-sheet on a clipboard', note: 'Clipboard, run-sheet, a hall full of students: the fun and management events I ran in college. Best bonding there is.', ask: 'Ask me what makes an event actually fun.' },
+  { id: 'mic', name: 'The mic', label: 'A stage mic under a spotlight', note: 'Hand me a mic and I’m home: my college club’s main stage, and every event I ran.', ask: 'Ask me how to fill an awkward pause on stage.' },
 ] as const;
 export const contactLine = 'Whether it’s a role, an idea or a question about agents, I’d love to hear from you.';
-export const contactOpen = 'Open to AI engineer and forward-deployed engineer roles.';
 /*
- * Contact: a small chat window. Nothing here is a bot and nothing is sent anywhere:
- * each reply chip opens the visitor's own email app with the subject and body below.
- * Without JavaScript the chips are plain mailto links.
+ * Contact: a hand-drawn envelope. Nothing is sent anywhere: "Write to me" opens the
+ * visitor's own email app with the topic below as the subject. Without JavaScript every
+ * topic and the button are plain mailto links.
  */
-export const chat = {
-  hello: 'Hey! What brings you here?',
-  caption: 'This opens your email app. No bots here.',
-  chips: [
-    { label: 'Hiring for an AI role', reply: 'Lovely! Opening your email with that subject…', subject: 'Hiring for an AI role', body: 'Hi Nitya,\n\nI’m hiring for an AI role and would love to talk.\n\nRole:\nTeam / company:\nLink to the job:\n\nThanks,\n' },
-    { label: 'Want to build something together', reply: 'Ooh, tell me more! Opening your email with that subject…', subject: 'Let’s build something together', body: 'Hi Nitya,\n\nI have an idea I’d love to build with you:\n\n\nThanks,\n' },
-    { label: 'Just saying hi', reply: 'Hi back! Opening your email with that subject…', subject: 'Just saying hi', body: 'Hi Nitya,\n\n\n\nCheers,\n' },
+export const letter = {
+  write: 'Write to me',
+  caption: 'Opens your email app.',
+  topicsLabel: 'What’s it about?',
+  topics: [
+    { label: 'Say hello', subject: 'Hello!', body: 'Hi Nitya,\n\n\n\nCheers,\n' },
+    { label: 'Talk about AI agents', subject: 'Let’s talk about AI agents', body: 'Hi Nitya,\n\nI’d love to hear what you think about:\n\n\nThanks,\n' },
+    { label: 'Build something together', subject: 'Let’s build something together', body: 'Hi Nitya,\n\nI have an idea I’d love to build with you:\n\n\nThanks,\n' },
   ],
 } as const;
 /** A ready-to-use mailto link: subject and body URL-encoded. */

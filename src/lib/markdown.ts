@@ -58,7 +58,7 @@ ${home.desk.map((d) => `- **${d.name}.** ${d.note} ${d.ask}`).join('\n')}
 
 ## Contact
 
-${home.contactLine} ${home.contactOpen}
+${home.contactLine}
 
 - Email: ${home.contact.email}
 - LinkedIn: ${home.contact.linkedin}
