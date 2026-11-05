@@ -38,40 +38,35 @@ export const outsideIntro = {
 };
 /*
  * "When I'm not working": the things on my desk (src/components/Desk.astro).
- * Each item is one object in the drawing. Edit `note` (what I say) and `ask` (the "Ask me…" prompt) freely.
+ * Each item is one object in the drawing. Edit `note` (what I say) freely: one or two short sentences, in my voice.
  * `id` ties the item to its drawing, so leave it as it is. Keep every line true, and no numbers.
- * Keep the wording timeless: no "used to", "in school" or "nowadays".
+ * Keep the wording timeless: no "used to", "in school" or "nowadays". No questions to the reader.
  *
  * Spots to add more later:
- *  - My dance forms: the `note` of the item with id 'ghungroo'. For example, change
- *    "not one but two Indian classical forms" to "not one but two Indian classical forms, … and …".
- *  - My favourite books: the `note` of the item with id 'books'. Add a line after
- *    "…and I have opinions." such as "Current favourite: …", and you can make its `ask` "Ask me why I loved …".
+ *  - My dance forms: the `note` of the item with id 'ghungroo' (for example "…two Indian classical forms, … and …").
+ *  - My favourite books: the `note` of the item with id 'books' (for example add "Current favourite: …").
  */
 export const desk = [
-  { id: 'books', name: 'Books', label: 'My stack of books', note: 'Books over movies, always. If it’s been adapted, I’ve read it first, and I have opinions.', ask: 'Ask me which is better: the book or the movie.' },
-  { id: 'ghungroo', name: 'Ghungroo', label: 'My ghungroo, the ankle bells of Indian classical dance', note: 'Dance is the first thing I ever picked up, and I went all in: not one but two Indian classical forms, all the way to competition stages.', ask: 'Ask me which is harder: classical dance or debugging.' },
-  { id: 'mat', name: 'Yoga mat', label: 'My yoga mat', note: 'Yoga started as a daily routine and turned into competitions. Best reset button I know.', ask: 'Ask me which pose is harder than it looks.' },
-  { id: 'mug', name: 'Mug', label: 'My mug', note: 'Every good desk needs a mug. This one’s for you: pull up a chair.', ask: 'Ask me anything, really.' },
-  { id: 'globe', name: 'Globe', label: 'A small globe', note: 'Work took me from India to Mexico. People from all over the world at one table? Count me in, every time.', ask: 'Ask me what I learnt working across borders.' },
-  { id: 'events', name: 'Run-sheet', label: 'An event run-sheet on a clipboard', note: 'Clipboard, run-sheet, a hall full of students: the fun and management events I ran in college. Best bonding there is.', ask: 'Ask me what makes an event actually fun.' },
-  { id: 'mic', name: 'Mic', label: 'A stage mic under a spotlight', note: 'Hand me a mic and I’m home: my college club’s main stage, and every event I ran.', ask: 'Ask me how to fill an awkward pause on stage.' },
+  { id: 'books', name: 'Books', label: 'My stack of books', note: 'Books over movies, every single time. If there’s an adaptation, I’ve already read the book.' },
+  { id: 'ghungroo', name: 'Ghungroo', label: 'My ghungroo, the ankle bells of Indian classical dance', note: 'Dance came first, before almost anything else I learnt. Not one but two Indian classical forms, all the way to competition stages.' },
+  { id: 'mat', name: 'Yoga mat', label: 'My yoga mat', note: 'Yoga began as a daily ritual and grew into competitions. It taught me that stillness takes practice.' },
+  { id: 'mug', name: 'Mug', label: 'My mug', note: 'Not every object needs a story. This one just keeps the desk company.' },
+  { id: 'globe', name: 'Globe', label: 'A small globe', note: 'Work took me from India to Mexico. Working with people from all over the world was the most fun kind of learning.' },
+  { id: 'events', name: 'Run-sheet', label: 'An event run-sheet on a clipboard', note: 'Clipboard in hand, I ran fun and management events for students in college. The best way to bond, and we had a blast.' },
+  { id: 'mic', name: 'Mic', label: 'A stage mic under a spotlight', note: 'Hand me a mic and I’m at home: my college club’s main stage, and every event I ran.' },
 ] as const;
-export const contactLine = 'Whether it’s a role, an idea or a question about agents, I’d love to hear from you.';
+export const contactLine = 'An idea, a question about agents, or simply hello: I’d love to hear from you.';
 /*
- * Contact: a hand-drawn envelope. Nothing is sent anywhere: "Write to me" opens the
- * visitor's own email app with the topic below as the subject. Without JavaScript every
- * topic and the button are plain mailto links.
+ * Contact: a hand-drawn envelope addressed to me. Clicking it (or the address on it) opens the
+ * visitor's own email app with the subject and body below; nothing is sent anywhere. A small icon
+ * beside the address copies it. Without JavaScript the address is a plain email link.
  */
 export const letter = {
-  write: 'Write to me',
-  caption: 'Opens your email app.',
-  topicsLabel: 'What’s it about?',
-  topics: [
-    { label: 'Say hello', subject: 'Hello!', body: 'Hi Nitya,\n\n\n\nCheers,\n' },
-    { label: 'Talk about AI agents', subject: 'Let’s talk about AI agents', body: 'Hi Nitya,\n\nI’d love to hear what you think about:\n\n\nThanks,\n' },
-    { label: 'Build something together', subject: 'Let’s build something together', body: 'Hi Nitya,\n\nI have an idea I’d love to build with you:\n\n\nThanks,\n' },
-  ],
+  hint: 'Click the envelope to write to me.',
+  hintTouch: 'Tap the envelope to write to me.',
+  fallback: 'Nothing opened? The icon beside my address copies it.',
+  subject: 'Hello, Nitya',
+  body: 'Hi Nitya,\n\n\n\nThanks,\n',
 } as const;
 /** A ready-to-use mailto link: subject and body URL-encoded. */
 export const mailto = (subject: string, body: string) => `mailto:${contact.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;

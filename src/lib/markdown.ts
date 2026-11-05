@@ -54,7 +54,7 @@ ${home.path.map((p) => `${Number(p.when)}. **${p.title}.** ${p.line}`).join('\n'
 
 ${home.outsideIntro.text}
 
-${home.desk.map((d) => `- **${d.name}.** ${d.note} ${d.ask}`).join('\n')}
+${home.desk.map((d) => `- **${d.name}.** ${d.note}`).join('\n')}
 
 ## Contact
 

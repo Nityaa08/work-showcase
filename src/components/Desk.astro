@@ -2,7 +2,7 @@
 // "When I'm not working": a hand-drawn desk. Inline SVG line art (dark grey ink, one green accent).
 // Every object has a real <button> laid over it (positioned in % of the drawing, so it scales).
 // The page script (src/pages/index.astro) adds .hot (hover/focus) and .open (note showing) to the
-// matching .dk-obj, and .in to .desk while it is on screen. Motion lives in global.css ("Round 10", refined in "Round 11").
+// matching .dk-obj, and .in to .desk while it is on screen. Motion lives in global.css ("Round 10", refined in "Round 11" and "Round 12").
 // Opening a note plays that object's own reveal once (pages flip, bells ring, the mat unrolls, the spotlight
 // sweeps to the mic, confetti pops, a plane flies India to Mexico); the end state holds while the note is open.
 import { desk } from '../data/home';
@@ -102,12 +102,14 @@ const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(
         <path class="dk-tick" style="--d:.15s" pathLength="10" d="M382.4 133.6 l2 2.4 l4.4 -5.4" />
         <path class="dk-tick" style="--d:.35s" pathLength="10" d="M382.4 145.6 l2 2.4 l4.4 -5.4" />
         <path class="dk-tick" style="--d:.55s" pathLength="10" d="M382.4 157.6 l2 2.4 l4.4 -5.4" />
+        <path class="dk-tick" style="--d:.75s" pathLength="10" d="M382.4 169.6 l2 2.4 l4.4 -5.4" />
       </g></g>
       <g class="dk-pop" transform="translate(400 112)" set:html={confetti} />
     </g>
 
     <!-- books, one open on top -->
     <g class="dk-obj dk-books" data-obj="books">
+      <ellipse class="dk-shadow" cx="136" cy="177.5" rx="68" ry="2.6" />
       <g class="dk-lift">
         <rect class="dk-paper" x="72" y="150" width="128" height="26" rx="3" />
         <path class="dk-line" d="M86 150 V176 M92 150 V176 M184 157 H194 M184 163 H194 M184 169 H194" />
@@ -139,6 +141,7 @@ const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(
 
     <!-- a small globe -->
     <g class="dk-obj dk-globe" data-obj="globe">
+      <ellipse class="dk-shadow" cx="285" cy="177.5" rx="30" ry="2.4" />
       <g class="dk-lift">
         <ellipse class="dk-paper" cx="285" cy="172" rx="24" ry="5" />
         <path class="dk-line" d="M285 167 V154" />
@@ -202,12 +205,14 @@ const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(
 
     <!-- a stage mic on a small stand, under the spotlight -->
     <g class="dk-obj dk-mic" data-obj="mic">
+      <ellipse class="dk-shadow" cx="505" cy="331" rx="30" ry="3" />
       <g class="dk-lift">
         <path class="dk-paper" d="M480 327 v-3.5 a25 5 0 0 1 50 0 v3.5 a25 5 0 0 1 -50 0 Z" />
         <path class="dk-stand" d="M505 322 V236" />
         <g transform="rotate(-14 505 236)">
           <path class="dk-paper" d="M501.5 238 L498.5 200 H511.5 L508.5 238 Z" />
           <rect class="dk-green-solid" x="497.5" y="198" width="15" height="4" rx="1" />
+          <circle class="dk-halo" cx="505" cy="190" r="19" />
           <circle class="dk-paper" cx="505" cy="190" r="12" />
           <g clip-path="url(#dk-grille-clip)"><path class="dk-faint" d="M493 184 H517 M493 189 H517 M493 194 H517 M499 178 V202 M505 178 V202 M511 178 V202" /></g>
         </g>
