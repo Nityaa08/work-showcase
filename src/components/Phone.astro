@@ -10,6 +10,7 @@ const work = [
 ];
 ---
 <div class="phone-wrap">
+  <div class="phone-fit">
   <div class="phone" id="phone">
     {layers.map((i) => <div class="phone-layer" style={`transform: translateZ(${-i}px)`} />)}
     <div class="phone-btn b1" /><div class="phone-btn b2" /><div class="phone-btn b3" />
@@ -37,6 +38,7 @@ const work = [
     </div>
   </div>
   <div class="phone-shadow" />
+  </div>
 </div>
 
 <script>

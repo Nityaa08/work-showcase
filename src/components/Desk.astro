@@ -1,5 +1,6 @@
 ---
-// "When I'm not working": a hand-drawn desk. Inline SVG line art (dark grey ink, one green accent).
+// "When I'm not working": a hand-drawn desk. Inline SVG line art in the site's neutral palette: grey ink, near-black
+// for small emphasis (the ribbon, the heart, the ticks) and light grey tints for fills. No other hue.
 // Every object has a real <button> laid over it (positioned in % of the drawing, so it scales).
 // The page script (src/pages/index.astro) adds .hot (hover/focus) and .open (note showing) to the
 // matching .dk-obj, and .in to .desk while it is on screen. Motion lives in global.css ("Round 10", refined in "Round 11" and "Round 12").
@@ -7,7 +8,9 @@
 // sweeps to the mic, confetti pops, a plane flies India to Mexico); the end state holds while the note is open.
 import { desk } from '../data/home';
 
-const W = 600, H = 400;
+// The drawing is 600 x 400 units. The desk box shows it from y = 40 (Y0) down, so there is no empty band above the
+// bunting and the lamp (global.css shifts the SVG up by the same share); the buttons are placed in that visible part.
+const W = 600, H = 400, Y0 = 40, VH = H - Y0;
 // Hit areas in drawing units: centre x/y, width, height. CSS keeps each at least 44px on screen.
 const hits: Record<string, [number, number, number, number]> = {
   books: [137, 132, 140, 100],
@@ -52,10 +55,10 @@ const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(
   <svg class="dk-svg" viewBox={`0 0 ${W} ${H}`} aria-hidden="true" focusable="false">
     <defs>
       <linearGradient id="dk-beam" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#3f7a4c" stop-opacity="0.05" />
-        <stop offset="1" stop-color="#3f7a4c" stop-opacity="0.26" />
+        <stop offset="0" stop-color="#0b0b0c" stop-opacity="0.02" />
+        <stop offset="1" stop-color="#0b0b0c" stop-opacity="0.09" />
       </linearGradient>
-      <radialGradient id="dk-breath-g"><stop offset="0" stop-color="#3f7a4c" stop-opacity="0.32" /><stop offset="1" stop-color="#3f7a4c" stop-opacity="0" /></radialGradient>
+      <radialGradient id="dk-breath-g"><stop offset="0" stop-color="#0b0b0c" stop-opacity="0.12" /><stop offset="1" stop-color="#0b0b0c" stop-opacity="0" /></radialGradient>
       <clipPath id="dk-globe-clip"><circle cx="285" cy="118" r="33.2" /></clipPath>
       <clipPath id="dk-grille-clip"><circle cx="505" cy="190" r="11.2" /></clipPath>
     </defs>
@@ -69,12 +72,14 @@ const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(
       <path class="dk-line" d="M46 342 V398 M554 342 V398 M46 362 H554" />
     </g>
 
-    <!-- the spotlight belongs to the mic, but sits behind everything on the desk -->
+    <!-- the spotlight belongs to the mic: it hangs from a wall bracket at the bunting's height, right above the mic,
+         and its cone lands on the desk round the mic's base. It sits behind everything on the desk. -->
     <g class="dk-obj dk-mic-light" data-for="mic">
-      <path class="dk-line" d="M497 0 V9" />
+      <rect class="dk-wood" x="548" y="62" width="8" height="20" rx="2" />
+      <path class="dk-line" d="M548 72 H497 V82" />
       <g class="dk-sweep">
-        <g class="dk-beam"><path d="M487 37 L507 37 L562 330 L450 330 Z" fill="url(#dk-beam)" /><ellipse class="dk-pool" cx="506" cy="330" rx="56" ry="5" /></g>
-        <rect class="dk-can" x="485" y="8" width="24" height="28" rx="5" /><ellipse class="dk-lens" cx="497" cy="36" rx="10" ry="3" />
+        <g class="dk-beam"><path d="M487 111 L507 111 L556 330 L454 330 Z" fill="url(#dk-beam)" /><path class="dk-faint dk-cone" d="M487 111 L454 330 M507 111 L556 330" /><ellipse class="dk-pool" cx="505" cy="330" rx="52" ry="4.5" /></g>
+        <rect class="dk-can" x="485" y="82" width="24" height="28" rx="5" /><ellipse class="dk-lens" cx="497" cy="110" rx="10" ry="3" />
       </g>
     </g>
 
@@ -225,7 +230,7 @@ const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(
     const [x, y, w, h] = hits[d.id];
     return (
       <button type="button" class="dk-hit" data-k={d.id} aria-label={`${d.label}: open my note`} aria-expanded="false" aria-controls="dk-card"
-        style={`--x:${pct(x, W)};--y:${pct(y, H)};--w:${pct(w, W)};--h:${pct(h, H)}`}>
+        style={`--x:${pct(x, W)};--y:${pct(y - Y0, VH)};--w:${pct(w, W)};--h:${pct(h, VH)}`}>
         <span class="dk-tip" aria-hidden="true">{d.name}</span>
       </button>
     );

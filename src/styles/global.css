@@ -1102,7 +1102,8 @@ html { scroll-behavior: smooth; }
 @media (min-width: 1920px) { :root { --sec-y: 100px; } }
 @media (max-width: 680px) { :root { --sec-y: 56px; } }
 @media (min-width: 961px) {
-  .home { --sec-y: clamp(48px, 6.5svh, 68px); }
+  .home { --sec-y: clamp(48px, 6.5vh, 68px); }
+  @supports (height: 1svh) { .home { --sec-y: clamp(48px, 6.5svh, 68px); } }
   .h-path.light { padding-bottom: var(--sec-y); }
 }
 .h-contact, .h-contact.light { padding-top: clamp(44px, 6vh, 64px); padding-top: clamp(44px, 6svh, 64px); padding-bottom: clamp(44px, 6vh, 64px); padding-bottom: clamp(44px, 6svh, 64px); }
@@ -1264,7 +1265,7 @@ html { scroll-behavior: smooth; }
 .h-outside .ow-intro { margin: 14px 0 0; max-width: 30em; font-size: 17px; line-height: 1.6; color: var(--ink-2); }
 
 /* the drawing */
-.h-outside { --ink-d: #3a3b3f; --g: #3f7a4c; --g-tint: #e3ece4; }
+.h-outside { --ink-d: #3a3b3f; --g: var(--n-ink); --g-tint: var(--n-tint); } /* --g is the drawing's emphasis: near-black, not a hue (Round 14) */
 .desk { position: relative; width: 100%; max-width: 700px; margin-inline: auto; aspect-ratio: 600 / 400; }
 .dk-svg { position: absolute; top: 0; right: 0; bottom: 0; left: 0; inset: 0; width: 100%; height: 100%; overflow: visible; }
 .dk-svg * { vector-effect: non-scaling-stroke; }
@@ -1440,7 +1441,7 @@ html { scroll-behavior: smooth; }
 .dk-globe.open .dk-plane { opacity: 1; }
 
 /* --- The mic: the spotlight sweeps the room, lands on the mic, applause --- */
-.dk-sweep { transform-box: view-box; transform-origin: 497px 22px; }
+.dk-sweep { transform-box: view-box; transform-origin: 497px 82px; } /* the lamp swings from its bracket */
 .desk.in .dk-mic-light.open .dk-sweep { animation: dk-sweep 1.8s var(--ease-in-out) both; }
 @keyframes dk-sweep { 0% { transform: rotate(0); } 45% { transform: rotate(12deg); } 100% { transform: rotate(0); } }
 .desk.in .dk-mic-light.open .dk-beam { animation: none; opacity: 1; }
@@ -1491,7 +1492,7 @@ html { scroll-behavior: smooth; }
 }
 
 /* --- Contact: "Let's talk." on the left; on the right one envelope that is the whole interaction --- */
-.h-contact { --ink-d: #3a3b3f; --g: #3f7a4c; --g-tint: #e3ece4; }
+.h-contact { --ink-d: #3a3b3f; --g: var(--n-ink); --g-tint: var(--n-tint); } /* neutral, as on the desk (Round 14) */
 .h-contact, .h-contact.light { grid-template-columns: minmax(0, 1fr) minmax(0, 520px); align-items: center; }
 .ct-side { display: grid; gap: 18px; width: 100%; max-width: 520px; justify-self: end; min-width: 0; }
 .ct-hint { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 2px 0 0; font: 500 14px/1.5 var(--sans); color: #66686d; text-align: center; }
@@ -1865,9 +1866,14 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
    the screen is at least 14.5px before the phone is scaled (about 11px or more on screen) and at least 7:1
    against the screen, with fewer, clearer rows. It floats and tilts only while on screen. The scale is a plain
    transform (not the `scale` property), so Chrome 100 and Safari 14 size it the same. --- */
-.how-phone { display: grid; place-items: center; height: 600px; }
-.phone-wrap { position: relative; perspective: 1700px; width: 300px; height: 620px; margin: 0 auto; transform: translateY(-14px) scale(0.8); }
-.phone { --rx: 8deg; --ry: -24deg; position: relative; width: 300px; height: 620px; transform-style: preserve-3d; transform: rotateX(var(--rx)) rotateY(var(--ry)) rotateZ(-3deg); transition: transform 900ms var(--ease); animation: float 7s ease-in-out infinite; }
+/* Round 14: the phone's layout box is its drawn size (300 x 620 scaled by --s), so the grid centres the real phone on the
+   text and the section padding holds it: no translate offsets, nothing reaches the section edge. The 300 x 620 drawing is
+   scaled from its top-left corner inside that box, and the perspective is part of the phone's own transform
+   (perspective()), so Safari and Chrome project it the same way. */
+.how-phone { --s: 0.8; display: grid; place-items: center; }
+.phone-wrap { position: relative; width: calc(300px * var(--s)); height: calc(620px * var(--s)); margin: 0 auto; }
+.phone-fit { position: absolute; top: 0; left: 0; width: 300px; height: 620px; transform: scale(var(--s)); transform-origin: 0 0; }
+.phone { --rx: 8deg; --ry: -24deg; position: relative; width: 300px; height: 620px; transform-style: preserve-3d; transform: perspective(1700px) rotateX(var(--rx)) rotateY(var(--ry)) rotateZ(-3deg); transition: transform 900ms var(--ease); animation: float 7s ease-in-out infinite; }
 @keyframes float { 50% { translate: 0 -10px; } }
 @supports not (translate: 0) { @keyframes float { 50% { margin-top: -10px; } } }
 .phone.off, .phone.off .d.run { animation-play-state: paused; }
@@ -1900,29 +1906,141 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 .d { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #555; flex: none; }
 .d.ok { background: #4ade80; } .d.wait { background: #f87171; } .d.idle { background: #55555a; }
 .d.run { background: transparent; border: 1.6px solid #f5c451; border-right-color: transparent; animation: spin 900ms linear infinite; }
-@media (min-width: 961px) and (max-height: 820px) { .how-phone { height: 540px; } .phone-wrap { transform: translateY(-36px) scale(0.76); } }
-@media (max-width: 960px) { .how-phone { height: 560px; margin-top: 8px; } .phone-wrap { transform: translateY(-30px) scale(0.8); } }
-@media (max-width: 680px) { .how-phone { height: 520px; } .phone-wrap { transform: translateY(-38px) scale(0.78); } }
+@media (min-width: 961px) and (max-height: 820px) { .how-phone { --s: 0.76; } }
+@media (max-width: 960px) { .how-phone { margin-top: 8px; } }
+@media (max-width: 680px) { .how-phone { --s: 0.78; } }
 @media (prefers-reduced-motion: reduce) { .phone { animation: none; transition: none; } }
 /* the home indicator */
 .screen::after { content: ''; position: absolute; left: 50%; bottom: 9px; width: 108px; height: 5px; margin-left: -54px; border-radius: 3px; background: rgba(255, 255, 255, 0.55); }
 
-/* --- Home hero, desktop (961px and up): the text and the portrait are one composed pair, centred in the first
-   screen. The hero fills that screen, so the work section starts at the fold (no half-cut cards). The portrait is
-   sized by the screen's height (capped by its width), sits one column gap from the text, and its edges fade into the
-   page, so its own background never shows as a box; the text column takes the rest of the container and is centred
-   on the portrait. Plain grid, vh/svh (divided by the page zoom on very large screens) and -webkit- prefixed masks,
-   so Safari 14+ lays it out the same. Phones and tablets keep the stacked hero above. --- */
+/* --- Home hero, desktop (961px and up), Round 14. The hero is top-weighted: the text starts one moderate gap
+   (--hero-gap, 64 to 96px) under the nav and keeps the same gap under its buttons, so it never floats in a tall empty
+   band. There is no 100vh stretch. Instead the portrait is sized so that the hero, plus the work section's heading
+   (its top padding and "Selected work"), ends where the first screen ends: the work section starts on a clean edge with
+   its heading in view and the cards just below the fold. The portrait stands on the section's bottom edge and rises
+   into the top gap; its waist fades into the page. On very tall screens, where the portrait reaches its width cap,
+   a min-height of the same size keeps the cards below the fold. Values use vh before svh and are divided by the page
+   zoom on very large screens, so Safari 14+ lays it out the same. Phones and tablets keep the stacked hero above. --- */
 @media (min-width: 961px) {
-  .h-open.light { min-height: calc(100vh / var(--z, 1)); min-height: calc(100svh / var(--z, 1)); padding-top: 72px; padding-bottom: 24px; grid-template-columns: minmax(0, 1fr) auto; column-gap: clamp(40px, 3.2vw, 56px); align-content: center; align-items: center; }
-  .h-open-text { align-self: center; padding: 0; max-width: none; }
-  .h-open h1 { font-size: clamp(42px, 5vw, 80px); max-width: 13ch; }
+  /* Custom properties are not checked when parsed, so the svh versions sit behind @supports (Safari before 15.4 gets vh). */
+  .home { --hero-gap: clamp(64px, 8vh, 96px); --hero-h: calc(100vh / var(--z, 1) - var(--sec-y) - 96px); }
+  @supports (height: 1svh) { .home { --hero-gap: clamp(64px, 8svh, 96px); --hero-h: calc(100svh / var(--z, 1) - var(--sec-y) - 96px); } }
+  .h-open.light {
+    min-height: var(--hero-h); padding-top: calc(68px + var(--hero-gap)); padding-bottom: 0;
+    grid-template-columns: minmax(0, 1fr) auto; column-gap: clamp(40px, 3.2vw, 56px); align-content: stretch; align-items: start;
+  }
+  .h-open-text { align-self: start; padding: 0 0 var(--hero-gap); max-width: none; }
+  .h-open h1 { font-size: clamp(42px, min(5.4vw, 8.2vh), 78px); font-size: clamp(42px, min(5.4vw, 8.2svh), 78px); max-width: 13ch; }
   .h-sub { max-width: 40em; font-size: clamp(17px, 1.3vw, 20px); text-wrap: pretty; }
-  .photo { align-self: center; justify-self: start; width: min(calc((100vh / var(--z, 1) - 120px) * 0.64), 38vw, 600px); width: min(calc((100svh / var(--z, 1) - 120px) * 0.64), 38vw, 600px); }
+  /* portrait height = hero height less the nav and a 16px breath; width from its 980 x 1220 aspect */
+  .photo {
+    align-self: end; justify-self: start; margin-top: calc(16px - var(--hero-gap));
+    width: min(calc((var(--hero-h) - 84px) * 0.803), 42vw, 660px);
+  }
   .photo img {
     /* The portrait's background is transparent (webp) or exactly the page colour (jpg), so only the cut at the
        waist needs a fade; fading all four sides drew a faint stepped box. */
     -webkit-mask-image: linear-gradient(to bottom, #000 82%, transparent 100%);
     mask-image: linear-gradient(to bottom, #000 82%, transparent 100%);
   }
+}
+
+/* =====================================================================
+   Round 14: one neutral palette, and layout fixes from Nitya's MacBook photos. Appended last on purpose.
+   Colour rule: warm off-white, near-black and greys everywhere. Green appears only as a muted status colour
+   (pass, blocked, connected) inside the dark technical visuals: terminals, the agent log card, the layer stack
+   and the phone's status dots. Brand colour appears only on hover/focus of the LinkedIn tile.
+   ===================================================================== */
+:root {
+  --n-ink: #0b0b0c;      /* near-black: text and small emphasis fills (ribbon, heart, ticks, stamps) */
+  --n-ink-2: #3a3b3f;    /* drawing ink */
+  --n-mid: #8a8c90;      /* mid grey: secondary marks */
+  --n-light: #c9c8c2;    /* light grey: airmail stripe, quiet rules */
+  --n-tint: #e6e5df;     /* light grey tint: fills (book cover, mat, stamp, bunting) */
+  --n-paper: #f5f5f2;    /* warm off-white page */
+  --ok: #9cc5a1;         /* muted green: status only, inside dark technical visuals */
+}
+
+/* --- Light sections: no green left in the desk or the contact block --- */
+.light .h-open-to i, .ct-open i { background: var(--n-ink); box-shadow: 0 0 0 4px rgba(11, 11, 12, 0.08); }
+.dk-green { stroke: var(--n-ink-2); }
+.dk-land { fill: rgba(11, 11, 12, 0.13); }
+.dk-pool { fill: rgba(11, 11, 12, 0.06); }
+.dk-cone { stroke: rgba(58, 59, 63, 0.22); }
+.dk-mat-end { fill: #f0efea; }
+.dk-spark, .dk-wave { stroke: var(--n-mid); }
+.dk-halo { fill: rgba(11, 11, 12, 0.05); stroke: var(--n-mid); }
+.dk-bit-1 { fill: var(--n-mid); } .dk-bit-2 { fill: var(--n-tint); stroke: var(--n-ink-2); }
+.dk-say-g { fill: var(--n-ink); font-weight: 700; }
+.dk-name { color: #55575c; }
+@media (hover: hover) { .ml-addr:hover { text-decoration-color: rgba(11, 11, 12, 0.5); } }
+@media (hover: hover) { .ml-copy:hover { background: rgba(11, 11, 12, 0.06); color: var(--n-ink); } }
+.ml-stamp-in { stroke: var(--n-ink-2); }
+/* the airmail stripe: ink and light grey */
+.ml-air { opacity: 0.85; background: repeating-linear-gradient(-45deg, var(--n-ink-2) 0 calc(1.6 * min(5.2px, (100vw - 40px) / 100)), transparent calc(1.6 * min(5.2px, (100vw - 40px) / 100)) calc(3 * min(5.2px, (100vw - 40px) / 100)), var(--n-light) calc(3 * min(5.2px, (100vw - 40px) / 100)) calc(4.6 * min(5.2px, (100vw - 40px) / 100)), transparent calc(4.6 * min(5.2px, (100vw - 40px) / 100)) calc(6 * min(5.2px, (100vw - 40px) / 100))); background: repeating-linear-gradient(-45deg, var(--n-ink-2) 0 1.6cqw, transparent 1.6cqw 3cqw, var(--n-light) 3cqw 4.6cqw, transparent 4.6cqw 6cqw); }
+.ml-copied { background: rgba(251, 250, 246, 0.94); }
+.ct-hint::before { background: var(--n-mid); box-shadow: 0 0 0 4px rgba(11, 11, 12, 0.06); }
+
+/* --- Social tiles: near-black marks at rest; on hover or keyboard focus the tile lifts and its edge darkens,
+   and only LinkedIn's mark takes its brand blue (GitHub's mark is already near-black, the resume has no brand). --- */
+.ct-links .ct-ic { color: var(--n-ink); }
+.ct-links a:focus-visible { outline: 2px solid var(--n-ink); outline-offset: 3px; background: #fff; transform: translateY(-2px); box-shadow: inset 0 0 0 1px rgba(11, 11, 12, 0.3), 0 14px 26px -18px rgba(40, 30, 20, 0.4); }
+.ct-links a:focus-visible .ct-arr { color: var(--n-ink); }
+.ct-links a.ct-li:focus-visible .ct-ic { color: #0A66C2; }
+@media (hover: hover) {
+  .ct-links a:hover { background: #fff; transform: translateY(-2px); box-shadow: inset 0 0 0 1px rgba(11, 11, 12, 0.3), 0 14px 26px -18px rgba(40, 30, 20, 0.4); }
+  .ct-links a:hover .ct-ic { color: var(--n-ink); transform: translateY(-1px); }
+  .ct-links a.ct-li:hover .ct-ic { color: #0A66C2; }
+  .ct-links a.ct-gh:hover .ct-ic { color: #181717; }
+  .ct-links a:hover .ct-arr { color: var(--n-ink); }
+}
+@media (prefers-reduced-motion: reduce) { .ct-links a:focus-visible { transform: none; } }
+
+/* --- Dark sections: decorative accents are off-white or grey; green stays only where it means a status --- */
+.w-go { color: #ecebe6; display: inline-flex; gap: 6px; align-items: center; }
+.w-go i { font-style: normal; transition: transform var(--t-fast) var(--ease); }
+@media (hover: hover) { .w-card:hover .w-go { color: #fff; } .w-card:hover .w-go i { transform: translateX(3px); } }
+.how-steps li::before { color: var(--ink-3); }
+.mini-flow .mf-gw { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.5), 0 0 0 4px rgba(255, 255, 255, 0.05); }
+.mini-flow .mf-drop { border-left-color: rgba(255, 255, 255, 0.32); }
+.mini-flow .mf-vault { color: #d9d8d3; background: #1a1b1e; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22); }
+/* the phone: "connected" and the passing branches keep a muted status green */
+.list-head span { color: var(--ok); }
+.d.ok { background: #6cc28a; }
+@media (prefers-reduced-motion: reduce) { .w-go i { transition: none; } }
+
+/* --- Hero (desktop): the paragraph and buttons breathe a little more on taller screens --- */
+@media (min-width: 961px) {
+  .h-sub { margin-top: clamp(22px, 2.6vh, 32px); margin-top: clamp(22px, 2.6svh, 32px); }
+  .h-actions { margin-top: clamp(30px, 3.6vh, 44px); margin-top: clamp(30px, 3.6svh, 44px); }
+}
+
+/* --- When I'm not working: the desk is cropped to its drawing (no band above the lamp and bunting), the hint is
+   one small pill, and the note has a reserved slot under the intro so opening it moves nothing. --- */
+.desk { aspect-ratio: 600 / 360; }
+.dk-svg { top: -11.111%; bottom: auto; height: 111.111%; }
+@supports not (aspect-ratio: 1 / 1) { .desk::before { content: ''; display: block; padding-top: 60%; } }
+.h-outside { grid-template-rows: 1fr auto auto 1fr; align-items: start; }
+.ow-desk { align-self: center; }
+.ow-note { margin-top: 26px; min-height: 0; }
+.dk-hint {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 0; margin: 0; padding: 9px 16px 9px 12px; border: 0; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.7); box-shadow: inset 0 0 0 1px rgba(11, 11, 12, 0.12); font: 500 14.5px/1.3 var(--sans); color: var(--n-ink);
+}
+.dk-hint svg { width: 18px; height: 18px; color: var(--n-ink); }
+.dk-hint span { display: inline; font: inherit; }
+.dk-hint[hidden] { display: none; }
+@media (min-width: 961px) {
+  /* the slot is as tall as the tallest note, so the intro and the hint sit still when a note opens */
+  .ow-note { min-height: 186px; }
+  .dk-card { min-height: 0; }
+}
+@media (min-width: 1200px) { .ow-note { min-height: 158px; } } /* the longest note is three lines from here up, four below */
+@media (max-width: 960px) { .dk-hint { padding: 9px 16px 9px 12px; } }
+@media (max-width: 680px) { .dk-hint { padding: 9px 16px 9px 12px; font-size: 14.5px; } }
+
+/* --- Contact: the heading block is top-aligned with the envelope's drawing (the letter's top edge) --- */
+@media (min-width: 961px) {
+  .h-contact, .h-contact.light { align-items: start; }
+  .ct-text { align-self: start; padding-top: calc(3 * min(5.2px, (100vw - 40px) / 100)); }
 }

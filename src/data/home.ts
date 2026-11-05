@@ -34,7 +34,6 @@ export const outsideIntro = {
   title: 'When I’m not working',
   text: 'Away from the screen: books, classical dance, yoga, a stage and a mic. Everything on my desk comes with a note.',
   hint: 'Tap anything on my desk.',
-  hintSub: 'Each thing opens a little note from me.',
 };
 /*
  * "When I'm not working": the things on my desk (src/components/Desk.astro).
