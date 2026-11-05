@@ -29,8 +29,8 @@
       if (cursor) t.after(cursor);
       if (typed.has(l.dataset.t!)) {
         t.textContent = '';
-        for (let c = 1; c <= full.length; c++) { if (!alive()) return false; t.textContent = full.slice(0, c); await sleep(20 + Math.random() * 36); }
-        await sleep(420);
+        for (let c = 1; c <= full.length; c++) { if (!alive()) return false; t.textContent = full.slice(0, c); await sleep(14 + Math.random() * 22); }
+        await sleep(360);
       } else {
         t.textContent = full;
         await sleep(l.dataset.t === 'dim' ? 700 : l.dataset.t === 'err' ? 180 : 300);

@@ -45,8 +45,8 @@ const work = cases.filter((c) => c.ready);
         </div>
         <figure class="photo">
           <picture>
-            <source srcset="/portrait-muted.webp" type="image/webp" />
-            <img src="/portrait-muted.jpg" alt="Nityashree S, smiling" width="980" height="1220" fetchpriority="high" />
+            <source srcset="/portrait-muted-600.webp 600w, /portrait-muted.webp 980w" sizes="(max-width: 960px) 300px, 420px" type="image/webp" />
+            <img src="/portrait-muted.jpg" srcset="/portrait-muted-600.jpg 600w, /portrait-muted.jpg 980w" sizes="(max-width: 960px) 300px, 420px" alt="Nityashree S, smiling" width="980" height="1220" fetchpriority="high" />
           </picture>
         </figure>
       </section>
