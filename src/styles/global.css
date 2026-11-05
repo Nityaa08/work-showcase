@@ -28,33 +28,6 @@ img { display: block; max-width: 100%; }
 /* hero stage */
 body.studio::before { content: ''; position: absolute; top: 0; right: 0; bottom: 0; left: 0; inset: 0; pointer-events: none; opacity: 0.16; mix-blend-mode: overlay; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 
-/* phone */
-.phone-wrap { position: relative; perspective: 1700px; width: 300px; height: 620px; margin: 0 auto; }
-.phone { --rx: 8deg; --ry: -24deg; position: relative; width: 300px; height: 620px; transform-style: preserve-3d; transform: rotateX(var(--rx)) rotateY(var(--ry)) rotateZ(-3deg); transition: transform 900ms var(--ease); animation: float 7s ease-in-out infinite; }
-@keyframes float { 50% { translate: 0 -10px; } }
-.phone.off, .phone.off .d.run { animation-play-state: paused; }
-.phone-layer { position: absolute; top: 0; right: 0; bottom: 0; left: 0; inset: 0; border-radius: 46px; background: linear-gradient(90deg, #1b1d1f, #8e9397 40%, #2e3134 70%, #0f1011); }
-.phone-btn { position: absolute; right: -2px; width: 4px; border-radius: 2px; background: #6c7175; transform: translateZ(-7px); }
-.phone-btn.b1 { top: 150px; height: 60px; } .phone-btn.b2 { top: 225px; height: 60px; } .phone-btn.b3 { left: -2px; right: auto; top: 130px; height: 34px; }
-.phone-face { position: absolute; top: 0; right: 0; bottom: 0; left: 0; inset: 0; border-radius: 46px; background: #050505; padding: 11px; transform: translateZ(1px); box-shadow: inset 0 0 0 1.5px #3c4044; }
-.phone-shadow { position: absolute; left: 10%; right: -10%; bottom: -46px; height: 40px; border-radius: 50%; background: rgba(0, 0, 0, 0.45); filter: blur(22px); }
-.screen { height: 100%; border-radius: 36px; background: #0b0b0b; overflow: hidden; padding: 12px 16px 0; font-family: -apple-system, 'SF Pro Text', system-ui, sans-serif; color: #ececec; line-height: 1.35; }
-.list-head { display: flex; align-items: center; gap: 2px; margin-bottom: 10px; }
-.list-head b { font-size: 15px; } .list-head span { margin-left: auto; font: 9.5px var(--mono); color: #777; }
-.cap { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: #6d6d6d; margin: 12px 0 2px; }
-.stream { display: grid; grid-template-columns: 12px 1fr; gap: 8px; padding: 7px 0; border-bottom: 1px solid #1c1c1c; }
-.stream > div { min-width: 0; }
-.stream.link { cursor: pointer; } @media (hover: hover) { .stream.link:hover b { color: #fff; text-decoration: underline; text-underline-offset: 2px; } }
-.stream .d { margin-top: 5px; }
-.stream b { font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 5px; white-space: nowrap; }
-.stream em { font: normal 8.5px var(--mono); color: #aaa; background: #222; border-radius: 5px; padding: 1px 5px; }
-.stream em.open { background: #2a3a2c; color: #9be59b; }
-.stream .repo, .stream .act { display: block; font: 10px var(--mono); color: #8a8a8a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.stream .act { color: #6f6f6f; }
-.d { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #555; margin-right: 5px; flex: none; }
-.d.ok { background: #4ade80; } .d.wait { background: #f87171; } .d.idle { background: #4b4b4b; }
-.d.run { background: transparent; border: 1.6px solid #f5c451; border-right-color: transparent; animation: spin 900ms linear infinite; }
-.d.small { width: 5px; height: 5px; background: #60a5fa; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 
@@ -77,13 +50,6 @@ body.studio::before { content: ''; position: absolute; top: 0; right: 0; bottom:
 .ios-bar.big .ios-island { width: 88px; height: 26px; }
 .sicons { display: inline-flex; align-items: center; gap: 5px; color: currentColor; }
 
-/* live agents on the hero phone */
-.live { border: 1px solid #222; border-radius: 12px; padding: 4px 10px 6px; margin: 10px 0 4px; background: #101010; }
-.live .cap { margin: 6px 0 4px; }
-.agent-row { display: grid; grid-template-columns: 12px 64px 1fr; align-items: center; padding: 5px 0; font-size: 11.5px; }
-.agent-row b { font-weight: 600; } .agent-row .a-act { font: 10px var(--mono); color: #8a8a8a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.agent-row.flash .a-act { animation: flash 700ms ease-out; }
-@keyframes flash { from { color: #fff; } }
 
 /* terminal / log window */
 .win { position: relative; margin: 0; border-radius: 14px; background: linear-gradient(180deg, #19191a, #121213); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.07), 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 50px 90px -40px rgba(0, 0, 0, 0.75); font: 13px/1.7 var(--mono); color: #cfcdc6; overflow: hidden; text-align: left; }
@@ -150,15 +116,6 @@ body.studio main { position: relative; z-index: 1; }
 .mb-gl { aspect-ratio: 1.25; height: auto; }
 .section-head, .story-head { max-width: 1240px; margin: 0 auto 56px; }
 .section-head h2, .story-head h2 { font-size: clamp(30px, 3.4vw, 48px); letter-spacing: -0.035em; line-height: 1.05; font-weight: 600; margin: 14px 0 0; }
-.story { max-width: 1400px; margin: 0 auto; padding: 160px 5vw 40px; }
-.story-grid { display: grid; grid-template-columns: 0.7fr 1.3fr; gap: 64px; }
-.step { min-height: 72vh; display: flex; flex-direction: column; justify-content: center; }
-.step-state { font: 500 12px var(--sans); letter-spacing: 0.18em; text-transform: uppercase; color: #8fdc98; margin: 0 0 16px; display: flex; gap: 14px; }
-.step-state span { color: #808287; }
-.step h3 { font-size: clamp(28px, 2.6vw, 38px); line-height: 1.06; letter-spacing: -0.03em; font-weight: 600; margin: 0 0 14px; }
-.step p { font-size: 17px; line-height: 1.55; color: #a4a6aa; margin: 0; max-width: 380px; }
-.step-inline { display: none; }
-.sticky-rig { position: sticky; top: 14vh; height: 72vh; display: grid; align-items: center; }
 .desk-slot { grid-area: 1 / 1; opacity: 0; transform: translateY(36px); transition: opacity var(--t-slow) var(--ease), transform var(--t-slow) var(--ease); }
 .desk-slot.active { opacity: 1; transform: none; }
 .desk-slot .win { font-size: 14px; }
@@ -258,48 +215,11 @@ body.studio main { position: relative; z-index: 1; }
 .mini { pointer-events: none; }
 
 @media (max-width: 900px) {
-  .story-grid { grid-template-columns: 1fr; }
-  .sticky-rig { display: none; }
-  .step { min-height: 0; padding: 40px 0; }
-  .step-inline { display: block; margin-top: 28px; }
-  .cs-hero { padding-top: 110px; }
-  .cs-hero, .rail { grid-template-columns: 1fr; }
+  .cs-hero { padding-top: 110px; grid-template-columns: 1fr; }
 }
-@media (prefers-reduced-motion: reduce) { .phone { animation: none; transition: none; } .desk-slot { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .desk-slot { transition: none; } }
 
-/* story extras */
-.step-fix { margin-top: 10px !important; font: 14px/1.5 var(--sans) !important; color: #8fdc98 !important; }
-.step .deep { margin-top: 18px; }
-.deep summary { cursor: pointer; list-style: none; width: fit-content; font: 12px var(--sans); color: #8c8e92; }
-.deep summary::-webkit-details-marker { display: none; }
-.deep summary::before { content: '+ '; } .deep[open] summary::before { content: '− '; }
-@media (hover: hover) { .deep summary:hover { color: #ecebe6; } }
-.step .deep p { margin: 12px 0 0; font-size: 15.5px; line-height: 1.6; color: #a9aaad; }
 
-/* feature accordion (Apple-style) */
-.rail-sec { max-width: 1440px; margin: 0 auto; padding: 140px 5vw; }
-.rail { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 80px; align-items: center; }
-.acc .story-head { margin-bottom: 36px; }
-.acc .story-head h2 { font-size: clamp(28px, 2.8vw, 40px); }
-.rail-list { list-style: none; margin: 0; padding: 0; }
-.rail-item { border-bottom: 1px solid #1f1f1f; }
-.rail-item button { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 22px 0; background: none; border: 0; color: #7e8085; font: 600 clamp(22px, 2vw, 30px) var(--sans); letter-spacing: -0.03em; cursor: pointer; text-align: left; transition: color var(--t-base); }
-.rail-item.on button { color: #f2f1ee; } @media (hover: hover) { .rail-item button:hover { color: #f2f1ee; } }
-.chev { flex: none; color: #6f7073; transition: transform var(--t-slow) var(--ease), color var(--t-base); }
-.rail-item.on .chev { transform: rotate(180deg); color: #f2f1ee; }
-.r-more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows var(--t-slow) var(--ease); }
-.rail-item.on .r-more { grid-template-rows: 1fr; }
-.r-more > div { overflow: hidden; }
-.r-more p { margin: -4px 0 0; color: #a3a4a7; font-size: 17px; line-height: 1.55; max-width: 420px; }
-.r-more p { min-height: var(--rail-d, auto); }
-.r-bar { display: block; height: 2px; margin: 18px 0 24px; background: #1f1f1f; border-radius: 2px; }
-.r-bar i { display: block; height: 100%; background: #ecebe6; border-radius: 2px; transform: scaleX(0); transform-origin: left; }
-.rail-stage { position: relative; display: grid; }
-.rail-slot { grid-area: 1 / 1; opacity: 0; transform: translateY(18px) scale(0.985); pointer-events: none; transition: opacity var(--t-slow) var(--ease), transform var(--t-slow) var(--ease); }
-.rail-slot.on { opacity: 1; transform: none; pointer-events: auto; }
-.rail-stage .demo { aspect-ratio: 16 / 10.5; font-size: 15px; border-radius: 20px; }
-.rail-stage .demo-body { padding: 26px; }
-.rail-stage .demo .bub { padding: 10px 14px; }
 
 /* next case */
 
@@ -311,10 +231,6 @@ body.studio main { position: relative; z-index: 1; }
 .chapters a.on { color: #ecebe6; } @media (hover: hover) { .chapters a:hover { color: #ecebe6; } } .chapters a.on span { color: #8fdc98; }
 @media (max-width: 1599px) { .chapters { display: none; } }
 
-/* story head inside first step: no empty screen */
-.story { padding-top: 40px !important; }
-.story-head.in-step { margin: 0 0 6vh; }
-.story-steps .step:first-child { justify-content: center; }
 
 /* incidents wall */
 .incidents { max-width: 1240px; margin: 0 auto; padding: 120px 5vw 40px; }
@@ -376,21 +292,15 @@ body.studio::before { opacity: 0.06 !important; }
 .inc-top { margin-bottom: 16px; }
 .inc-id { color: var(--ink-3); }
 .inc-status { color: #a9cfad; background: rgba(156, 197, 161, 0.08); box-shadow: inset 0 0 0 1px rgba(156, 197, 161, 0.18); }
-.rail-item { border-color: var(--hair) !important; }
-.r-bar { background: rgba(255, 255, 255, 0.06); }
-.step-state { color: #a9cfad; }
 .nav.solid { background: rgba(10, 10, 11, 0.72); border-color: var(--hair); }
 .mark { background: linear-gradient(145deg, #f4f3ef, #b9b8b3); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 4px 12px -4px rgba(0, 0, 0, 0.6); }
 
 /* ===== one rhythm for every section ===== */
 :root { --sec-x: max(5vw, calc((100vw - 1280px) / 2)); --sec-y: 112px; }
-.story, .rail-sec, .incidents { max-width: none !important; margin: 0 !important; padding: var(--sec-y) var(--sec-x) !important; }
-.story { padding-bottom: 0 !important; }
+.incidents { max-width: none !important; margin: 0 !important; padding: var(--sec-y) var(--sec-x) !important; }
 .cs-hero { padding-left: var(--sec-x) !important; padding-right: var(--sec-x) !important; }
 .story-head { margin-bottom: 48px !important; }
-.story-head.in-step { margin-bottom: 6vh !important; }
 .cs-hero { min-height: 86vh !important; min-height: 86svh !important; }
-.story { padding-top: calc(var(--sec-y) / 2) !important; }
 .mb-gl { aspect-ratio: 1.55 !important; }
 
 /* ===== case 02: MCP (custom layout) ===== */
@@ -505,10 +415,7 @@ body.studio::before { opacity: 0.06 !important; }
 @media (max-width: 960px) { .rule-row, .wb, .replay { grid-template-columns: 1fr; } .case-nav { flex-direction: column; } .cn { min-width: 0; } }
 
 /* ===== review fixes 2026-10-08 ===== */
-.rail { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); }
-.rail-stage { min-width: 0; max-width: 100%; overflow: hidden; }
 .section-head, .story-head { max-width: none !important; margin: 0 0 48px !important; }
-.story-head.in-step { margin-bottom: 6vh !important; }
 .cs-hero h1, .mx-head h1, .sx-head h1 { font-size: clamp(44px, 5vw, 76px) !important; }
 .cs-hero, .mx-hero, .sx-hero { align-items: center; padding-top: 130px !important; }
 .stamp-b em { white-space: normal; }
@@ -587,7 +494,6 @@ body.studio::before { opacity: 0.06 !important; }
 .how-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--hair); }
 .how-list li { display: grid; grid-template-columns: 96px 1fr; padding: 13px 0; border-bottom: 1px solid var(--hair); color: var(--ink-2); font-size: 15px; }
 .how-list b { font: 500 12.5px var(--sans); color: #9cc5a1; padding-top: 2px; }
-.how-phone { display: grid; place-items: center; min-height: 680px; }
 .h-work { padding-top: var(--sec-y); padding-bottom: var(--sec-y); }
 .w-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
 .w-card { display: flex; flex-direction: column; border-radius: 20px; overflow: hidden; background: linear-gradient(180deg, #161618, #111113); box-shadow: 0 0 0 1px var(--hair), inset 0 1px 0 rgba(255, 255, 255, 0.06); transition: box-shadow var(--t-base), transform var(--t-base) var(--ease); }
@@ -624,7 +530,6 @@ body.studio::before { opacity: 0.06 !important; }
 }
 @media (max-width: 960px) {
   .h-how { grid-template-columns: 1fr; }
-  .how-phone { min-height: 640px; }
   .replay-stage, .wb-side { position: static; }
 }
 @media (max-width: 860px) {
@@ -636,8 +541,6 @@ body.studio::before { opacity: 0.06 !important; }
   :root { --sec-x: 20px; --sec-y: 80px; }
   .w-grid { grid-template-columns: 1fr; }
   .h-open { padding-top: 96px; }
-  .how-phone { min-height: 560px; }
-  .phone-wrap { scale: 0.82; }
   .how-list li { grid-template-columns: 84px 1fr; }
   .nav { padding: 0 16px; gap: 14px; height: 60px; }
   .links { gap: 14px; font-size: 13.5px; }
@@ -703,9 +606,8 @@ body.studio::before { opacity: 0.06 !important; }
 
 /* Stack two-column sections on tablets and phones */
 @media (max-width: 960px) {
-  .rail, .wb, .replay { grid-template-columns: 1fr; gap: 40px; }
+  .wb, .replay { grid-template-columns: 1fr; gap: 40px; }
   .wb-side, .replay-stage { position: static; }
-  .rail .acc, .rail > * { min-width: 0; }
 }
 @media (max-width: 680px) {
   .fd { grid-template-columns: 72px minmax(0, 1fr); }
@@ -1027,11 +929,6 @@ html { scroll-behavior: smooth; }
 .layer { height: clamp(46px, 7.4vh, 64px); height: clamp(46px, 7.4svh, 64px); }
 .stack { gap: clamp(6px, 1.2vh, 10px); gap: clamp(6px, 1.2svh, 10px); }
 .attack { height: clamp(48px, 7vh, 56px); height: clamp(48px, 7svh, 56px); }
-/* Case 01 features: heading above, demo centred beside all six options */
-.rail-head { margin-bottom: 36px !important; }
-.rail { align-items: center; }
-.rail-item button { padding: clamp(12px, 2.2vh, 22px) 0; padding: clamp(12px, 2.2svh, 22px) 0; }
-.rail-stage .demo { max-height: calc(100vh - 140px); max-height: calc(100svh - 140px); }
 @media (max-width: 960px) {
   .cs-hero, .mx-hero, .sx-hero { min-height: 0 !important; padding-top: 96px !important; }
 }
@@ -1041,22 +938,15 @@ html { scroll-behavior: smooth; }
   .sx-hero { padding-top: 72px !important; }
 }
 
-/* How I work: the phone fits short laptop screens; heading wraps naturally on phones */
-@media (min-width: 961px) and (max-height: 820px) { .how-phone { min-height: 600px; } .phone-wrap { scale: 0.86; } }
-@media (min-width: 961px) and (max-height: 700px) { .how-phone { min-height: 520px; } .phone-wrap { scale: 0.74; } }
+/* How I work: the heading wraps naturally on phones */
 @media (max-width: 680px) { .h-how h2 br { display: none; } }
 
 /* Home: tighter rhythm, no empty screens between sections */
 @media (min-width: 961px) {
   .home { --sec-y: clamp(64px, 9svh, 96px); }
   .h-path.light { padding-bottom: clamp(56px, 8vh, 88px); padding-bottom: clamp(56px, 8svh, 88px); }
-  .h-how .how-phone { min-height: 0 !important; height: clamp(440px, 72vh, 540px); height: clamp(440px, 72svh, 540px); }
-  .h-how .phone-wrap { scale: clamp(0.72, calc(100vh / 1000), 0.9) !important; scale: clamp(0.72, calc(100svh / 1000), 0.9) !important; }
   .how-row, .h-how { align-items: center; }
 }
-@media (max-width: 960px) { .h-how .how-phone { min-height: 520px; } }
-@media (max-width: 680px) { .h-how .how-phone { min-height: 470px; } }
-@media (min-width: 961px) { .h-how { padding-bottom: clamp(88px, 12vh, 120px) !important; padding-bottom: clamp(88px, 12svh, 120px) !important; } .h-how .how-phone { height: clamp(460px, 76vh, 560px); height: clamp(460px, 76svh, 560px); } }
 
 /* =====================================================================
    Round 6: Rishi's review (see REVIEW-RISHI.md). Appended last on purpose:
@@ -1071,7 +961,6 @@ html { scroll-behavior: smooth; }
 /* --- Hero: small hello, big role line, a plain sub-sentence, Resume + scroll link --- */
 .h-hi { margin: 0 0 18px; font: 500 clamp(17px, 1.5vw, 20px) var(--sans); letter-spacing: -0.01em; color: #55575c; }
 .h-open h1 { font-size: clamp(38px, 4.6vw, 70px); line-height: 1.02; letter-spacing: -0.045em; max-width: 13ch; margin: 0; }
-@media (min-width: 961px) { .h-open { grid-template-columns: minmax(0, 1fr) minmax(0, 0.62fr); } .h-open-text { padding-top: 12px; } }
 .photo { width: min(405px, 100%); }
 @media (max-width: 960px) {
   .h-open-text { padding-top: 0; }
@@ -1235,23 +1124,9 @@ html { scroll-behavior: smooth; }
 /* --- Nav: text-only brand --- */
 .brand-who b { font-size: 15px; letter-spacing: -0.01em; }
 
-/* --- How I work: the phone sits fully inside its section, centred on the text column --- */
+/* --- How I work: the section centres the text and the phone (the phone itself is styled in Round 13 below) --- */
 @media (min-width: 961px) {
   .h-how { align-items: center; padding-top: var(--sec-y) !important; padding-bottom: var(--sec-y) !important; }
-  .h-how .how-phone { min-height: 0 !important; height: 600px !important; }
-  .h-how .phone-wrap { scale: 0.8 !important; translate: 0 -14px; }
-}
-@media (min-width: 961px) and (max-height: 820px) {
-  .h-how .how-phone { height: 540px !important; }
-  .h-how .phone-wrap { scale: 0.72 !important; translate: 0 -40px; }
-}
-@media (max-width: 960px) {
-  .h-how .how-phone { min-height: 0 !important; height: 560px !important; margin-top: 8px; }
-  .h-how .phone-wrap { scale: 0.8 !important; translate: 0 -30px; }
-}
-@media (max-width: 680px) {
-  .h-how .how-phone { height: 520px !important; }
-  .h-how .phone-wrap { scale: 0.74 !important; translate: 0 -40px; }
 }
 
 /* --- Case pages: a way back to all work, above the title --- */
@@ -1301,12 +1176,11 @@ html { scroll-behavior: smooth; }
    ===================================================================== */
 
 /* --- One font. Mono is kept only inside terminal/code windows (.win, .d-skills .code,
-   the home card's mini log window) and the phone screen, where it should read as a console. --- */
+   the home card's mini log window). --- */
 :where(code, kbd, samp) { font-family: var(--sans); }
 .kicker, .how-text > p.kicker, .step-state, .wb-cap, .tst-no, .fx-table caption, .glance dt, .w-no, .ab-cap, .now dt, .path-learnt em {
   font-family: var(--sans); font-weight: 600; font-size: 12px; line-height: 1.4; letter-spacing: 0.08em; text-transform: uppercase;
 }
-.step .step-state { font-size: 12px; line-height: 1.4; gap: 10px; margin-bottom: 14px; }
 .step-state span, .mx-steps span, .ls-list span, .path-steps span, .how-proved span, .chap-no, .l-no, .cp-no, .tst-no span { font-variant-numeric: tabular-nums; font-weight: 500; letter-spacing: 0; }
 .how-steps li::before { font: 500 12px var(--sans); font-variant-numeric: tabular-nums; }
 .nk, .mx-svg-m .nk { font-family: var(--sans); font-weight: 600; letter-spacing: 0.08em; }
@@ -1314,8 +1188,6 @@ html { scroll-behavior: smooth; }
 .chapters a { font: 500 12.5px var(--sans); letter-spacing: 0; }
 .crumb { font: 500 13px var(--sans); }
 .inc-top { font: 500 12.5px var(--sans); letter-spacing: 0.02em; }
-.deep summary { font: 500 13.5px var(--sans); }
-.step-fix { font: 500 15px/1.5 var(--sans) !important; }
 .inc .b-sym, .inc .b-fix { font: 14px/1.5 var(--sans); }
 .fix-list li { font: 14.5px/1.5 var(--sans); }
 .tool-list code { font: 600 15.5px var(--sans); letter-spacing: -0.005em; }
@@ -1352,9 +1224,6 @@ html { scroll-behavior: smooth; }
 
 /* --- Visuals sit level with their text on desktop --- */
 @media (min-width: 961px) {
-  /* home hero: the text is centred on the portrait, which still rests on the section's bottom edge */
-  .h-open-text { padding-bottom: 0; }
-  .photo { width: min(440px, 100%); }
   /* case 01: the model timeline and its workbench share a centre */
   .wb { align-items: center; }
   .wb-side { position: static; }
@@ -1367,9 +1236,6 @@ html { scroll-behavior: smooth; }
   .replay-stage { position: static; align-items: center; }
   .replay-stage .desk-slot { align-self: center; }
 }
-/* the "When something breaks" heading now sits above the steps, so the first step lines up with its window */
-.story > .story-head { margin-bottom: 0 !important; }
-@media (max-width: 960px) { .story > .story-head { margin-bottom: 8px !important; } }
 /* home card 03: six layers fit the same art box as the other cards */
 .mini-stack { gap: 5px; } .mini-stack span { padding: 5px 12px; }
 /* home card 03 mirrors the case hero: a red trail in the gutter passes edge and identity (red edges) and stops at tenant */
@@ -1540,10 +1406,9 @@ html { scroll-behavior: smooth; }
 .dk-verdict { opacity: 0; transform: translateY(6px); transition: opacity 400ms ease, transform 500ms var(--ease); }
 .dk-books.open .dk-verdict { opacity: 1; transform: none; transition-delay: 0.75s; }
 .dk-holes { stroke: var(--ink-d); stroke-width: 1.4; fill: none; }
-.dk-strike { stroke: var(--g); stroke-width: 2.2; stroke-linecap: round; fill: none; stroke-dasharray: 10; stroke-dashoffset: 10; transition: stroke-dashoffset 450ms ease; }
-.dk-books.open .dk-strike { stroke-dashoffset: 0; transition-delay: 1.2s; }
 .dk-say { font: 600 12.5px var(--sans); fill: var(--ink-d); letter-spacing: 0.01em; }
 .dk-say-g { fill: var(--g); }
+.dk-say-n { fill: #66686d; }
 
 /* --- Ghungroo: a proper shake, sound rings and sparks --- */
 .dk-wave { fill: none; stroke: var(--g); stroke-width: 1.3; opacity: 0; transform-box: fill-box; transform-origin: center; }
@@ -1576,11 +1441,11 @@ html { scroll-behavior: smooth; }
 
 /* --- The mic: the spotlight sweeps the room, lands on the mic, applause --- */
 .dk-sweep { transform-box: view-box; transform-origin: 497px 22px; }
-.desk.in .dk-mic-light.open .dk-sweep { animation: dk-sweep 1.5s cubic-bezier(0.45, 0, 0.3, 1) both; }
-@keyframes dk-sweep { 0% { transform: rotate(0); } 22% { transform: rotate(26deg); } 52% { transform: rotate(-12deg); } 76% { transform: rotate(4deg); } 100% { transform: rotate(0); } }
+.desk.in .dk-mic-light.open .dk-sweep { animation: dk-sweep 1.8s var(--ease-in-out) both; }
+@keyframes dk-sweep { 0% { transform: rotate(0); } 45% { transform: rotate(12deg); } 100% { transform: rotate(0); } }
 .desk.in .dk-mic-light.open .dk-beam { animation: none; opacity: 1; }
 .dk-clap { fill: var(--g); opacity: 0; transform-box: fill-box; transform-origin: center; }
-.desk.in .dk-mic.open .dk-clap { animation: dk-clap 0.8s ease-out var(--d) 3 both; }
+.desk.in .dk-mic.open .dk-clap { animation: dk-clap 0.9s ease-out var(--d) 1 both; }
 @keyframes dk-clap { 0% { opacity: 0; transform: scale(0.2) translateY(0); } 30% { opacity: 1; transform: scale(1.2) translateY(-2px); } 100% { opacity: 0; transform: scale(0.8) translateY(-9px); } }
 
 /* --- Run-sheet: a clipboard on a nail under bunting; ticks fill in and confetti pops --- */
@@ -1732,7 +1597,7 @@ html { scroll-behavior: smooth; }
   font: 600 15px var(--sans); color: #0b0b0c; white-space: nowrap;
   transition: transform var(--t-fast) var(--ease), background var(--t-fast), box-shadow var(--t-fast);
 }
-.ct-links .ct-ic { flex: none; color: #3a3b3f; transition: transform var(--t-base) var(--ease), color var(--t-fast); }
+.ct-links .ct-ic { flex: none; display: block; color: #1f2023; transition: transform var(--t-base) var(--ease), color var(--t-fast); }
 .ct-arr { display: grid; font-style: normal; color: #9a9ca0; transition: transform var(--t-fast) var(--ease), color var(--t-fast); }
 @media (hover: hover) { .ct-links a:hover { background: #fff; transform: translateY(-2px); box-shadow: inset 0 0 0 1px rgba(63, 122, 76, 0.4), 0 14px 26px -18px rgba(40, 30, 20, 0.4); } }
 @media (hover: hover) { .ct-links a:hover .ct-ic { color: var(--g); transform: translateY(-1px) scale(1.06); } }
@@ -1760,7 +1625,7 @@ html { scroll-behavior: smooth; }
 /* Reduced motion: the work-card flow line holds still, and step and feature lists switch instantly. */
 @media (prefers-reduced-motion: reduce) {
   .mini-flow b { animation: none; }
-  .mx-steps p, .mx-steps li, .r-more, .rail-slot, .chev, .layer, .layer::before, .layer::after, .layer b, .stamp-b, .l-d, .a-text, .a-dot, .a-trail { transition: none !important; }
+  .mx-steps p, .mx-steps li, .layer, .layer::before, .layer::after, .layer b, .stamp-b, .l-d, .a-text, .a-dot, .a-trail { transition: none !important; }
 }
 
 /* =====================================================================
@@ -1772,12 +1637,7 @@ html { scroll-behavior: smooth; }
 :root { --wrap: 1280px; --gutter: clamp(20px, 5vw, 64px); --sec-x: max(var(--gutter), calc((100vw - var(--wrap)) / 2)); }
 .nav { padding-inline: var(--sec-x); }
 
-/* Hero: the text and the portrait sit as one balanced pair; the portrait is capped and centred in its column. */
-@media (min-width: 961px) {
-  .h-open.light { grid-template-columns: minmax(0, 1fr) minmax(0, 0.72fr); column-gap: clamp(32px, 4vw, 72px); }
-  .h-open-text { max-width: 640px; }
-  .photo { justify-self: center; width: clamp(300px, 29vw, 420px); }
-}
+/* Hero: see "Home hero" in Round 13 below. */
 
 /* Work cards: each visual fills its frame and scales with the card (cqw), so it never reads as an empty box. */
 .w-art { container-type: inline-size; padding: 6.5%; }
@@ -1802,11 +1662,12 @@ html { scroll-behavior: smooth; }
 .dk-mat.open .dk-shadow { opacity: 1; transform: none; }
 .dk-lift { transition: transform var(--t-base) var(--ease); }
 
-/* Books: the pages turn, a film strip slides out, gets struck through, then the verdict appears. */
+/* Books: the pages turn, then the order appears: "book first", and only after it "then the film" with a small film strip. */
 .dk-verdict { transform: translateY(8px) scale(0.94); transform-box: fill-box; transform-origin: 30% 100%; transition: opacity var(--t-base) var(--ease), transform var(--t-slow) var(--ease); }
 .dk-books.open .dk-verdict { transform: none; transition-delay: 0.7s; }
-.dk-say { opacity: 0; transition: opacity var(--t-base) var(--ease); }
-.dk-books.open .dk-say { opacity: 1; transition-delay: 1.55s; }
+.dk-say-1, .dk-say-2 { opacity: 0; transition: opacity var(--t-base) var(--ease); }
+.dk-books.open .dk-say-1 { opacity: 1; transition-delay: 1s; }
+.dk-books.open .dk-say-2 { opacity: 1; transition-delay: 1.6s; }
 
 /* Ghungroo: bells ring in a wave from one end to the other; rings spread on the desk. */
 .desk.in .dk-ghungroo.open .dk-bell { animation: dk-jingle 0.46s var(--ease-in-out) var(--d) 4; }
@@ -1850,9 +1711,6 @@ html { scroll-behavior: smooth; }
 
 /* Case 01 hero: the laptop's base is 12% wider than its screen, so the laptop is sized for the base to end on the container edge. */
 @media (min-width: 961px) { .cs-hero .cs-hero-visual .lap { width: calc(100% / 1.12); margin: 0 calc(100% * 0.06 / 1.12) 0 auto; } }
-/* Feature demos never grow past the column (a long line inside used to push them 14px past the edge on phones). */
-.rail-stage { grid-template-columns: minmax(0, 1fr); }
-.rail-slot { min-width: 0; }
 /* The chapter index sits in the left gutter, so it only shows where the gutter is wide enough to hold it without touching the content. */
 @media (max-width: 1759px) { .chapters { display: none; } }
 
@@ -1880,15 +1738,6 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 .cs-hero h1, .mx-head h1, .sx-head h1 { font-size: clamp(34px, min(4.2vw, 8vh), 62px) !important; font-size: clamp(34px, min(4.2vw, 8svh), 62px) !important; line-height: 1.02; }
 .cs-hero .cs-intro, .mx-head .cs-intro, .sx-head .cs-intro { font-size: clamp(15.5px, 2.4vh, 17.5px); font-size: clamp(15.5px, 2.4svh, 17.5px); }
 
-/* Feature demos on phones: the window grows to hold its finished state instead of cropping it. All six share the tallest height, so switching never jumps. */
-@media (max-width: 700px) {
-  .rail-stage .demo { aspect-ratio: auto; height: 100%; min-height: 280px; font-size: 14px; }
-  .rail-stage .demo-body { padding: 18px; }
-  .rail-stage .d-sheet { width: 74%; }
-  .rail-stage .opt.on { flex-wrap: wrap; row-gap: 6px; }
-  .rail-stage .opt .ppl { margin-left: 21px; flex-basis: 100%; }
-  .rail-stage .opt em { white-space: nowrap; }
-}
 
 /* Incidents: opening one postmortem no longer stretches its neighbour. */
 .inc-grid { align-items: start; }
@@ -1904,3 +1753,176 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 /* The contact hint: when the longer "Nothing opened?" line wraps on a phone, its two lines stay even beside the dot. */
 .ct-hint { text-wrap: balance; }
 @media (max-width: 480px) { .ct-hint.after { font-size: 13.5px; } }
+
+/* =====================================================================
+   Round 13. Each block below is the one place its component is styled: the rules that used to be spread
+   over earlier rounds (with !important layers) were folded in here and removed from above.
+   ===================================================================== */
+
+/* --- Case 01, "When something breaks": a continuous scroll story. Each step is about 40% of a screen
+   tall and the window rig is the same height, centred on screen, so a step's text and its window share a centre
+   and the next step follows closely. Phones and tablets show each window inline under its step. --- */
+.story { max-width: none; margin: 0; padding: calc(var(--sec-y) / 2) var(--sec-x) 0; }
+.story > .story-head { margin-bottom: 0 !important; } /* beats the shared `.story-head` margin (also !important) */
+.story-grid { display: grid; grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr); gap: 64px; }
+.step { min-height: 40vh; min-height: 40svh; display: flex; flex-direction: column; justify-content: center; padding: 3vh 0; padding: 3svh 0; }
+.step .step-state { display: flex; gap: 10px; margin: 0 0 14px; font-size: 12px; line-height: 1.4; color: #a9cfad; }
+.step-state span { color: #808287; }
+.step h3 { font-size: clamp(28px, 2.6vw, 38px); line-height: 1.06; letter-spacing: -0.03em; font-weight: 600; margin: 0 0 14px; }
+.step p { font-size: 17px; line-height: 1.55; margin: 0; max-width: 380px; }
+.step .step-fix { margin-top: 10px; font: 500 15px/1.5 var(--sans); color: #8fdc98; }
+.step-inline { display: none; }
+.sticky-rig { position: sticky; top: 30vh; top: 30svh; height: 40vh; height: 40svh; display: grid; align-items: center; }
+.step .deep { margin-top: 18px; }
+.step .deep p { margin: 12px 0 0; font-size: 15.5px; line-height: 1.6; color: #a9aaad; }
+.deep summary { cursor: pointer; list-style: none; width: fit-content; font: 500 13.5px var(--sans); color: #8c8e92; }
+.deep summary::-webkit-details-marker { display: none; }
+.deep summary::before { content: '+ '; } .deep[open] summary::before { content: '− '; }
+@media (hover: hover) { .deep summary:hover { color: #ecebe6; } }
+@media (max-width: 960px) { .story > .story-head { margin-bottom: 8px !important; } }
+@media (max-width: 900px) {
+  .story-grid { grid-template-columns: 1fr; }
+  .sticky-rig { display: none; }
+  .step { min-height: 0; padding: 40px 0; }
+  .step-inline { display: block; margin-top: 28px; }
+}
+
+/* --- Case 01 features: the list beside one demo window. Every demo has its own height (the tallest it reaches
+   across its steps, measured by FeatureRail). Side by side, the window eases to the open demo's height and stays
+   centred in a box as tall as the tallest demo; it moves by transform only, so nothing around it shifts. Stacked
+   (tablets) every demo uses the tallest height; on phones the window grows to hold the tallest finished state. --- */
+.rail-sec { max-width: none; margin: 0; padding: var(--sec-y) var(--sec-x); }
+.rail-sec > .rail-head { margin-bottom: 36px !important; } /* beats the shared `.story-head` margin (also !important) */
+.rail { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 80px; align-items: center; }
+.rail > * { min-width: 0; }
+.rail-list { list-style: none; margin: 0; padding: 0; }
+.rail-item { border-bottom: 1px solid var(--hair); }
+.rail-item button { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: clamp(12px, 2.2vh, 22px) 0; padding: clamp(12px, 2.2svh, 22px) 0; background: none; border: 0; color: #7e8085; font: 600 clamp(22px, 2vw, 30px) var(--sans); letter-spacing: -0.03em; cursor: pointer; text-align: left; transition: color var(--t-base); }
+.rail-item.on button { color: #f2f1ee; }
+@media (hover: hover) { .rail-item button:hover { color: #f2f1ee; } }
+.chev { flex: none; color: #6f7073; transition: transform var(--t-slow) var(--ease), color var(--t-base); }
+.rail-item.on .chev { transform: rotate(180deg); color: #f2f1ee; }
+.r-more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows var(--t-slow) var(--ease); }
+.rail-item.on .r-more { grid-template-rows: 1fr; }
+.r-more > div { overflow: hidden; }
+.r-more p { margin: -4px 0 0; font-size: 17px; line-height: 1.55; max-width: 420px; min-height: var(--rail-d, auto); }
+.r-bar { display: block; height: 2px; margin: 18px 0 24px; background: rgba(255, 255, 255, 0.06); border-radius: 2px; }
+.r-bar i { display: block; height: 100%; background: #ecebe6; border-radius: 2px; transform: scaleX(0); transform-origin: left; }
+.rail-stage { position: relative; min-width: 0; max-width: 100%; }
+.rail-frame { display: grid; grid-template-columns: minmax(0, 1fr); }
+.rail-slot { grid-area: 1 / 1; min-width: 0; min-height: 0; opacity: 0; transform: translateY(18px) scale(0.985); pointer-events: none; transition: opacity var(--t-slow) var(--ease), transform var(--t-slow) var(--ease); }
+.rail-slot.on { opacity: 1; transform: none; pointer-events: auto; }
+.rail-stage .demo { aspect-ratio: auto; height: 100%; font-size: 15px; border-radius: 20px; }
+.rail-stage .demo-body { padding: 26px; }
+.rail-stage .demo .bub { padding: 10px 14px; }
+@media (min-width: 701px) {
+  .rail-stage { height: var(--stage-max, auto); }
+  .rail-frame { grid-template-rows: minmax(0, 1fr); height: var(--stage-h, auto); transform: translateY(calc((var(--stage-max, 0px) - var(--stage-h, 0px)) / 2)); transition: height var(--t-slow) var(--ease), transform var(--t-slow) var(--ease); }
+}
+/* Wider than a phone, the demo text reads at a comfortable size, so each window is full rather than sparse. */
+@media (min-width: 701px) {
+  .rail-stage .demo { font-size: 16px; }
+  .rail-stage .demo-bar { height: 42px; font-size: 13px; }
+  .rail-stage .demo .bub { padding: 11px 16px; margin-bottom: 11px; }
+  .rail-stage .demo .toast { font-size: 13.5px; padding: 9px 16px; }
+  .rail-stage .demo .tag, .rail-stage .opt em { font-size: 12px; }
+  .rail-stage .d-share-btn, .rail-stage .d-actions button { font-size: 13.5px; padding: 7px 14px; }
+  .rail-stage .d-share .bub:first-of-type { margin-top: 40px; }
+  .rail-stage .d-sheet { top: 56px; padding: 16px; }
+  .rail-stage .d-h { font-size: 15px; }
+  .rail-stage .opt { font-size: 14px; padding: 8px 7px; }
+  .rail-stage .d-memory .sep { font-size: 12px; margin: 14px 0; }
+  .rail-stage .d-memory .toast.t-top { top: 76px; }
+  .rail-stage .d-guard .flag, .rail-stage .d-schedule .clock { font-size: 13px; }
+  .rail-stage .d-skills .code { font-size: 14px; padding: 14px 16px; }
+  .rail-stage .d-skills .banner { font-size: 13.5px; padding: 11px 14px; left: 26px; right: 26px; bottom: 26px; }
+  .rail-stage .d-schedule .form { gap: 10px; }
+  .rail-stage .d-schedule .row { font-size: 14.5px; padding: 12px 14px; }
+  .rail-stage .d-schedule .post { font-size: 14.5px; }
+  .rail-stage .conns { gap: 12px; }
+  .rail-stage .conn { padding: 14px; }
+  .rail-stage .c-name b { font-size: 15px; } .rail-stage .c-name em { font-size: 12.5px; } .rail-stage .c-state { font-size: 12.5px; }
+  .rail-stage .d-tools .hint { font-size: 13.5px; margin-top: 16px; }
+}
+/* The "typing" dots sit over the (still hidden) reply that follows them, so showing them never pushes the window taller. */
+.d-memory[data-step='2'] .typing, .d-guard[data-step='1'] .typing { margin-bottom: -19px; }
+/* measuring: every demo at its natural height, with no motion, for one synchronous pass */
+.rail-stage.measuring .rail-slot, .demo.measuring, .demo.measuring * { transition: none !important; }
+.rail-stage.measuring .rail-slot { transform: none; }
+.demo.measuring { height: auto !important; }
+@media (max-width: 960px) { .rail { grid-template-columns: 1fr; gap: 40px; } }
+@media (max-width: 700px) {
+  .rail-stage .demo { min-height: 280px; font-size: 14px; }
+  .rail-stage .demo-body { padding: 18px; }
+  .rail-stage .d-sheet { width: 74%; }
+  .rail-stage .opt.on { flex-wrap: wrap; row-gap: 6px; }
+  .rail-stage .opt .ppl { margin-left: 21px; flex-basis: 100%; }
+  .rail-stage .opt em { white-space: nowrap; }
+}
+@media (prefers-reduced-motion: reduce) { .r-more, .rail-slot, .chev, .rail-frame { transition: none !important; } }
+
+/* --- How I work: the phone. A believable iPhone showing the agent workflow, sized to be read: every line on
+   the screen is at least 14.5px before the phone is scaled (about 11px or more on screen) and at least 7:1
+   against the screen, with fewer, clearer rows. It floats and tilts only while on screen. The scale is a plain
+   transform (not the `scale` property), so Chrome 100 and Safari 14 size it the same. --- */
+.how-phone { display: grid; place-items: center; height: 600px; }
+.phone-wrap { position: relative; perspective: 1700px; width: 300px; height: 620px; margin: 0 auto; transform: translateY(-14px) scale(0.8); }
+.phone { --rx: 8deg; --ry: -24deg; position: relative; width: 300px; height: 620px; transform-style: preserve-3d; transform: rotateX(var(--rx)) rotateY(var(--ry)) rotateZ(-3deg); transition: transform 900ms var(--ease); animation: float 7s ease-in-out infinite; }
+@keyframes float { 50% { translate: 0 -10px; } }
+@supports not (translate: 0) { @keyframes float { 50% { margin-top: -10px; } } }
+.phone.off, .phone.off .d.run { animation-play-state: paused; }
+.phone-layer { position: absolute; top: 0; right: 0; bottom: 0; left: 0; border-radius: 46px; background: linear-gradient(90deg, #1b1d1f, #8e9397 40%, #2e3134 70%, #0f1011); }
+.phone-btn { position: absolute; right: -2px; width: 4px; border-radius: 2px; background: #6c7175; transform: translateZ(-7px); }
+.phone-btn.b1 { top: 150px; height: 60px; } .phone-btn.b2 { top: 225px; height: 60px; } .phone-btn.b3 { left: -2px; right: auto; top: 130px; height: 34px; }
+.phone-face { position: absolute; top: 0; right: 0; bottom: 0; left: 0; border-radius: 46px; background: #050505; padding: 11px; transform: translateZ(1px); box-shadow: inset 0 0 0 1.5px #3c4044; }
+.phone-shadow { position: absolute; left: 10%; right: -10%; bottom: -46px; height: 40px; border-radius: 50%; background: rgba(0, 0, 0, 0.45); filter: blur(22px); }
+.screen { position: relative; height: 100%; border-radius: 36px; background: #0b0b0b; overflow: hidden; padding: 12px 16px 0; font-family: var(--sans); color: #f0efec; line-height: 1.3; }
+.screen .ios-bar.big { font: 600 15px var(--sans); margin-bottom: 16px; }
+.list-head { display: flex; align-items: baseline; justify-content: space-between; margin: 0 2px 14px; }
+.list-head b { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
+.list-head span { display: inline-flex; align-items: center; gap: 6px; font-size: 14.5px; font-weight: 500; color: #8fdc98; }
+.cap { margin: 0 2px 6px; font-size: 14.5px; font-weight: 600; color: #b4b3ae; }
+.live { margin: 0 0 18px; padding: 12px 14px 6px; border-radius: 16px; background: #161618; box-shadow: inset 0 0 0 1px #26262a; }
+.live .cap { margin: 0 0 4px; color: #b4b3ae; }
+.agent-row { display: grid; grid-template-columns: 14px 78px minmax(0, 1fr); align-items: center; padding: 7px 0; font-size: 15px; }
+.agent-row + .agent-row { box-shadow: inset 0 1px 0 #232326; }
+.agent-row b { font-weight: 600; }
+.agent-row .a-act { font-size: 14.5px; color: #c2c1bc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.agent-row.flash .a-act { animation: flash 700ms ease-out; }
+@keyframes flash { from { color: #fff; } }
+.stream { display: grid; grid-template-columns: 14px minmax(0, 1fr); gap: 0; padding: 10px 2px; box-shadow: inset 0 -1px 0 #1f1f22; }
+.stream > div { min-width: 0; }
+.stream .d { margin-top: 6px; }
+.stream b { display: block; font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.stream .act { display: block; margin-top: 2px; font-size: 14.5px; color: #b4b3ae; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.stream.link { cursor: pointer; }
+@media (hover: hover) { .stream.link:hover b { color: #fff; text-decoration: underline; text-underline-offset: 2px; } }
+.d { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #555; flex: none; }
+.d.ok { background: #4ade80; } .d.wait { background: #f87171; } .d.idle { background: #55555a; }
+.d.run { background: transparent; border: 1.6px solid #f5c451; border-right-color: transparent; animation: spin 900ms linear infinite; }
+@media (min-width: 961px) and (max-height: 820px) { .how-phone { height: 540px; } .phone-wrap { transform: translateY(-36px) scale(0.76); } }
+@media (max-width: 960px) { .how-phone { height: 560px; margin-top: 8px; } .phone-wrap { transform: translateY(-30px) scale(0.8); } }
+@media (max-width: 680px) { .how-phone { height: 520px; } .phone-wrap { transform: translateY(-38px) scale(0.78); } }
+@media (prefers-reduced-motion: reduce) { .phone { animation: none; transition: none; } }
+/* the home indicator */
+.screen::after { content: ''; position: absolute; left: 50%; bottom: 9px; width: 108px; height: 5px; margin-left: -54px; border-radius: 3px; background: rgba(255, 255, 255, 0.55); }
+
+/* --- Home hero, desktop (961px and up): the text and the portrait are one composed pair, centred in the first
+   screen. The hero fills that screen, so the work section starts at the fold (no half-cut cards). The portrait is
+   sized by the screen's height (capped by its width), sits one column gap from the text, and its edges fade into the
+   page, so its own background never shows as a box; the text column takes the rest of the container and is centred
+   on the portrait. Plain grid, vh/svh (divided by the page zoom on very large screens) and -webkit- prefixed masks,
+   so Safari 14+ lays it out the same. Phones and tablets keep the stacked hero above. --- */
+@media (min-width: 961px) {
+  .h-open.light { min-height: calc(100vh / var(--z, 1)); min-height: calc(100svh / var(--z, 1)); padding-top: 72px; padding-bottom: 24px; grid-template-columns: minmax(0, 1fr) auto; column-gap: clamp(40px, 3.2vw, 56px); align-content: center; align-items: center; }
+  .h-open-text { align-self: center; padding: 0; max-width: none; }
+  .h-open h1 { font-size: clamp(42px, 5vw, 80px); max-width: 13ch; }
+  .h-sub { max-width: 40em; font-size: clamp(17px, 1.3vw, 20px); }
+  .photo { align-self: center; justify-self: start; width: min(calc((100vh / var(--z, 1) - 120px) * 0.64), 38vw, 600px); width: min(calc((100svh / var(--z, 1) - 120px) * 0.64), 38vw, 600px); }
+  .photo img {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 16%, #000 80%, transparent 100%), linear-gradient(to right, transparent 0, #000 14%, #000 86%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to bottom, transparent 0, #000 16%, #000 80%, transparent 100%), linear-gradient(to right, transparent 0, #000 14%, #000 86%, transparent 100%);
+    mask-composite: intersect;
+  }
+}

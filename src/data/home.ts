@@ -47,13 +47,13 @@ export const outsideIntro = {
  *  - My favourite books: the `note` of the item with id 'books' (for example add "Current favourite: …").
  */
 export const desk = [
-  { id: 'books', name: 'Books', label: 'My stack of books', note: 'Books over movies, every single time. If there’s an adaptation, I’ve already read the book.' },
+  { id: 'books', name: 'Books', label: 'My stack of books', note: 'Any book adaptation out there? I’ve probably read the book first.' },
   { id: 'ghungroo', name: 'Ghungroo', label: 'My ghungroo, the ankle bells of Indian classical dance', note: 'Dance came first, before almost anything else I learnt. Not one but two Indian classical forms, all the way to competition stages.' },
   { id: 'mat', name: 'Yoga mat', label: 'My yoga mat', note: 'Yoga began as a daily ritual and grew into competitions. It taught me that stillness takes practice.' },
   { id: 'mug', name: 'Mug', label: 'My mug', note: 'Not every object needs a story. This one just keeps the desk company.' },
   { id: 'globe', name: 'Globe', label: 'A small globe', note: 'Work took me from India to Mexico. Working with people from all over the world was the most fun kind of learning.' },
   { id: 'events', name: 'Run-sheet', label: 'An event run-sheet on a clipboard', note: 'Clipboard in hand, I ran fun and management events for students in college. The best way to bond, and we had a blast.' },
-  { id: 'mic', name: 'Mic', label: 'A stage mic under a spotlight', note: 'Hand me a mic and I’m at home: my college club’s main stage, and every event I ran.' },
+  { id: 'mic', name: 'Mic', label: 'A stage mic under a spotlight', note: 'Now and then the mic found me: I emceed a few events on my college club’s main stage, and it was a lot of fun.' },
 ] as const;
 export const contactLine = 'An idea, a question about agents, or simply hello: I’d love to hear from you.';
 /*

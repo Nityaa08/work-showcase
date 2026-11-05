@@ -16,12 +16,12 @@ const { id, kicker, title, items } = Astro.props;
           <p>{it.text}</p>
           {it.fix && <p class="step-fix">✓ {it.fix}</p>}
           {it.deep && <details class="deep"><summary>Deep dive</summary><p>{it.deep}</p></details>}
-          <div class="step-inline"><Stage stage={it.stage} /></div>
+          <div class="step-inline"><Stage stage={it.stage} quick /></div>
         </article>
       ))}
     </div>
     <div class="sticky-rig">
-      {items.map((it, n) => <div class:list={['desk-slot', { active: n === 0 }]} data-slot={n}><Stage stage={it.stage} /></div>)}
+      {items.map((it, n) => <div class:list={['desk-slot', { active: n === 0 }]} data-slot={n}><Stage stage={it.stage} quick /></div>)}
     </div>
   </div>
 </section>

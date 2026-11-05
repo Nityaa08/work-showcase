@@ -40,9 +40,50 @@
     return true;
   }
 
+  // The story terminals: the first line is there the moment the step opens, the rest streams in quickly
+  // (a short line every ~100ms, a typed command at ~10ms a key, capped), and then the window holds its finished state.
+  async function playQuick(f: HTMLElement, run: number) {
+    const alive = () => token.get(f) === run && isActive(f);
+    const lines = [...f.querySelectorAll<HTMLElement>('.ln')];
+    const cursor = f.querySelector<HTMLElement>('.cursor');
+    // Lock the window at its finished height while it streams, so a half-typed line that wraps differently never nudges it.
+    const body = f.querySelector<HTMLElement>('.win-body');
+    lines.forEach((l) => { const t = l.querySelector<HTMLElement>('.txt')!; t.dataset.full ??= t.textContent ?? ''; t.textContent = t.dataset.full; l.classList.add('shown'); });
+    if (cursor && lines.length) lines[lines.length - 1].querySelector('.txt')!.after(cursor);
+    if (body) { body.style.height = ''; body.style.overflow = ''; const h = body.offsetHeight; if (h) { body.style.height = `${h}px`; body.style.overflow = 'hidden'; } }
+    lines.forEach((l, n) => l.classList.toggle('shown', n === 0));
+    f.classList.add('playing');
+    if (cursor) lines[0]?.querySelector('.txt')!.after(cursor);
+    await sleep(260);
+    for (const l of lines.slice(1)) {
+      if (!alive()) break;
+      const t = l.querySelector<HTMLElement>('.txt')!;
+      const full = t.dataset.full!;
+      l.classList.add('shown');
+      if (cursor) t.after(cursor);
+      if (typed.has(l.dataset.t!)) {
+        const step = Math.max(1, Math.ceil(full.length / 28));
+        for (let c = step; c < full.length + step; c += step) { if (!alive()) break; t.textContent = full.slice(0, c); await sleep(12); }
+        t.textContent = full;
+        await sleep(160);
+      } else await sleep(l.dataset.t === 'dim' ? 170 : 110);
+    }
+    // Whatever happened (finished, or scrolled away mid-way), leave the finished state, so the window is never half empty.
+    lines.forEach((l) => { const t = l.querySelector<HTMLElement>('.txt')!; t.textContent = t.dataset.full!; l.classList.add('shown'); });
+    if (cursor && lines.length) lines[lines.length - 1].querySelector('.txt')!.after(cursor);
+    if (body) { body.style.height = ''; body.style.overflow = ''; }
+    f.classList.remove('playing');
+  }
+
   async function loop(f: HTMLElement) {
     const run = (token.get(f) ?? 0) + 1;
     token.set(f, run);
+    if (f.dataset.quick !== undefined) {
+      // inline (phone) story windows play once; the desktop slots replay each time their step opens (they fade in from 0)
+      if (!f.closest('[data-slot]') && f.dataset.played) return;
+      f.dataset.played = '1';
+      return playQuick(f, run);
+    }
     while (token.get(f) === run && isActive(f)) {
       if (!(await playOnce(f, run))) return;
       await sleep(2800);

@@ -1,12 +1,12 @@
 ---
 import StatusIcons from './StatusIcons.astro';
 const layers = Array.from({ length: 14 }, (_, i) => i);
+// Four branch rows, one line each: large enough to read at the phone's scale (the screen text is 14.5px or more).
 const work = [
-  { s: 'ok', name: 'feat/guest-access', repo: 'across services', act: '$ go test ./... · ok', href: '/work/agent-platform/' },
-  { s: 'run', name: 'fix/untrusted-fence-on-trim', repo: 'agent-platform', act: 'coder · fence kept after trimming', href: '/work/agent-platform/' },
-  { s: 'ok', name: 'feat/mcp-connector', repo: 'connectors', act: 'tests green · verified on dev' },
-  { s: 'wait', name: 'fix/tool-gateway-timeouts', repo: 'gateway', act: 'in review · bounded upstream wait' },
-  { s: 'idle', name: 'chore/cve-sweep', repo: 'agent fleet', act: '$ govulncheck ./...' },
+  { s: 'ok', name: 'feat/guest-access', act: 'tests pass · across services', href: '/work/agent-platform/' },
+  { s: 'run', name: 'fix/untrusted-fence-on-trim', act: 'coder · fence kept on trim', href: '/work/agent-platform/' },
+  { s: 'ok', name: 'feat/mcp-connector', act: 'verified on dev' },
+  { s: 'wait', name: 'fix/tool-gateway-timeouts', act: 'in review' },
 ];
 ---
 <div class="phone-wrap">
@@ -16,20 +16,20 @@ const work = [
     <div class="phone-face">
       <div class="screen">
         <div class="ios-bar big"><span data-clock="ios">--:--</span><span class="ios-island" /><StatusIcons kind="ios" /></div>
-        <div class="list-head"><i class="d ok" /><b>MacBook Pro</b><span>connected</span></div>
+        <div class="list-head"><b>MacBook Pro</b><span><i class="d ok" />connected</span></div>
         <div class="live" id="live">
           <p class="cap">Running now</p>
           <div class="agent-row" data-agent="0"><i class="d run" /><b>planner</b><span class="a-act">splitting the task</span></div>
           <div class="agent-row" data-agent="1"><i class="d idle" /><b>coder</b><span class="a-act">queued</span></div>
           <div class="agent-row" data-agent="2"><i class="d idle" /><b>reviewer</b><span class="a-act">queued</span></div>
         </div>
-        <p class="cap">Work</p>
+        <p class="cap">Branches</p>
         {work.map((it) => {
           const Tag = it.href ? 'a' : 'div';
           return (
             <Tag class:list={['stream', { link: it.href }]} href={it.href}>
               <i class:list={['d', it.s]} />
-              <div><b>{it.name}</b><span class="repo"><i class="d small" />{it.repo}</span><span class="act">{it.act}</span></div>
+              <div><b>{it.name}</b><span class="act">{it.act}</span></div>
             </Tag>
           );
         })}
@@ -45,7 +45,7 @@ const work = [
   const script: [number, string, string][] = [
     [0, 'run', 'splitting the task'], [0, 'ok', 'plan ready'], [1, 'run', 'writing trim.go'],
     [2, 'run', 'reading the diff'], [1, 'run', '$ go test ./...'], [1, 'ok', 'tests pass'],
-    [2, 'wait', 'asks: does the fence survive a cut?'], [2, 'ok', 'approved · PR opened'],
+    [2, 'wait', 'asks: fence kept after a cut?'], [2, 'ok', 'approved · PR opened'],
   ];
   const rows = [...document.querySelectorAll<HTMLElement>('.agent-row')];
   const set = (n: number, s: string, text: string) => {

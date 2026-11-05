@@ -21,7 +21,9 @@ const { features } = Astro.props;
       </ol>
     </div>
     <div class="rail-stage">
-      {features.map((f, n) => <div class:list={['rail-slot', { on: n === 0 }]} data-i={n}><FeatureDemo kind={f.demo} manual /></div>)}
+      <div class="rail-frame">
+        {features.map((f, n) => <div class:list={['rail-slot', { on: n === 0 }]} data-i={n}><FeatureDemo kind={f.demo} manual /></div>)}
+      </div>
     </div>
   </div>
 </section>
@@ -38,6 +40,7 @@ const { features } = Astro.props;
     current = i;
     items.forEach((el, n) => { el.classList.toggle('on', n === i); el.querySelector('button')!.setAttribute('aria-expanded', String(n === i)); });
     slots.forEach((el, n) => el.classList.toggle('on', n === i));
+    fit();
     const demo = slots[i].querySelector<HTMLElement>('[data-demo]')!;
     const steps = Number(demo.dataset.steps);
     const bar = items[i].querySelector<HTMLElement>('.r-bar i')!;
@@ -59,6 +62,54 @@ const { features } = Astro.props;
     list.style.setProperty('--rail-d', `${Math.max(...items.map((el) => el.querySelector<HTMLElement>('.r-more p')!.offsetHeight))}px`);
   };
   reserve(); addEventListener('resize', reserve); document.fonts?.ready.then(reserve);
+
+  // Each demo gets its own height: the tallest it reaches across its steps (bottom-pinned toasts and banners included).
+  // Side by side (desktop), the frame eases to the open demo's height and stays centred in a box as tall as the tallest
+  // demo, moved by transform only, so the list and the page never shift. Stacked (tablets), every demo uses the tallest
+  // height. On phones (700px and under) the CSS keeps its own rule: the window grows to hold the tallest finished state.
+  const stage = document.querySelector<HTMLElement>('.rail-stage')!;
+  const heights: number[] = [];
+  const sideBySide = matchMedia('(min-width: 961px)'), phone = matchMedia('(max-width: 700px)');
+  const natural = (demo: HTMLElement) => {
+    const body = demo.querySelector<HTMLElement>('.demo-body')!;
+    const bar = demo.querySelector<HTMLElement>('.demo-bar')!;
+    const keep = demo.dataset.step!;
+    const pad = parseFloat(getComputedStyle(body).paddingBottom);
+    let need = 0;
+    demo.classList.add('measuring');
+    for (let s = 0; s < Number(demo.dataset.steps); s++) {
+      demo.dataset.step = String(s);
+      const top = body.getBoundingClientRect().top;
+      let flow = 0, pinned = 0;
+      for (const el of body.querySelectorAll<HTMLElement>(':scope > *')) {
+        const cs = getComputedStyle(el);
+        if (cs.display === 'none' || el.classList.contains('pointer')) continue;
+        const r = el.getBoundingClientRect();
+        if (el.matches('.toast:not(.t-top), .banner')) pinned = Math.max(pinned, r.height + parseFloat(cs.bottom) + 12);
+        else flow = Math.max(flow, r.bottom - top + parseFloat(cs.marginBottom || '0'));
+      }
+      need = Math.max(need, flow + (pinned || pad));
+    }
+    demo.dataset.step = keep;
+    void demo.offsetHeight; // settle the restored step while transitions are still off, so nothing animates back
+    demo.classList.remove('measuring');
+    return Math.ceil(bar.offsetHeight + need + 2);
+  };
+  function fit() {
+    if (phone.matches) { stage.style.removeProperty('--stage-max'); stage.style.removeProperty('--stage-h'); return; }
+    if (!heights.length) return;
+    const max = Math.max(...heights);
+    stage.style.setProperty('--stage-max', `${max}px`);
+    stage.style.setProperty('--stage-h', `${sideBySide.matches ? heights[current] : max}px`);
+  }
+  const measure = () => {
+    stage.classList.add('measuring');
+    slots.forEach((el, n) => (heights[n] = natural(el.querySelector<HTMLElement>('[data-demo]')!)));
+    void stage.offsetHeight;
+    stage.classList.remove('measuring');
+    fit();
+  };
+  measure(); addEventListener('resize', measure); document.fonts?.ready.then(measure);
   items.forEach((el, n) => el.querySelector('button')!.addEventListener('click', () => show(n)));
   new IntersectionObserver(([e]) => {
     inView = e.isIntersecting;

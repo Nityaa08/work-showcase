@@ -127,15 +127,15 @@ const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(
         <path class="dk-flip" style="--d:.4s" d="M136 104 C152 92 170 90 188 93 V103 C170 100 152 102 136 112 Z" />
         <path class="dk-line" d="M136 104 V112" />
       </g>
-      <!-- the verdict: a film strip, crossed out -->
+      <!-- the order: the book comes first, then the film -->
       <g class="dk-verdict">
-        <g transform="rotate(-6 116 68)">
-          <rect class="dk-paper" x="92" y="58" width="48" height="20" rx="2" />
-          <path class="dk-line" d="M108 61.5 V74.5 M124 61.5 V74.5" />
-          <path class="dk-holes" d="M95 60 h3 M101 60 h3 M107 60 h3 M113 60 h3 M119 60 h3 M125 60 h3 M131 60 h3 M95 76 h3 M101 76 h3 M107 76 h3 M113 76 h3 M119 76 h3 M125 76 h3 M131 76 h3" />
+        <text class="dk-say dk-say-1" x="86" y="66"><tspan class="dk-say-g">1</tspan><tspan dx="5">the book</tspan></text>
+        <text class="dk-say dk-say-2" x="86" y="83"><tspan class="dk-say-n">2</tspan><tspan dx="5">then the film</tspan></text>
+        <g class="dk-say-2" transform="rotate(-6 199 70)">
+          <rect class="dk-paper" x="185" y="64" width="30" height="13" rx="2" />
+          <path class="dk-line" d="M195 66.5 V74.5 M205 66.5 V74.5" />
+          <path class="dk-holes" d="M188 66 h2 M193 66 h2 M198 66 h2 M203 66 h2 M208 66 h2 M188 75 h2 M193 75 h2 M198 75 h2 M203 75 h2 M208 75 h2" />
         </g>
-        <path class="dk-strike" pathLength="10" d="M88 80 L146 52" />
-        <text class="dk-say" x="150" y="73"><tspan class="dk-say-g">book</tspan> &gt; movie</text>
       </g>
     </g>
 
