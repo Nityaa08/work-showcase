@@ -1917,12 +1917,12 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   .h-open.light { min-height: calc(100vh / var(--z, 1)); min-height: calc(100svh / var(--z, 1)); padding-top: 72px; padding-bottom: 24px; grid-template-columns: minmax(0, 1fr) auto; column-gap: clamp(40px, 3.2vw, 56px); align-content: center; align-items: center; }
   .h-open-text { align-self: center; padding: 0; max-width: none; }
   .h-open h1 { font-size: clamp(42px, 5vw, 80px); max-width: 13ch; }
-  .h-sub { max-width: 40em; font-size: clamp(17px, 1.3vw, 20px); }
+  .h-sub { max-width: 40em; font-size: clamp(17px, 1.3vw, 20px); text-wrap: pretty; }
   .photo { align-self: center; justify-self: start; width: min(calc((100vh / var(--z, 1) - 120px) * 0.64), 38vw, 600px); width: min(calc((100svh / var(--z, 1) - 120px) * 0.64), 38vw, 600px); }
   .photo img {
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 16%, #000 80%, transparent 100%), linear-gradient(to right, transparent 0, #000 14%, #000 86%, transparent 100%);
-    -webkit-mask-composite: source-in;
-    mask-image: linear-gradient(to bottom, transparent 0, #000 16%, #000 80%, transparent 100%), linear-gradient(to right, transparent 0, #000 14%, #000 86%, transparent 100%);
-    mask-composite: intersect;
+    /* The portrait's background is transparent (webp) or exactly the page colour (jpg), so only the cut at the
+       waist needs a fade; fading all four sides drew a faint stepped box. */
+    -webkit-mask-image: linear-gradient(to bottom, #000 82%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 82%, transparent 100%);
   }
 }
