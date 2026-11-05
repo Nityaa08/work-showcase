@@ -2039,8 +2039,8 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 @media (max-width: 960px) { .dk-hint { padding: 9px 16px 9px 12px; } }
 @media (max-width: 680px) { .dk-hint { padding: 9px 16px 9px 12px; font-size: 14.5px; } }
 
-/* --- Contact: the heading block is top-aligned with the envelope's drawing (the letter's top edge) --- */
+/* --- Contact: the heading block is centred on the envelope and its link tiles together --- */
 @media (min-width: 961px) {
-  .h-contact, .h-contact.light { align-items: start; }
-  .ct-text { align-self: start; padding-top: calc(3 * min(5.2px, (100vw - 40px) / 100)); }
+  .h-contact, .h-contact.light { align-items: center; }
+  .ct-text { align-self: center; padding-top: 0; }
 }
