@@ -11,7 +11,9 @@
   };
 
   async function playOnce(f: HTMLElement, run: number) {
-    const alive = () => token.get(f) === run && isActive(f);
+    // A looping terminal (case 03's replay) stops as soon as it leaves the screen, even while its slot stays active;
+    // it starts again when it comes back (Round 16: it used to keep typing, and repainting, off screen).
+    const alive = () => token.get(f) === run && isActive(f) && visible.has(f);
     const lines = [...f.querySelectorAll<HTMLElement>('.ln')];
     const cursor = f.querySelector<HTMLElement>('.cursor');
     // Reserve the finished height up front, so the window never grows while it types (and nothing below it moves).
@@ -96,7 +98,12 @@
     const io = new IntersectionObserver((entries) => {
       for (const e of entries) {
         const f = e.target as HTMLElement;
-        if (e.isIntersecting) { visible.add(f); if (!f.closest('[data-slot]')) loop(f); } else visible.delete(f);
+        const slot = f.closest<HTMLElement>('[data-slot]');
+        if (e.isIntersecting) {
+          visible.add(f);
+          if (!slot) loop(f);
+          else if (f.dataset.quick === undefined && slot.classList.contains('active')) loop(f); // back on screen: resume
+        } else visible.delete(f);
       }
     }, { threshold: 0.4 });
     frames.forEach((f) => io.observe(f));
@@ -105,17 +112,22 @@
 
   const demos = [...document.querySelectorAll<HTMLElement>('[data-demo]:not([data-manual])')];
   const seen = new WeakSet<HTMLElement>();
+  const onScreen = new WeakSet<HTMLElement>();
+  const wake = new WeakMap<HTMLElement, () => void>();
+  // the loop waits (no timers, no repaints) while its demo is off screen
+  const whenVisible = (d: HTMLElement) => (onScreen.has(d) ? Promise.resolve() : new Promise<void>((r) => wake.set(d, r)));
   if (reduced) demos.forEach((d) => (d.dataset.step = String(Number(d.dataset.steps) - 1)));
   else {
     const dio = new IntersectionObserver((entries) => {
       for (const e of entries) {
         const d = e.target as HTMLElement;
+        if (e.isIntersecting) { onScreen.add(d); wake.get(d)?.(); wake.delete(d); } else onScreen.delete(d);
         if (e.isIntersecting && !seen.has(d)) {
           seen.add(d);
           (async () => {
             const n = Number(d.dataset.steps);
             while (true) {
-              for (let s = 0; s < n; s++) { d.dataset.step = String(s); await sleep(s === n - 1 ? 3000 : 1600); }
+              for (let s = 0; s < n; s++) { await whenVisible(d); d.dataset.step = String(s); await sleep(s === n - 1 ? 3000 : 1600); }
             }
           })();
         }

@@ -5,8 +5,9 @@ import Phone from '../components/Phone.astro';
 import StagePlayer from '../components/StagePlayer.astro';
 import Meta from '../components/Meta.astro';
 import { cases } from '../data/cases';
-import { hero, how, contact, path, cards, desk, outsideIntro, contactLine, letter, mailto } from '../data/home';
+import { hero, how, contact, path, pathLog, offClock, cards, desk, outsideIntro, contactLine, letter, mailto } from '../data/home';
 import Desk from '../components/Desk.astro';
+import ContactLinks from '../components/ContactLinks.astro';
 // The envelope's stamp: a rectangle with a perforated (scalloped) edge, traced clockwise.
 const stampEdge = (() => {
   const w = 60, h = 72, r = 2.4, n = [8, 10];
@@ -21,6 +22,9 @@ const stampEdge = (() => {
 const write = mailto(letter.subject, letter.body);
 
 const work = cases.filter((c) => c.ready);
+// Desk option C lists the notes in the order the objects stand on the desk, left to right.
+const shelfOrder = ['ghungroo', 'books', 'mug', 'globe', 'mat', 'events', 'mic'];
+const shelf = shelfOrder.map((k) => desk.find((d) => d.id === k)!);
 ---
 <!doctype html>
 <html lang="en">
@@ -29,8 +33,29 @@ const work = cases.filter((c) => c.ready);
     <title>Nityashree S · AI engineer</title>
     <meta name="description" content="Nityashree S builds production AI agents end to end: the platform, the MCP connectors, the guardrails and the evals." />
     <Meta title="Nityashree S · AI engineer" description="Nityashree S builds production AI agents end to end: the platform, the MCP connectors, the guardrails and the evals." />
+    <script is:inline>
+      // Section options (Round 16): ?v=path-b,sep-c,desk-b,contact-c (or ?v=all-b) picks an option per section; the
+      // default is option A everywhere. Set before the page paints, so there is no flash of the other option.
+      (function () {
+        var d = document.documentElement; d.classList.add('js');
+        var pick = { path: 'a', sep: 'a', desk: 'a', contact: 'a' };
+        var q = ''; try { q = new URLSearchParams(location.search).get('v') || ''; } catch (e) {}
+        q.split(',').forEach(function (s) {
+          var m = /^(path|sep|desk|contact|all)-([abc])$/.exec(s.trim()); if (!m) return;
+          if (m[1] === 'all') { for (var k in pick) pick[k] = m[2]; } else pick[m[1]] = m[2];
+        });
+        for (var k in pick) d.setAttribute('data-v-' + k, pick[k]);
+      })();
+    </script>
   </head>
   <body class="studio home" id="top">
+    <svg class="sr-only" aria-hidden="true" focusable="false">
+      <!-- My path icons, line art in the desk's style -->
+      <symbol id="pi-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9.5 12 5l10 4.5L12 14 2 9.5Z" /><path d="M6 11.5V16c0 1.4 2.7 3 6 3s6-1.6 6-3v-4.5" /><path d="M22 9.5v5" /></symbol>
+      <symbol id="pi-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5.5" rx="7.5" ry="2.8" /><path d="M4.5 5.5v13c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8v-13" /><path d="M4.5 12c0 1.5 3.4 2.8 7.5 2.8s7.5-1.3 7.5-2.8" /></symbol>
+      <symbol id="pi-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="7" /><path d="m15.6 15.6 5.4 5.4" /><path d="m7.6 10.7 2 2 3.8-4" /></symbol>
+      <symbol id="pi-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5c2.9 2.3 4.4 5.6 4.2 9.8L14.6 16H9.4l-1.6-3.7C7.6 8.1 9.1 4.8 12 2.5Z" /><circle cx="12" cy="9" r="1.7" /><path d="M8.4 13.4 5.5 16v3.2l3.6-2M15.6 13.4l2.9 2.6v3.2l-3.6-2M10.5 19l1.5 2.5 1.5-2.5" /></symbol>
+    </svg>
     <Nav />
     <main>
       <section class="h-open light" data-light>
@@ -90,13 +115,72 @@ const work = cases.filter((c) => c.ready);
       </section>
 
       <section class="h-path light" id="about" data-light>
-        <p class="kicker">My path</p>
-        <h2>From payments data to production AI.</h2>
-        <ol class="path-steps">
-          {path.map((p) => <li><span>{p.when}</span><h3>{p.title}</h3><p>{p.line}</p></li>)}
-        </ol>
+        <div class="path-head">
+          <p class="kicker">My path</p>
+          <h2>From payments data to production AI.</h2>
+        </div>
+        {/* Option A: a timeline. The line draws itself once as it comes into view, each node fills and its text fades up in turn. */}
+        <div class="pa" data-variant="path-a">
+          <ol class="pa-line" data-reveal>
+            <li class="pa-track" aria-hidden="true"><i></i></li>
+            {path.map((p, i) => (
+              <li class="pa-step" style={`--i:${i}`}>
+                <span class="pa-node" aria-hidden="true"><svg class="pa-ic pa-ic-o" viewBox="0 0 24 24"><use href={`#pi-${i}`} /></svg><svg class="pa-ic pa-ic-f" viewBox="0 0 24 24"><use href={`#pi-${i}`} /></svg></span>
+                <span class="pa-no">{p.when}{i === path.length - 1 && <em>now</em>}</span>
+                <h3>{p.title}</h3>
+                <p>{p.line}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+        {/* Option B: four index cards that deal out of one pile into a row. */}
+        <div class="pb" data-variant="path-b">
+          <ol class="pb-cards" data-reveal>
+            {path.map((p, i) => (
+              <li class="pb-card" style={`--i:${i}`}>
+                <span class="pb-top"><svg class="pb-ic" viewBox="0 0 24 24" aria-hidden="true"><use href={`#pi-${i}`} /></svg><span class="pb-no">{p.when}</span></span>
+                <h3>{p.title}</h3>
+                <p>{p.line}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+        {/* Option C: the path as a git log in a small terminal window. */}
+        <div class="pc" data-variant="path-c">
+          <figure class="win pc-win" data-reveal>
+            <div class="titlebar"><div class="lights"><i></i><i></i><i></i></div><span class="win-title">~/nitya · git log --reverse</span></div>
+            <ol class="pc-log">
+              {pathLog.map((c, i) => (
+                <li class="pc-c" style={`--i:${i}`}>
+                  <p class="pc-sub"><span class="pc-hash">{c.hash}</span>{i === pathLog.length - 1 && <span class="pc-head"> (HEAD → main)</span>} <b>{c.type}:</b> {c.msg}</p>
+                  <p class="pc-body"><span class="sr-only">{path[i].title}. </span>{path[i].line}</p>
+                </li>
+              ))}
+              <li class="pc-prompt" aria-hidden="true"><span class="pc-dollar">$</span><i class="cursor"></i></li>
+            </ol>
+          </figure>
+        </div>
       </section>
 
+      {/* The switch from work to the personal part of the page. */}
+      <div class="offsep offsep-a light" data-variant="sep-a" data-light data-reveal aria-hidden="true">
+        <svg class="offsep-sq offsep-sq-l" viewBox="0 0 240 24" preserveAspectRatio="none"><path d="M2 12 C 22 2, 34 22, 54 12 S 86 2, 106 12 S 138 22, 158 12 S 190 2, 210 12 S 230 18, 238 12" /></svg>
+        <span class="offsep-mid">
+          <svg class="offsep-lamp" viewBox="0 0 40 40"><g class="offsep-rays"><path d="M20 3v4M20 33v4M3 20h4M33 20h4M8 8l2.8 2.8M29.2 29.2L32 32M8 32l2.8-2.8M29.2 10.8L32 8" /></g><circle cx="20" cy="20" r="7.5" /></svg>
+          <span class="offsep-label">{offClock}</span>
+        </span>
+        <svg class="offsep-sq offsep-sq-r" viewBox="0 0 240 24" preserveAspectRatio="none"><path d="M2 12 C 10 6, 22 2, 30 12 S 62 22, 82 12 S 114 2, 134 12 S 166 22, 186 12 S 218 2, 238 12" /></svg>
+      </div>
+      <div class="offsep offsep-b light" data-variant="sep-b" data-light data-reveal aria-hidden="true">
+        <span class="offsep-w">Work</span>
+        <span class="offsep-switch"><i></i></span>
+        <span class="offsep-o">{offClock}</span>
+      </div>
+      <div class="offsep offsep-c" data-variant="sep-c" data-reveal aria-hidden="true">
+        <span class="offsep-note"><i class="offsep-tape"></i><span>{offClock}</span><svg viewBox="0 0 60 20"><path d="M2 14 C 12 4, 20 18, 30 10 S 48 4, 58 12" /></svg></span>
+      </div>
+
+      <div class="offzone" data-light>
       <section class="h-outside light" id="outside" data-light>
         <div class="ow-text">
           <p class="kicker">Outside work</p>
@@ -120,6 +204,18 @@ const work = cases.filter((c) => c.ready);
             <ul class="dk-plain">{desk.map((d) => <li><b>{d.name}.</b> {d.note}</li>)}</ul>
           </noscript>
         </div>
+        {/* Option B: every note pinned to a board beside the desk. */}
+        <div class="db" data-variant="desk-b">
+          <ul class="db-board" aria-label="Notes from my desk">
+            {desk.map((d, i) => <li style={`--i:${i}`}><button type="button" class="db-card" data-pick={d.id}><i class="db-pin" aria-hidden="true"></i><b>{d.name}</b><span>{d.note}</span></button></li>)}
+          </ul>
+        </div>
+        {/* Option C: a shelf of notes under the desk, in the order the objects stand, left to right. */}
+        <div class="dc" data-variant="desk-c">
+          <ul class="dc-shelf" aria-label="Notes from my desk">
+            {shelf.map((d) => <li><button type="button" class="dc-card" data-pick={d.id}><b>{d.name}</b><span>{d.note}</span></button></li>)}
+          </ul>
+        </div>
       </section>
 
       <section class="h-contact light" id="contact" data-light>
@@ -127,8 +223,13 @@ const work = cases.filter((c) => c.ready);
           <p class="kicker">Contact</p>
           <h2>Let’s talk.</h2>
           <p class="ct-line">{contactLine}</p>
+          {/* Option A: a paper plane that flies once along its dashed trail when the section comes into view. */}
+          <div class="ct-fly" data-variant="contact-a" data-reveal aria-hidden="true">
+            <span class="ct-trail"><svg viewBox="0 0 320 90" preserveAspectRatio="none"><path d="M4 76 C 60 86, 92 30, 140 44 S 196 92, 236 52 S 290 18, 316 22" /></svg></span>
+            <span class="ct-plane"><svg viewBox="0 0 40 30"><path d="M2 14 L38 2 L26 28 L18 18 Z" /><path d="M38 2 L18 18 L16 27 L22 21" /></svg></span>
+          </div>
         </div>
-        <div class="ct-side">
+        <div class="ct-side" data-variant="contact-a">
           <div class="mail" data-mail>
             <div class="ml-tilt">
               <div class="ml-back" aria-hidden="true"></div>
@@ -165,14 +266,45 @@ const work = cases.filter((c) => c.ready);
             </div>
           </div>
           <p class="ct-hint" id="ct-hint" data-fallback={letter.fallback} hidden><span class="ct-hint-p">{letter.hint}</span><span class="ct-hint-t">{letter.hintTouch}</span></p>
-          <p class="sr-only" id="ct-status" role="status" aria-live="polite"></p>
-          <ul class="ct-links" aria-label="Elsewhere">
-            <li><a class="ct-li" href={contact.linkedin} target="_blank" rel="noopener"><svg class="ct-ic" width="20" height="20" viewBox="-1.2 -1.2 26.4 26.4" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" /></svg><span>LinkedIn</span><i class="ct-arr" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l5-5M4.5 3.5h4v4" /></svg></i></a></li>
-            <li><a class="ct-gh" href={contact.github} target="_blank" rel="noopener"><svg class="ct-ic" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" /></svg><span>GitHub</span><i class="ct-arr" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l5-5M4.5 3.5h4v4" /></svg></i></a></li>
-            <li><a class="ct-cv" href={contact.resume} target="_blank" rel="noopener" aria-label="Resume (PDF)"><svg class="ct-ic" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd" aria-hidden="true"><path d="M5.5 0H14.4L21 6.6V22a2 2 0 0 1-2 2H5.5a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2zM14 1.6V6a1.2 1.2 0 0 0 1.2 1.2h4.2zM7.5 11h9v1.9h-9zM7.5 15h9v1.9h-9zM7.5 19h5.5v1.9H7.5z" /></svg><span>Resume</span><i class="ct-arr" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2.5v7M3 6.5l3 3 3-3" /></svg></i></a></li>
-          </ul>
+          <ContactLinks />
         </div>
+        {/* Option B: a postcard. The front is a drawing; it turns over once by itself to show my address and the links. */}
+        <div class="ct-side pcd" data-variant="contact-b">
+          <div class="pcd-card" data-postcard>
+            <div class="pcd-face pcd-front" aria-hidden="true">
+              <svg class="pcd-art" viewBox="0 0 300 180" preserveAspectRatio="xMidYMid meet">
+                <circle class="pcd-sun" cx="232" cy="52" r="18" />
+                <path class="pcd-rays" d="M232 22v-8M232 90v-6M262 52h8M196 52h-8M253 31l6-6M211 31l-6-6M253 73l6 6" />
+                <path class="pcd-hill" d="M0 150 C 50 112, 96 118, 140 140 S 230 120, 300 132" />
+                <path class="pcd-hill2" d="M0 166 C 70 146, 130 152, 180 160 S 260 150, 300 156" />
+                <path class="pcd-trail" d="M30 92 C 60 70, 88 96, 118 74 S 160 52, 176 60" />
+                <g transform="translate(176 46) rotate(-12)"><path class="pcd-plane" d="M0 14 L26 4 L18 24 L12 16 Z M26 4 L12 16 L11 23 L15 19" /></g>
+              </svg>
+              <p class="pcd-hello">Hello from<br />my desk</p>
+            </div>
+            <div class="pcd-face pcd-back">
+              <div class="pcd-msg" aria-hidden="true"><p>Hi there,</p><i></i><i></i><i></i><i></i><i></i><p class="pcd-sign">Nitya</p></div>
+              <div class="pcd-addr">
+                <svg class="pcd-stamp" aria-hidden="true" viewBox="-3 -3 66 78"><path class="ml-stamp-edge" d={stampEdge} /><rect class="ml-stamp-in" x="7" y="7" width="46" height="58" rx="2" /><text class="ml-ns" x="30" y="43" text-anchor="middle">NS</text></svg>
+                <span class="pcd-k">Write to</span>
+                <span class="pcd-name" aria-hidden="true">Nitya</span>
+                <span class="pcd-row"><a class="pcd-mail" href={write}>{contact.email}</a><button type="button" class="pcd-copy" data-copy-btn={contact.email} aria-label="Copy my email address"><svg class="ic-copy" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2.5" /><path d="M16 8V5.5A2.5 2.5 0 0 0 13.5 3h-8A2.5 2.5 0 0 0 3 5.5v8A2.5 2.5 0 0 0 5.5 16H8" /></svg><svg class="ic-done" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></span>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="pcd-turn" data-turn><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8M21 3v5h-5M21 12a9 9 0 0 1-15.5 6.2L3 16M3 21v-5h5" /></svg><span>Turn the postcard over</span></button>
+          <ContactLinks />
+        </div>
+        {/* Option C: the address in big type, the tiles under it, and a small envelope as an accent. */}
+        <div class="ct-side cbig" data-variant="contact-c">
+          <svg class="cbig-env" data-reveal viewBox="0 0 64 46" aria-hidden="true"><rect x="2" y="8" width="60" height="36" rx="3" /><path class="cbig-flap" d="M2 11 L32 30 L62 11" /><rect class="cbig-letter" x="12" y="2" width="40" height="22" rx="1.5" /></svg>
+          <p class="cbig-k">Write to me</p>
+          <p class="cbig-row"><a class="cbig-mail" href={write}>{contact.email}</a><button type="button" class="pcd-copy" data-copy-btn={contact.email} aria-label="Copy my email address"><svg class="ic-copy" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2.5" /><path d="M16 8V5.5A2.5 2.5 0 0 0 13.5 3h-8A2.5 2.5 0 0 0 3 5.5v8A2.5 2.5 0 0 0 5.5 16H8" /></svg><svg class="ic-done" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></p>
+          <ContactLinks />
+        </div>
+        <p class="sr-only" id="ct-status" role="status" aria-live="polite"></p>
       </section>
+      </div>
     </main>
     <footer class="foot light" data-light>
       <span>© Nityashree S</span>
@@ -193,6 +325,16 @@ const work = cases.filter((c) => c.ready);
       // Looping decorations run only while they are on screen (the work card's flow line).
       const loopIO = new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle('in', e.isIntersecting)));
       document.querySelectorAll('.mini-flow').forEach((el) => loopIO.observe(el));
+      // Round 16: one-time entrances ([data-reveal] gets .in once, as it comes into view; at once with motion off) and the
+      // two small loops (the timeline's "now" ring, the git cursor) that run only while they are on screen (.onscreen).
+      const reveals = [...document.querySelectorAll<HTMLElement>('[data-reveal]')];
+      if (still.matches) reveals.forEach((el) => el.classList.add('in'));
+      else {
+        const revealIO = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); revealIO.unobserve(e.target); } }), { threshold: 0.3 });
+        reveals.forEach((el) => revealIO.observe(el));
+      }
+      const liveIO = new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle('onscreen', e.isIntersecting)));
+      document.querySelectorAll('.pa-line, .pc-win').forEach((el) => liveIO.observe(el));
       const wait = (ms: number) => new Promise((r) => setTimeout(r, still.matches ? 0 : ms));
 
       // --- The desk: every object is a button that opens one note at a time. ---
@@ -216,13 +358,23 @@ const work = cases.filter((c) => c.ready);
         const objs = (k: string) => deskEl.querySelectorAll(`[data-obj="${k}"], [data-for="${k}"]`);
         const mark = (k: string, cls: string, on: boolean) => objs(k).forEach((o) => o.classList.toggle(cls, on));
         let open = '', seq = 0;
+        // Desk options B and C show every note as a card (a pinned board, a shelf); picking a card or an object marks both.
+        const picks = [...document.querySelectorAll<HTMLButtonElement>('[data-pick]')];
+        const pickOn = (k: string) => picks.forEach((p) => { const on = p.dataset.pick === k; p.classList.toggle('on', on); p.setAttribute('aria-pressed', String(on)); });
+        const pickShow = (k: string) => {
+          const c = picks.find((p) => p.dataset.pick === k && p.offsetParent);
+          if (!c) return;
+          const shelf = c.closest<HTMLElement>('.dc-shelf');
+          if (shelf) { const li = c.parentElement!; const x = li.offsetLeft - shelf.offsetLeft; if (x < shelf.scrollLeft || x + li.offsetWidth > shelf.scrollLeft + shelf.clientWidth) shelf.scrollTo({ left: x - 2, behavior: still.matches ? 'auto' : 'smooth' }); }
+          const r = c.getBoundingClientRect(); if (r.bottom > innerHeight) c.scrollIntoView({ block: 'nearest', behavior: still.matches ? 'auto' : 'smooth' });
+        };
         const setText = (k: string) => { const n = notes.get(k)!; nameEl.textContent = n.name!; textEl.textContent = n.note!; };
         const close = (focusBack = false) => {
           if (!open) return;
           const b = btn(open);
           mark(open, 'open', false); b.setAttribute('aria-expanded', 'false');
           seq++; card.classList.remove('show', 'swap'); card.hidden = true; hint.hidden = false; live.textContent = '';
-          open = '';
+          open = ''; pickOn('');
           if (focusBack) b.focus();
         };
         const show = (k: string) => {
@@ -242,6 +394,7 @@ const work = cases.filter((c) => c.ready);
           // The globe's plane flies its route (SMIL); with motion off it simply lands.
           if (k === 'globe') { const fly = deskEl.querySelector<SVGAnimationElement>('.dk-plane animateMotion'); if (fly) { fly.setAttribute('dur', still.matches ? '0.01s' : '2s'); try { fly.beginElement(); } catch {} } }
           live.textContent = `${n.name}. ${n.note}`;
+          pickOn(k); if (picks.length) pickShow(k);
           // On a phone the note sits under the drawing: bring it into view if it is below the fold.
           const r = card.getBoundingClientRect();
           if (r.bottom > innerHeight) card.scrollIntoView({ block: 'nearest', behavior: still.matches ? 'auto' : 'smooth' });
@@ -255,6 +408,7 @@ const work = cases.filter((c) => c.ready);
           b.addEventListener('click', () => (open === k ? close() : show(k)));
         });
         card.querySelector('.dk-close')!.addEventListener('click', () => close(true));
+        picks.forEach((p) => { p.setAttribute('aria-pressed', 'false'); p.addEventListener('click', () => (open === p.dataset.pick ? close() : show(p.dataset.pick!))); });
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && open) close(true); });
       }
 
@@ -315,6 +469,33 @@ const work = cases.filter((c) => c.ready);
           });
         }
       }
+
+      // Contact option B: the postcard turns over once by itself when it comes into view, then on click or the button.
+      const pc = document.querySelector<HTMLElement>('[data-postcard]');
+      const turn = document.querySelector<HTMLButtonElement>('[data-turn]');
+      if (pc && turn) {
+        const flip = (on: boolean) => { pc.classList.toggle('flipped', on); turn.setAttribute('aria-pressed', String(on)); };
+        flip(false);
+        turn.addEventListener('click', () => flip(!pc.classList.contains('flipped')));
+        pc.addEventListener('click', (e) => { if (!(e.target as Element).closest('a, button')) flip(!pc.classList.contains('flipped')); });
+        pc.querySelector('.pcd-back')!.addEventListener('focusin', () => flip(true));
+        new IntersectionObserver(([e], o) => { if (e.isIntersecting) { o.disconnect(); window.setTimeout(() => flip(true), still.matches ? 0 : 900); } }, { threshold: 0.5 }).observe(pc);
+      }
+      // Contact options B and C: the copy icon beside the address.
+      document.querySelectorAll<HTMLButtonElement>('[data-copy-btn]').forEach((b) => {
+        let t = 0;
+        b.addEventListener('click', async () => {
+          const v = b.dataset.copyBtn!;
+          let ok = false;
+          try { await navigator.clipboard.writeText(v); ok = true; } catch {
+            const ta = document.createElement('textarea'); ta.value = v; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+            document.body.append(ta); ta.select(); try { ok = document.execCommand('copy'); } catch {} ta.remove();
+          }
+          b.classList.toggle('done', ok); b.setAttribute('aria-label', ok ? 'Copied' : 'Copy my email address');
+          if (status) status.textContent = ok ? 'Email address copied.' : `Copy didn’t work. My address is ${v}.`;
+          clearTimeout(t); t = window.setTimeout(() => { b.classList.remove('done'); b.setAttribute('aria-label', 'Copy my email address'); }, 2000);
+        });
+      });
     </script>
   </body>
 </html>

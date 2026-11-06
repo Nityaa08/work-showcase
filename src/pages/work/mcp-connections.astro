@@ -87,6 +87,7 @@ const c = cases.find((x) => x.slug === 'mcp-connections')!;
               <g class="node" id="n3-m"><rect x="0" y="450" width="210" height="96" rx="16" /><circle class="nno-c" cx="186" cy="476" r="13" /><text class="nno" x="186" y="481" text-anchor="middle">5</text><text x="16" y="478" class="nk">APP</text><text x="16" y="508" class="nt">the real app</text><text x="16" y="530" class="nd">docs · logs · …</text></g>
             <circle id="pkt-m" r="7" cx="105" cy="96" />
           </svg>
+          <i class="mx-pkt" aria-hidden="true"></i>
         </div>
       </section>
       {c.glance && <section class="glance-sec"><Glance items={c.glance} /></section>}
@@ -170,36 +171,54 @@ const c = cases.find((x) => x.slug === 'mcp-connections')!;
       let i = 0;
       const SPEED = 0.32; // viewBox units per ms — constant, so short lines are quick
       let timer = 0;
+      // Round 16: the packet is a small HTML dot on its own layer, moved by transform. It used to move by rewriting the
+      // SVG circle's cx/cy, which repainted the whole page every frame. The diagram also only plays while it is on screen.
+      const fig = document.getElementById('mx')!;
+      const dot = fig.querySelector<HTMLElement>('.mx-pkt')!;
+      let onScreen = false;
+      let box = { x: 0, y: 0, s: 1 };
+      const measure = () => {
+        const svg = fig.querySelector<SVGSVGElement>(narrow.matches ? 'svg.mx-svg-m' : 'svg:not(.mx-svg-m)')!;
+        const f = fig.getBoundingClientRect(), r = svg.getBoundingClientRect(), vb = svg.viewBox.baseVal;
+        // rects are in zoomed pixels where the page is zoomed (laptop scale); the transform is in CSS pixels
+        const z = fig.offsetWidth ? f.width / fig.offsetWidth : 1;
+        const s = Math.min(r.width / vb.width, r.height / vb.height);
+        box = { x: (r.left - f.left + (r.width - vb.width * s) / 2) / z, y: (r.top - f.top + (r.height - vb.height * s) / 2) / z, s: s / z };
+      };
+      const place = (x: number, y: number) => { dot.style.transform = `translate(${(box.x + x * box.s).toFixed(1)}px, ${(box.y + y * box.s).toFixed(1)}px)`; };
       function show(n: number) {
         clearTimeout(timer);
         i = n;
         steps.forEach((s, k) => s.classList.toggle('on', k === n));
         document.querySelectorAll('.node').forEach((el) => el.classList.toggle('on', nodes[n].includes(el.id.replace('-m', ''))));
-        const pkt = document.getElementById('pkt' + sfx()) as unknown as SVGCircleElement;
         document.querySelectorAll('.edge').forEach((el) => el.classList.toggle('on', legs[n].some(([id]) => id === el.id.replace('-m', ''))));
         const gw = document.getElementById('n1' + sfx())!;
         gw.classList.remove('check'); void (gw as unknown as HTMLElement).getBoundingClientRect();
         if (n === 1) gw.classList.add('check');
         const paths = legs[n].map(([id, back]) => ({ path: document.getElementById(id + sfx()) as unknown as SVGPathElement, back }));
         const lens = paths.map((p) => p.path.getTotalLength());
-        const travel = lens.reduce((a, b) => a + b, 0) / SPEED;
-        if (!reduced && paths.length) {
-          const start = performance.now();
-          const tick = (now: number) => {
-            if (i !== n) return;
-            let d = Math.min((now - start) * SPEED, lens.reduce((a, b) => a + b, 0) - 0.01), k = 0;
-            while (d > lens[k]) { d -= lens[k]; k++; }
-            const { path, back } = paths[k];
-            const pt = path.getPointAtLength(back ? lens[k] - d : d);
-            pkt.setAttribute('cx', String(pt.x)); pkt.setAttribute('cy', String(pt.y));
-            if ((now - start) < travel) requestAnimationFrame(tick);
-          };
-          requestAnimationFrame(tick);
+        const total = lens.reduce((a, b) => a + b, 0);
+        const travel = total / SPEED;
+        const at = (d: number) => { let k = 0; while (k < lens.length - 1 && d > lens[k]) { d -= lens[k]; k++; } const { path, back } = paths[k]; return path.getPointAtLength(back ? lens[k] - d : d); };
+        if (paths.length) {
+          measure();
+          if (!reduced) {
+            const start = performance.now();
+            const tick = (now: number) => {
+              if (i !== n) return;
+              const pt = at(Math.min((now - start) * SPEED, total - 0.01)); place(pt.x, pt.y);
+              if ((now - start) < travel) requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+          } else { const pt = at(total - 0.01); place(pt.x, pt.y); }
         }
-        if (!reduced && auto) timer = window.setTimeout(() => show((n + 1) % steps.length), Math.max(travel, 700) + 1300);
+        if (!reduced && auto && onScreen) timer = window.setTimeout(() => show((n + 1) % steps.length), Math.max(travel, 700) + 1300);
       }
       let auto = true;
       steps.forEach((s, k) => s.addEventListener('click', () => show(k)));
+      measure(); place(...((narrow.matches ? [105, 96] : [190, 110]) as [number, number]));
+      addEventListener('resize', () => { measure(); show(i); });
+      new IntersectionObserver(([e]) => { const was = onScreen; onScreen = e.isIntersecting; if (onScreen && !was) show(i); else if (!onScreen) clearTimeout(timer); }).observe(fig);
       show(0);
     </script>
   </body>

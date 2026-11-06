@@ -22,6 +22,18 @@ export const path = [
   { when: '03', title: 'Testing AI', line: 'I tested that assistant before launch and caught its wrong answers. That’s when AI engineering clicked for me.' },
   { when: '04', title: 'Shipping agents', line: 'Then I moved to building and securing AI agents that people rely on at work: the platform, the tools and the guardrails.' },
 ];
+/*
+ * My path, option C ("?v=path-c"): the same four steps told as a git log, oldest first. Each `msg` is a short
+ * commit subject drawn from the step above it; the step's full line shows under it as the commit body. No dates.
+ */
+export const pathLog = [
+  { hash: '5a1c0e2', type: 'learn', msg: 'computer science, AI and data science' },
+  { hash: '8d3f71b', type: 'data', msg: 'look after the payments data an assistant answers from' },
+  { hash: 'c47e9a0', type: 'test', msg: 'catch the assistant’s wrong answers before launch' },
+  { hash: 'f20b6d4', type: 'ship', msg: 'build and secure AI agents people rely on at work' },
+];
+/** The label that marks the switch from work to the personal part of the page. */
+export const offClock = 'Off the clock';
 // Work cards on home: an outcome headline in my voice; the topic and one line underneath.
 export const cards: Record<string, { headline: string; text: string }> = {
   'agent-platform': { headline: 'An agent went offline. I found the one file that did it.', text: 'The engine, studio and gateways behind company-wide AI agents, and how I kept them running.' },

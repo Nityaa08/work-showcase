@@ -79,14 +79,16 @@ const { features } = Astro.props;
     demo.classList.add('measuring');
     for (let s = 0; s < Number(demo.dataset.steps); s++) {
       demo.dataset.step = String(s);
+      // getBoundingClientRect is in zoomed pixels where the page is zoomed (laptop scale), offsetHeight is not: divide by the ratio
+      const z = body.offsetWidth ? body.getBoundingClientRect().width / body.offsetWidth : 1;
       const top = body.getBoundingClientRect().top;
       let flow = 0, pinned = 0;
       for (const el of body.querySelectorAll<HTMLElement>(':scope > *')) {
         const cs = getComputedStyle(el);
         if (cs.display === 'none' || el.classList.contains('pointer')) continue;
         const r = el.getBoundingClientRect();
-        if (el.matches('.toast:not(.t-top), .banner')) pinned = Math.max(pinned, r.height + parseFloat(cs.bottom) + 12);
-        else flow = Math.max(flow, r.bottom - top + parseFloat(cs.marginBottom || '0'));
+        if (el.matches('.toast:not(.t-top), .banner')) pinned = Math.max(pinned, r.height / z + parseFloat(cs.bottom) + 12);
+        else flow = Math.max(flow, (r.bottom - top) / z + parseFloat(cs.marginBottom || '0'));
       }
       need = Math.max(need, flow + (pinned || pad));
     }
