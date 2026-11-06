@@ -48,11 +48,13 @@ ${home.how.tools}
 
 ## My path
 
-${home.path.map((p) => `${Number(p.when)}. **${p.title}.** ${p.line}`).join('\n')}
+On the page this is a short git log, oldest first; the codes beside each commit are labels, not real commits.
+
+${home.path.map((p, i) => `${Number(p.when)}. **${p.title}** (\`${home.pathLog[i].type}: ${home.pathLog[i].msg}\`). ${p.line}`).join('\n')}
 
 ## ${home.outsideIntro.title}
 
-${home.outsideIntro.text}
+*${home.offClock}.* ${home.outsideIntro.text}
 
 ${home.desk.map((d) => `- **${d.name}.** ${d.note}`).join('\n')}
 
@@ -203,7 +205,7 @@ export function llmsTxt(site?: URL) {
 
 ## Pages
 
-- [Home](${abs(site, '/index.md')}): who I am, selected work, how I work, my path, life outside work, contact
+- [Home](${abs(site, '/index.md')}): who I am, selected work, how I work, my path (told as a short git log), life outside work, contact
 ${work.map((c) => `- [Case ${c.no}: ${c.title}](${abs(site, `/work/${c.slug}.md`)}): ${home.blurbs[c.slug]}`).join('\n')}
 
 ## Contact

@@ -23,14 +23,15 @@ export const path = [
   { when: '04', title: 'Shipping agents', line: 'Then I moved to building and securing AI agents that people rely on at work: the platform, the tools and the guardrails.' },
 ];
 /*
- * My path, option C ("?v=path-c"): the same four steps told as a git log, oldest first. Each `msg` is a short
- * commit subject drawn from the step above it; the step's full line shows under it as the commit body. No dates.
+ * My path as a git log, oldest first. Each `msg` is a short commit subject drawn from the step above it; the step's
+ * full line shows under it as the commit body. No dates. The `hash` is a decorative label (the step's number plus a
+ * letter), not a real commit, so it never reads as a claim; screen readers skip it.
  */
 export const pathLog = [
-  { hash: '5a1c0e2', type: 'learn', msg: 'computer science, AI and data science' },
-  { hash: '8d3f71b', type: 'data', msg: 'look after the payments data an assistant answers from' },
-  { hash: 'c47e9a0', type: 'test', msg: 'catch the assistant’s wrong answers before launch' },
-  { hash: 'f20b6d4', type: 'ship', msg: 'build and secure AI agents people rely on at work' },
+  { hash: '01a', type: 'learn', msg: 'computer science, AI and data science' },
+  { hash: '02b', type: 'data', msg: 'look after the payments data an assistant answers from' },
+  { hash: '03c', type: 'test', msg: 'catch the assistant’s wrong answers before launch' },
+  { hash: '04d', type: 'ship', msg: 'build and secure AI agents people rely on at work' },
 ];
 /** The label that marks the switch from work to the personal part of the page. */
 export const offClock = 'Off the clock';
