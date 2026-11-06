@@ -16,22 +16,15 @@ export const contact = {
   github: 'https://github.com/Nityaa08',
   resume: '/Nityashree_S_Resume.pdf',
 };
+/*
+ * My path: four stops on a hand-drawn trail (src/components/Trail.astro), oldest first. Each stop shows its `title`
+ * and its `line` under a small drawing. No dates. `when` is the stop's number, used by the markdown twin.
+ */
 export const path = [
   { when: '01', title: 'Studied', line: 'I studied computer science, with a focus on AI and data science, at SASTRA University.' },
   { when: '02', title: 'Payments data', line: 'I looked after the payments data an AI assistant answered from, and learnt how much an answer depends on its data.' },
   { when: '03', title: 'Testing AI', line: 'I tested that assistant before launch and caught its wrong answers. That’s when AI engineering clicked for me.' },
   { when: '04', title: 'Shipping agents', line: 'Then I moved to building and securing AI agents that people rely on at work: the platform, the tools and the guardrails.' },
-];
-/*
- * My path as a git log, oldest first. Each `msg` is a short commit subject drawn from the step above it; the step's
- * full line shows under it as the commit body. No dates. The `hash` is a decorative label (the step's number plus a
- * letter), not a real commit, so it never reads as a claim; screen readers skip it.
- */
-export const pathLog = [
-  { hash: '01a', type: 'learn', msg: 'computer science, AI and data science' },
-  { hash: '02b', type: 'data', msg: 'look after the payments data an assistant answers from' },
-  { hash: '03c', type: 'test', msg: 'catch the assistant’s wrong answers before launch' },
-  { hash: '04d', type: 'ship', msg: 'build and secure AI agents people rely on at work' },
 ];
 /** The label that marks the switch from work to the personal part of the page. */
 export const offClock = 'Off the clock';

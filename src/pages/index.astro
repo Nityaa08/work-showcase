@@ -5,8 +5,9 @@ import Phone from '../components/Phone.astro';
 import StagePlayer from '../components/StagePlayer.astro';
 import Meta from '../components/Meta.astro';
 import { cases } from '../data/cases';
-import { hero, how, contact, path, pathLog, offClock, cards, desk, outsideIntro, contactLine, letter, mailto } from '../data/home';
+import { hero, how, contact, offClock, cards, desk, outsideIntro, contactLine, letter, mailto } from '../data/home';
 import Desk from '../components/Desk.astro';
+import Trail from '../components/Trail.astro';
 import ContactLinks from '../components/ContactLinks.astro';
 // The envelope's stamp: a rectangle with a perforated (scalloped) edge, traced clockwise.
 const stampEdge = (() => {
@@ -96,22 +97,8 @@ const work = cases.filter((c) => c.ready);
           <p class="kicker">My path</p>
           <h2>From payments data to production AI.</h2>
         </div>
-        {/* My path as a git log in a small terminal window. The short hashes are labels, not real commits. */}
-        <div class="pc">
-          <figure class="win pc-win" data-reveal>
-            <div class="titlebar"><div class="lights"><i></i><i></i><i></i></div><span class="win-title">~/nitya · git log --reverse</span></div>
-            <ol class="pc-log">
-              {pathLog.map((c, i) => (
-                <li class="pc-c" style={`--i:${i}`}>
-                  <span class="pc-hash" aria-hidden="true">{c.hash}</span>
-                  <p class="pc-sub">{i === pathLog.length - 1 && <span class="pc-head" aria-hidden="true">(HEAD → main) </span>}<b>{c.type}:</b> {c.msg}</p>
-                  <p class="pc-body"><span class="sr-only">{path[i].title}. </span>{path[i].line}</p>
-                </li>
-              ))}
-              <li class="pc-prompt" style={`--i:${pathLog.length}`} aria-hidden="true"><span class="pc-dollar">$</span><i class="cursor"></i></li>
-            </ol>
-          </figure>
-        </div>
+        {/* My path as a hand-drawn trail with four stops. */}
+        <Trail />
       </section>
 
       {/* The switch from work to the personal part of the page. */}
@@ -220,16 +207,16 @@ const work = cases.filter((c) => c.ready);
       // Looping decorations run only while they are on screen (the work card's flow line).
       const loopIO = new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle('in', e.isIntersecting)));
       document.querySelectorAll('.mini-flow').forEach((el) => loopIO.observe(el));
-      // One-time entrances ([data-reveal] gets .in once, as it comes into view; at once with motion off), and the git
-      // log's cursor, which blinks only while the terminal is on screen (.onscreen).
+      // One-time entrances ([data-reveal] gets .in once, as it comes into view; at once with motion off). My path's
+      // trail also pauses its entrance while it is off screen (.off).
       const reveals = [...document.querySelectorAll<HTMLElement>('[data-reveal]')];
       if (still.matches) reveals.forEach((el) => el.classList.add('in'));
       else {
         const revealIO = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); revealIO.unobserve(e.target); } }), { threshold: 0.3 });
         reveals.forEach((el) => revealIO.observe(el));
       }
-      const liveIO = new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle('onscreen', e.isIntersecting)));
-      document.querySelectorAll('.pc-win').forEach((el) => liveIO.observe(el));
+      const liveIO = new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle('off', !e.isIntersecting)));
+      document.querySelectorAll('.tr').forEach((el) => liveIO.observe(el));
       const wait = (ms: number) => new Promise((r) => setTimeout(r, still.matches ? 0 : ms));
 
       // --- The desk: every object is a button that opens one note at a time. ---

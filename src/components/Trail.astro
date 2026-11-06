@@ -1,0 +1,130 @@
+---
+// "My path" as a hand-drawn trail: one dashed line that winds past four stops, each a small line-art drawing in the
+// desk's style (grey ink, near-black for small emphasis, light grey tints; no other hue). Horizontal on desktop,
+// vertical on phones and tablets. Styles and motion live in global.css ("My path: the trail").
+//
+// Geometry. The four stops sit in four equal columns (desktop) or four equal rows (phones), so their centres are at
+// 12.5%, 37.5%, 62.5% and 87.5% of the list. The trail's box runs from the list's start edge to the last stop's
+// centre (87.5%), so inside it the stops are at 1/7, 3/7, 5/7 and 1. The line crosses each stop on the centre line
+// and swings out between them. The path, the paper plane's flight and each stop's pop-in delay are all worked out
+// here from that one description, so they always agree.
+//
+// Motion (plays once, when the list scrolls into view): the line is revealed by a clip that slides with it (a
+// translated wrapper and a counter-translated svg, both transform only); the plane rides the reveal's front edge
+// (one element moves along the trail by transform, a second adds the swing, its tilt and the final hop to the
+// robot's hand, sampled from the same curve); each stop pops in (scale and opacity) as the line reaches it.
+import { path } from '../data/home';
+
+const STOPS = [1 / 7, 3 / 7, 5 / 7, 1];
+// Each segment's swing: the lead-in from the start dot, then one gentle wave between each pair of stops.
+const SEG = [[0, STOPS[0], -0.5], [STOPS[0], STOPS[1], 1], [STOPS[1], STOPS[2], -1], [STOPS[2], STOPS[3], 1]] as const;
+// Two layouts. `len`: the main axis in path units (scaled to the box). `c`/`a`: the cross axis centre and swing in px
+// (the box is exactly that tall or wide, so px are exact). `nom`: a typical box length in px, for the plane's tilt.
+// `hand`: where the plane lands, from the last stop's centre (main, cross) in px.
+const H = { len: 1000, c: 60, a: 22, nom: 1100, hand: [38, -16] };
+const V = { len: 1000, c: 34, a: 19, nom: 560, hand: [-12, 27] };
+
+// One cubic per segment, controls at 35% and 65% of its length, so its peak (75% of the control height) is `a`.
+const bez = (p0: number, p1: number, p2: number, p3: number, t: number) => { const u = 1 - t; return u * u * u * p0 + 3 * u * u * t * p1 + 3 * u * t * t * p2 + t * t * t * p3; };
+const curve = (L: typeof H, m: number) => {
+  const s = SEG.find(([a, b]) => m <= b + 1e-9) ?? SEG[3];
+  const [m0, m1, sw] = s, w = m1 - m0, h = (sw * L.a) / 0.75;
+  const xs = [m0, m0 + 0.35 * w, m1 - 0.35 * w, m1], ys = [0, h, h, 0];
+  let lo = 0, hi = 1;
+  for (let i = 0; i < 40; i++) { const mid = (lo + hi) / 2; if (bez(xs[0], xs[1], xs[2], xs[3], mid) < m) lo = mid; else hi = mid; }
+  const t = (lo + hi) / 2, e = 1e-4;
+  const dx = bez(xs[0], xs[1], xs[2], xs[3], Math.min(1, t + e)) - bez(xs[0], xs[1], xs[2], xs[3], Math.max(0, t - e));
+  const dy = bez(ys[0], ys[1], ys[2], ys[3], Math.min(1, t + e)) - bez(ys[0], ys[1], ys[2], ys[3], Math.max(0, t - e));
+  return { off: bez(ys[0], ys[1], ys[2], ys[3], t), dm: dx * L.nom, dc: dy };
+};
+const f = (n: number) => +n.toFixed(2);
+const d = (L: typeof H, vertical: boolean) => {
+  const P = (m: number, c: number) => (vertical ? `${f(L.c + c)} ${f(m * L.len)}` : `${f(m * L.len)} ${f(L.c + c)}`);
+  return `M${P(0, 0)}` + SEG.map(([m0, m1, sw]) => { const w = m1 - m0, h = (sw * L.a) / 0.75; return ` C${P(m0 + 0.35 * w, h)} ${P(m1 - 0.35 * w, h)} ${P(m1, 0)}`; }).join('');
+};
+
+// Travel timing: the site's --ease-in-out, cubic-bezier(.45, 0, .3, 1), solved exactly as the browser does.
+const E = [0.45, 0, 0.3, 1];
+const ease = (x: number) => {
+  let lo = 0, hi = 1;
+  for (let i = 0; i < 50; i++) { const mid = (lo + hi) / 2; if (bez(0, E[0], E[2], 1, mid) < x) lo = mid; else hi = mid; }
+  return bez(0, E[1], E[3], 1, (lo + hi) / 2);
+};
+const invEase = (y: number) => { let lo = 0, hi = 1; for (let i = 0; i < 50; i++) { const mid = (lo + hi) / 2; if (ease(mid) < y) lo = mid; else hi = mid; } return (lo + hi) / 2; };
+const START = 0.35, TRAVEL = 2.8; // seconds
+const NOSE = 18.4; // the plane is drawn nose up-right, 18.4deg above its tail
+const LAND = -16; // its resting tilt beside the robot (as the contact plane rests)
+const smooth = (x: number) => { const k = Math.min(1, Math.max(0, x)); return k * k * (3 - 2 * k); };
+const frames = (L: typeof H, vertical: boolean) => {
+  const out: string[] = [];
+  for (let k = 0; k <= 80; k++) {
+    const tau = k / 80, m = ease(tau), { off, dm, dc } = curve(L, m);
+    const ang = vertical ? (Math.atan2(dm, dc) * 180) / Math.PI : (Math.atan2(dc, dm) * 180) / Math.PI;
+    const w = smooth((m - (STOPS[2] + 0.45 * (STOPS[3] - STOPS[2]))) / (0.55 * (STOPS[3] - STOPS[2]))); // hop to the hand over the last stretch
+    const main = w * L.hand[0], cross = (1 - w) * off + w * L.hand[1];
+    const rot = (1 - w) * (ang + NOSE) + w * LAND;
+    const [x, y] = vertical ? [cross, main] : [main, cross];
+    const op = tau < 0.04 ? f(tau / 0.04) : 1;
+    out.push(`${f(tau * 100)}%{transform:translate(${f(x)}px,${f(y)}px) rotate(${f(rot)}deg);opacity:${op}}`);
+  }
+  return out.join('');
+};
+const css = `@keyframes tr-fy-h{${frames(H, false)}}@keyframes tr-fy-v{${frames(V, true)}}`;
+// When the reveal reaches each stop: it pops in a little before the line arrives, so it is whole as the plane passes.
+const at = STOPS.map((s) => f(START + invEase(s) * TRAVEL - 0.25));
+const done = f(START + TRAVEL);
+const vars = `--tr-start:${START}s;--tr-travel:${TRAVEL}s;--tr-done:${done}s;--h-land:translate(${H.hand[0]}px,${H.hand[1]}px) rotate(${LAND}deg);--v-land:translate(${V.hand[1]}px,${V.hand[0]}px) rotate(${LAND}deg)`;
+
+// The four drawings, 100 x 100 units each, centred on the trail. A paper disc behind each hides the line under it.
+const art = [
+  // Studied: a mortarboard on two books
+  `<ellipse class="tr-shadow" cx="50" cy="85" rx="31" ry="3.2"/>
+   <rect class="tr-pp" x="20" y="66" width="60" height="16" rx="2.5"/><path class="tr-ln" d="M27 66v16M64 71h10M64 75h10M64 79h10"/>
+   <rect class="tr-tn" x="25" y="54" width="50" height="12" rx="2.5"/><path class="tr-ln" d="M31 54v12"/>
+   <path class="tr-tn" d="M35 39v9c0 5.5 30 5.5 30 0v-9"/>
+   <path class="tr-pp" d="M50 24 82 35 50 46 18 35Z"/>
+   <path class="tr-cord" d="M50 35 76 38.5V50"/><path class="tr-k" d="M74.2 49.5h3.6l1 8h-5.6Z"/><circle class="tr-k" cx="50" cy="35" r="1.8"/>`,
+  // Payments data: a ledger sheet, a card and a coin
+  `<ellipse class="tr-shadow" cx="50" cy="85" rx="31" ry="3.2"/>
+   <g transform="rotate(7 60 46)"><rect class="tr-pp" x="42" y="16" width="38" height="56" rx="3"/><path class="tr-k-ln" d="M48 26h16"/><path class="tr-fn" d="M48 36h26M48 44h26M48 52h26M48 60h26M63 32v34"/></g>
+   <g transform="rotate(-9 40 64)"><rect class="tr-tn" x="15" y="49" width="50" height="31" rx="4.5"/><rect class="tr-k" x="15.6" y="55" width="48.8" height="6"/><rect class="tr-pp" x="21" y="66" width="10" height="7.5" rx="1.6"/><path class="tr-ln" d="M44 71h14"/></g>
+   <circle class="tr-pp" cx="73" cy="72" r="11"/><circle class="tr-fn" cx="73" cy="72" r="7.5"/><path class="tr-ln" d="M73 68.5v7"/>`,
+  // Testing AI: a magnifying glass over a chat bubble with a tick
+  `<ellipse class="tr-shadow" cx="50" cy="85" rx="31" ry="3.2"/>
+   <path class="tr-pp" d="M26 18h34a12 12 0 0 1 12 12v16a12 12 0 0 1-12 12H38l-10 9v-9h-2a12 12 0 0 1-12-12V30a12 12 0 0 1 12-12Z"/>
+   <path class="tr-tick" d="M32 38.5l6 6 12.5-12.5"/>
+   <path class="tr-handle" d="M77.5 71.5 86 80"/>
+   <circle class="tr-lens" cx="66" cy="61" r="14.5"/><circle class="tr-fn" cx="66" cy="61" r="11"/><path class="tr-glint" d="M58.5 56.5a9 9 0 0 1 6-4.6"/>`,
+  // Shipping agents: a small friendly robot, one arm up to send the paper plane
+  `<ellipse class="tr-shadow" cx="50" cy="85" rx="31" ry="3.2"/>
+   <path class="tr-ln" d="M50 26v-9"/><circle class="tr-k" cx="50" cy="14.5" r="3.2"/>
+   <rect class="tr-tn" x="24.5" y="35" width="6" height="13" rx="2.2"/><rect class="tr-tn" x="69.5" y="35" width="6" height="13" rx="2.2"/>
+   <rect class="tr-pp" x="29" y="26" width="42" height="32" rx="10"/>
+   <circle class="tr-k" cx="42" cy="40.5" r="3"/><circle class="tr-k" cx="58" cy="40.5" r="3"/><path class="tr-ln" d="M44.5 48q5.5 4.5 11 0"/>
+   <path class="tr-ln" d="M36 66q-8 4-10 11M64 65q9-3 12-12"/><circle class="tr-pp" cx="26" cy="78" r="2.8"/><circle class="tr-pp" cx="76.5" cy="51.5" r="2.8"/>
+   <rect class="tr-tn" x="35" y="60" width="30" height="21" rx="7"/><circle class="tr-pp" cx="50" cy="70.5" r="3"/>`,
+];
+---
+<div class="tr" data-reveal style={vars}>
+  <style is:inline set:html={css}></style>
+  <span class="tr-start" aria-hidden="true"></span>
+  <span class="tr-line" aria-hidden="true"><svg class="tr-h" viewBox={`0 0 ${H.len} ${2 * H.c}`} preserveAspectRatio="none" focusable="false"><path d={d(H, false)} /></svg><svg class="tr-v" viewBox={`0 0 ${2 * V.c} ${V.len}`} preserveAspectRatio="none" focusable="false"><path d={d(V, true)} /></svg></span>
+  <ol class="tr-stops">
+    {path.map((p, i) => (
+      <li class="tr-stop" style={`--d:${at[i]}s`}>
+        <span class="tr-art" aria-hidden="true">
+          <svg viewBox="0 0 100 100" focusable="false" set:html={`<circle class="tr-disc" cx="50" cy="50" r="43"/>${art[i]}`} />
+          {i === path.length - 1 && (
+            <span class="tr-here"><span>you are here</span><svg viewBox="0 0 40 30" focusable="false"><path d="M3 5c12-2 24 2 28 15" /><path d="M24 17l7.5 4.5 2-8.5" /></svg></span>
+          )}
+        </span>
+        <div class="tr-txt">
+          <h3>{p.title}</h3>
+          <p>{p.line}</p>
+        </div>
+      </li>
+    ))}
+  </ol>
+  {/* The traveller: a little paper plane (the same drawing as the one in Contact) that flies the trail once and lands by the robot. */}
+  <span class="tr-fly" aria-hidden="true"><span class="tr-fx"><span class="tr-fy"><svg viewBox="0 0 40 30" focusable="false"><path d="M2 14 L38 2 L26 28 L18 18 Z" /><path d="M38 2 L18 18 L16 27 L22 21" /></svg></span></span></span>
+</div>
