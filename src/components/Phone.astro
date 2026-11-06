@@ -1,6 +1,7 @@
 ---
 import StatusIcons from './StatusIcons.astro';
-const layers = Array.from({ length: 14 }, (_, i) => i);
+// Seven slabs over the same 13px depth draw the edge as smoothly as fourteen did, at half the compositing cost (Round 15).
+const layers = Array.from({ length: 7 }, (_, i) => +((i * 13) / 6).toFixed(2));
 // Four branch rows, one line each: large enough to read at the phone's scale (the screen text is 14.5px or more).
 const work = [
   { s: 'ok', name: 'feat/guest-access', act: 'tests pass · across services', href: '/work/agent-platform/' },

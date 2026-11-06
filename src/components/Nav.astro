@@ -20,14 +20,18 @@ const { crumb, active } = Astro.props;
   const nav = document.getElementById('nav')!;
   let last = scrollY, travel = 0, hovering = false;
   const set = (hide: boolean) => nav.classList.toggle('hide', hide && !hovering && !nav.matches(':focus-within'));
-  addEventListener('scroll', () => {
+  // One update per frame at most (rAF), whatever the scroll event rate.
+  let queued = false;
+  addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(update); } }, { passive: true });
+  function update() {
+    queued = false;
     const y = scrollY, d = y - last; last = y;
     nav.classList.toggle('solid', y > 24);
     if (y < 120) { travel = 0; set(false); return; }
     travel = Math.sign(d) === Math.sign(travel) ? travel + d : d;
     if (travel > 48) set(true);
     else if (travel < -64) set(false);
-  }, { passive: true });
+  }
   if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
     addEventListener('pointermove', (e) => {
       const near = e.clientY < 72;

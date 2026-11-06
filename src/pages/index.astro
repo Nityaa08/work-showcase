@@ -45,8 +45,8 @@ const work = cases.filter((c) => c.ready);
         </div>
         <figure class="photo">
           <picture>
-            <source srcset="/portrait-muted-600.webp 600w, /portrait-muted.webp 980w" sizes="(max-width: 960px) 300px, 420px" type="image/webp" />
-            <img src="/portrait-muted.jpg" srcset="/portrait-muted-600.jpg 600w, /portrait-muted.jpg 980w" sizes="(max-width: 960px) 300px, 420px" alt="Nityashree S, smiling" width="980" height="1220" fetchpriority="high" />
+            <source srcset="/portrait-muted-600.webp 600w, /portrait-muted.webp 980w" sizes="(max-width: 960px) 340px, min(52vw, 760px)" type="image/webp" />
+            <img src="/portrait-muted.jpg" srcset="/portrait-muted-600.jpg 600w, /portrait-muted.jpg 980w" sizes="(max-width: 960px) 340px, min(52vw, 760px)" alt="Nityashree S, smiling" width="980" height="1220" fetchpriority="high" />
           </picture>
         </figure>
       </section>
@@ -184,9 +184,15 @@ const work = cases.filter((c) => c.ready);
       // Nav switches to its light style while it sits over a light section.
       const navEl = document.getElementById('nav')!;
       const lights = [...document.querySelectorAll<HTMLElement>('[data-light]')];
-      const paint = () => { const y = 34; navEl.classList.toggle('on-light', lights.some((el) => { const r = el.getBoundingClientRect(); return r.top <= y && r.bottom > y; })); };
-      paint(); addEventListener('scroll', paint, { passive: true }); addEventListener('resize', paint);
+      // Read layout at most once per frame (rAF), never once per scroll event.
+      let queued = false;
+      const paint = () => { queued = false; const y = 34; navEl.classList.toggle('on-light', lights.some((el) => { const r = el.getBoundingClientRect(); return r.top <= y && r.bottom > y; })); };
+      const queue = () => { if (!queued) { queued = true; requestAnimationFrame(paint); } };
+      paint(); addEventListener('scroll', queue, { passive: true }); addEventListener('resize', queue);
       const still = matchMedia('(prefers-reduced-motion: reduce)');
+      // Looping decorations run only while they are on screen (the work card's flow line).
+      const loopIO = new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle('in', e.isIntersecting)));
+      document.querySelectorAll('.mini-flow').forEach((el) => loopIO.observe(el));
       const wait = (ms: number) => new Promise((r) => setTimeout(r, still.matches ? 0 : ms));
 
       // --- The desk: every object is a button that opens one note at a time. ---
@@ -194,6 +200,14 @@ const work = cases.filter((c) => c.ready);
       if (deskEl) {
         // Idle motion only runs while the desk is on screen.
         new IntersectionObserver(([e]) => deskEl.classList.toggle('in', e.isIntersecting), { rootMargin: '60px 0px' }).observe(deskEl);
+        // While the page scrolls, the pointer sweeping over the drawing must not start hover loops (Safari updates hover
+        // mid-scroll). The hit areas ignore the pointer until scrolling has stopped for a moment.
+        let rest = 0;
+        addEventListener('scroll', () => {
+          if (!deskEl.classList.contains('in')) return;
+          if (!deskEl.classList.contains('busy')) { deskEl.classList.add('busy'); deskEl.querySelectorAll('.dk-obj.hot, .dk-steam.hot').forEach((o) => o.classList.remove('hot')); }
+          clearTimeout(rest); rest = window.setTimeout(() => deskEl.classList.remove('busy'), 180);
+        }, { passive: true });
         const notes = new Map([...(document.getElementById('dk-notes') as HTMLTemplateElement).content.querySelectorAll<HTMLElement>('[data-k]')].map((n) => [n.dataset.k!, n.dataset]));
         const card = document.getElementById('dk-card')!, hint = document.getElementById('dk-hint')!, live = document.getElementById('dk-live')!;
         const nameEl = card.querySelector('.dk-name')!, textEl = card.querySelector('.dk-text')!;

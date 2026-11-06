@@ -186,7 +186,7 @@ const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(
     <!-- a mug -->
     <g class="dk-obj dk-mug" data-obj="mug">
       <ellipse class="dk-shadow" cx="252" cy="331" rx="26" ry="3" />
-      <g class="dk-steam"><path d="M243 280 c-5 -7 5 -11 0 -18" /><path d="M252 277 c-5 -7 5 -11 0 -18" /><path d="M261 280 c-5 -7 5 -11 0 -18" /></g>
+      <!-- the steam is drawn outside this SVG (below), on its own small layers -->
       <g class="dk-lift">
         <path class="dk-line" d="M270 298 C285 298 285 320 270 320 M270 303 C279 303 279 315 270 315" />
         <path class="dk-paper" d="M230 290 H270 V318 Q270 330 258 330 H242 Q230 330 230 318 Z" />
@@ -225,6 +225,15 @@ const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(
       <g class="dk-claps" set:html={claps} />
     </g>
   </svg>
+
+  <!-- The mug's steam: three wisps, each its own tiny SVG. The idle loop moves them by transform and opacity only,
+       so the browser composites it and never repaints the big drawing above (Round 15, performance). -->
+  <span class="dk-steam" data-for="mug" aria-hidden="true"
+    style={`--x:${pct(236, W)};--y:${pct(256 - Y0, VH)};--w:${pct(32, W)};--h:${pct(28, VH)}`}>
+    {[['M243 280 c-5 -7 5 -11 0 -18', '0s'], ['M252 277 c-5 -7 5 -11 0 -18', '-1.2s'], ['M261 280 c-5 -7 5 -11 0 -18', '-2.4s']].map(([d, delay]) => (
+      <svg viewBox="236 256 32 28" style={`--dl:${delay}`} focusable="false"><path d={d} /></svg>
+    ))}
+  </span>
 
   {desk.map((d) => {
     const [x, y, w, h] = hits[d.id];

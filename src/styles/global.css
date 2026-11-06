@@ -1127,7 +1127,7 @@ html { scroll-behavior: smooth; }
 
 /* --- How I work: the section centres the text and the phone (the phone itself is styled in Round 13 below) --- */
 @media (min-width: 961px) {
-  .h-how { align-items: center; padding-top: var(--sec-y) !important; padding-bottom: var(--sec-y) !important; }
+  .h-how { align-items: center; padding-top: var(--sec-y); padding-bottom: var(--sec-y); }
 }
 
 /* --- Case pages: a way back to all work, above the title --- */
@@ -2043,4 +2043,155 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 @media (min-width: 961px) {
   .h-contact, .h-contact.light { align-items: center; }
   .ct-text { align-self: center; padding-top: 0; }
+}
+
+/* =====================================================================
+   Round 15: scroll performance (measured; see SITE-GUIDE "Performance"). Appended last on purpose.
+   ===================================================================== */
+
+/* The fixed, full-screen noise overlay (mix-blend-mode: overlay) changed no pixel by more than 1/255, yet it forced
+   all of <main> into one page-tall composited layer (Overlap) that was repainted whenever anything moved, and made
+   the compositor blend a full-screen layer every frame. It is gone. */
+body.studio::before { content: none; display: none; }
+
+/* The nav: a near-opaque solid background instead of backdrop-filter (at 92-94% opacity the blur was not visible). */
+.nav.solid { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(10, 10, 11, 0.95); }
+.nav.on-light.solid { background: rgba(245, 245, 242, 0.96); }
+
+/* Case 02 card: the flow line's light used to move by background-position (a repaint every frame, forever, even off
+   screen). Now a strip twice the tile width slides by transform, which the compositor runs, and only while on screen. */
+.mini-flow b { position: relative; overflow: hidden; background: #2a2c30; animation: none; }
+.mini-flow b::before {
+  content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 400%;
+  background: linear-gradient(90deg, #2a2c30, #9cc5a1, #2a2c30); background-size: 50% 100%; background-repeat: repeat-x;
+  transform: translateX(-50%); will-change: transform;
+}
+.mini-flow.in b::before { animation: flowline-t 2.4s linear infinite; }
+@keyframes flowline-t { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+@media (prefers-reduced-motion: reduce) { .mini-flow b::before { animation: none !important; } }
+
+/* The desk. Idle loops on SVG children (the globe's meridians, the steam) are not composited: every frame they
+   restyled and repainted the whole drawing. The steam now lives on three tiny HTML-level SVGs that move by transform
+   and opacity only; the globe turns only while it is pointed at (or open), not as an idle loop. */
+.desk.in .dk-mer, .desk.in .dk-mer2 { animation: none; }
+.desk.in .dk-globe.hot .dk-mer, .desk.in .dk-globe.open .dk-mer { animation: dk-spin 4s linear infinite; }
+.desk.in .dk-globe.hot .dk-mer2, .desk.in .dk-globe.open .dk-mer2 { animation-delay: -2s; }
+.dk-steam { position: absolute; left: var(--x); top: var(--y); width: var(--w); height: var(--h); pointer-events: none; opacity: 0.55; transition: opacity var(--t-base) var(--ease); }
+.dk-steam.hot, .dk-steam.open { opacity: 1; }
+.dk-steam svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: visible; opacity: 0; }
+.dk-steam path { stroke: rgba(58, 59, 63, 0.3); stroke-width: 1.3; fill: none; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.desk.in .dk-steam svg { animation: dk-steam-c 3.6s ease-in-out var(--dl) infinite; }
+@keyframes dk-steam-c { 0% { transform: translateY(14.3%); opacity: 0; } 40% { opacity: 1; } 100% { transform: translateY(-28.6%); opacity: 0; } }
+/* while the page scrolls, the drawing ignores the pointer, so sweeping over it does not start hover loops */
+.desk.busy .dk-hit { pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .dk-steam svg { opacity: 1; animation: none !important; } }
+.desk.in .dk-steam path { animation: none; }
+/* The phone's running-agent spinner gets its own tiny layer, so its spin never repaints the phone screen. */
+.d.run { will-change: transform; }
+
+/* Work cards: the hover lift is a transform, and the hover shadow is pre-baked on a pseudo-element that fades by
+   opacity, so a pointer resting on a card while the page scrolls past no longer repaints a 70px blur every frame.
+   The card no longer clips its children (that would clip the shadow); the picture rounds its own top corners. */
+.w-card { position: relative; overflow: visible; transition: transform var(--t-base) var(--ease); }
+.w-card::after {
+  content: ''; position: absolute; top: 0; right: 0; bottom: 0; left: 0; border-radius: inherit; pointer-events: none;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15), 0 40px 70px -40px rgba(0, 0, 0, 0.9); opacity: 0; transition: opacity var(--t-base) var(--ease);
+}
+.w-art { border-radius: 20px 20px 0 0; overflow: hidden; }
+@media (max-width: 1100px) and (min-width: 681px) { .w-art { border-radius: 20px 0 0 20px; } }
+@media (hover: hover) {
+  .w-card:hover { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.13), inset 0 1px 0 rgba(255, 255, 255, 0.05); }
+  .w-card:hover::after { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) { .w-card, .w-card::after { transition: none; } }
+
+/* The envelope: the same idea, its lifted shadow fades in on a pseudo-element instead of transitioning box-shadow. */
+.ml-front, .mail.hot .ml-front { box-shadow: 0 28px 44px -30px rgba(40, 30, 20, 0.45); transition: none; }
+@media (hover: hover) { .mail:hover .ml-front { box-shadow: 0 28px 44px -30px rgba(40, 30, 20, 0.45); } }
+.ml-tilt::after {
+  content: ''; position: absolute; left: 0; right: 0; z-index: 0; pointer-events: none; opacity: 0; transition: opacity var(--t-slow) var(--ease);
+  top: calc(27 * min(5.2px, (100vw - 40px) / 100)); top: 27cqw; height: calc(50 * min(5.2px, (100vw - 40px) / 100)); height: 50cqw;
+  border-radius: calc(1.4 * min(5.2px, (100vw - 40px) / 100)); border-radius: 1.4cqw; box-shadow: 0 36px 50px -30px rgba(40, 30, 20, 0.5);
+}
+.mail.hot .ml-tilt::after { opacity: 1; }
+@media (hover: hover) { .mail:hover .ml-tilt::after { opacity: 1; } }
+
+/* =====================================================================
+   Round 15b: every home section is composed to the screen. Scrolled to its top, each section (hero, Selected work,
+   How I work, My path, When I'm not working, Contact with the footer) is at least one screen tall, its content is
+   centred in the space under the fixed nav, and the next section starts exactly at the fold. Content that is taller
+   than a screen (phones, short laptops) simply grows. Visuals and type scale with the screen's height where that
+   keeps the gaps around the content even rather than leaving an empty band. vh comes before svh (Safari < 15.4),
+   and viewport sizes are divided by the page zoom on very large screens.
+   ===================================================================== */
+.home { --screen: calc(100vh / var(--z, 1)); --pad: clamp(24px, 4.5vh, 64px); --nav-h: 68px; --foot-h: 0px; }
+@supports (height: 1svh) { .home { --screen: calc(100svh / var(--z, 1)); --pad: clamp(24px, 4.5svh, 64px); } }
+@media (max-width: 680px) { .home { --nav-h: 60px; } }
+
+/* sections that are plain blocks centre their content with flex; grid sections with align-content */
+.home main > section { min-height: var(--screen); }
+.home .h-work, .home .h-path.light { display: flex; flex-direction: column; justify-content: center; }
+.home .h-how, .home .h-contact, .home .h-contact.light { align-content: center; }
+
+@media (min-width: 961px) {
+  .home main > section:not(.h-open) { padding-top: calc(var(--nav-h) + var(--pad)); padding-bottom: var(--pad); }
+
+  /* Hero: exactly one screen. The text is centred in the space under the nav; the portrait stands on the hero's bottom
+     edge and is as tall as the screen less the nav and a 16px breath, its width following its 980 x 1220 aspect,
+     capped at 52% of the container and 760px so it never dominates a very wide screen. */
+  .h-open.light {
+    min-height: var(--screen); padding-top: var(--nav-h); padding-bottom: 0;
+    grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: minmax(0, 1fr); column-gap: clamp(40px, 3.2vw, 56px);
+    align-content: stretch; align-items: center;
+  }
+  .h-open-text { align-self: center; padding: var(--pad) 0; }
+  .photo {
+    align-self: end; justify-self: end; margin: 16px 0 0;
+    width: min(calc((var(--screen) - var(--nav-h) - 18px) * 0.803), calc((100vw / var(--z, 1) - 2 * var(--sec-x)) * 0.52), 760px);
+  }
+
+  /* How I work: the phone grows with the screen's height */
+  @media (min-height: 900px) { .how-phone { --s: 0.9; } }
+  @media (min-height: 1040px) { .how-phone { --s: 1; } }
+
+  /* My path: a display-size heading and roomier steps on taller screens */
+  .h-path h2 { font-size: clamp(36px, min(4.8vw, 7.6vh), 72px); font-size: clamp(36px, min(4.8vw, 7.6svh), 72px); line-height: 1.03; max-width: 15ch; }
+  .path-steps { margin-top: clamp(40px, 8vh, 96px); margin-top: clamp(40px, 8svh, 96px); }
+  .path-steps li { padding-top: clamp(22px, 3vh, 34px); padding-top: clamp(22px, 3svh, 34px); }
+  .path-steps h3 { font-size: clamp(21px, 2.5vh, 26px); font-size: clamp(21px, 2.5svh, 26px); }
+  .path-steps p { font-size: clamp(15.5px, 1.85vh, 17.5px); font-size: clamp(15.5px, 1.85svh, 17.5px); }
+
+  /* Selected work: the heading keeps a gap in proportion to the screen */
+  .h-work > .story-head { margin-bottom: clamp(32px, 5vh, 60px) !important; margin-bottom: clamp(32px, 5svh, 60px) !important; } /* beats the shared `.story-head` margin */
+
+  /* When I'm not working: the desk gets more of the row */
+  .h-outside { grid-template-columns: minmax(0, 0.66fr) minmax(0, 1.34fr); }
+  .desk { max-width: 860px; }
+
+  /* Contact and the footer share one screen; the envelope grows with the screen's height where container units
+     exist (its px fallbacks assume 520px, so older browsers keep that size). */
+  .home { --foot-h: 88px; }
+  .home .foot { min-height: var(--foot-h); align-items: center; padding-top: 0; padding-bottom: 0; }
+  .home .h-contact, .home .h-contact.light { min-height: calc(var(--screen) - var(--foot-h)); }
+  @supports (container-type: inline-size) {
+    .home { --ct-w: clamp(440px, calc((var(--screen) - var(--nav-h) - var(--foot-h) - 2 * var(--pad) - 120px) / 0.79), 600px); }
+    .h-contact, .h-contact.light { grid-template-columns: minmax(0, 1fr) minmax(0, var(--ct-w)); }
+    .ct-side { max-width: var(--ct-w); }
+  }
+}
+
+/* Phones and tablets: the stacked layouts stay; a section shorter than the screen is centred in it. */
+@media (max-width: 960px) {
+  .home { --foot-h: 85px; }
+  .home .h-outside { grid-template-rows: auto; align-content: center; }
+  .home .h-open.light { min-height: var(--screen); align-content: center; }
+  .home .foot { min-height: var(--foot-h); }
+  .home .h-contact, .home .h-contact.light { min-height: calc(var(--screen) - var(--foot-h)); }
+}
+@media (max-width: 680px) { .home { --foot-h: 165px; } }
+
+/* Case pages: the hero fills the first screen on phones and tablets too (on desktop it already does, with its content
+   set a little above the middle on purpose). Taller content simply grows. */
+@media (max-width: 960px) {
+  .cs-hero, .mx-hero, .sx-hero { min-height: 100vh !important; min-height: 100svh !important; align-content: center; }
 }
