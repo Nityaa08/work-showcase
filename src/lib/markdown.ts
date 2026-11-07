@@ -48,7 +48,7 @@ ${home.how.tools}
 
 ## My path
 
-On the page this is a hand-drawn trail, a journey with four stops, oldest first: a mortarboard on books, a ledger with a card and a coin, a magnifying glass over a chat bubble with a tick, and an agent network (a hub with an AI spark connected to three nodes) with a paper plane landing beside it (“you are here”).
+On the page this is a hand-drawn trail, a journey with four stops, oldest first: a mortarboard resting on an open book, a payment card in front of a small bar chart, a magnifying glass with a tick checking a chat bubble, and an agent network (a hub with an AI sparkle linked to three tools: a document, a terminal and a shield) with a paper plane landing beside it (“you are here”).
 
 ${home.path.map((p) => `${Number(p.when)}. **${p.title}.** ${p.line}`).join('\n')}
 
