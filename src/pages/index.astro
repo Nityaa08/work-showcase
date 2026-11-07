@@ -35,7 +35,7 @@ const work = cases.filter((c) => c.ready);
   </head>
   <body class="studio home" id="top">
     <Nav />
-    <main>
+    <main id="main" tabindex="-1">
       <section class="h-open light" data-light>
         <div class="h-open-text">
           <p class="h-hi">{hero.hi}</p>
@@ -86,6 +86,7 @@ const work = cases.filter((c) => c.ready);
           <p class="kicker">How I work</p>
           <h2>One laptop, a team of agents,<br /> and me in the loop.</h2>
           <p>{how.text}</p>
+          <p class="how-people">{how.people}</p>
           <ol class="how-steps">{how.steps.map((x) => <li>{x}</li>)}</ol>
           <p class="how-tools">{how.tools}</p>
         </div>
@@ -111,7 +112,6 @@ const work = cases.filter((c) => c.ready);
       <div class="offzone" data-light>
       <section class="h-outside light" id="outside" data-light>
         <div class="ow-text">
-          <p class="kicker">Outside work</p>
           <h2>{outsideIntro.title}</h2>
           <p class="ow-intro">{outsideIntro.text}</p>
         </div>

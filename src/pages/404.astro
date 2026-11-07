@@ -2,31 +2,71 @@
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Meta from '../components/Meta.astro';
+// A full-screen page in the site's dark style: the message on the left, a small terminal on the right that shows the
+// request failing closed. The terminal is static (no typing), so it is complete from the first paint.
 ---
 <!doctype html>
-<html lang="en">
+<html lang="en" class="nf-html">
   <head>
     <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Page not found · Nityashree S</title>
-    <meta name="description" content="This page doesn’t exist." />
+    <meta name="description" content="This page doesn’t exist. The work is one click away." />
     <meta name="robots" content="noindex" />
-    <Meta md={false} title="Nityashree S · AI engineer" description="Nityashree S builds production AI agents end to end: the platform, the MCP connectors, the guardrails and the evals." />
+    <Meta md={false} title="Page not found · Nityashree S" description="This page doesn’t exist. The work is one click away." path="/" canonical={false} />
   </head>
-  <body class="studio home">
+  <body class="studio nf-page">
     <Nav />
-    <main>
+    <main id="main" tabindex="-1">
       <section class="nf">
-        <p class="kicker">404 · Not found</p>
-        <h1>This page fails closed.</h1>
-        <p class="nf-sub">The address doesn’t match anything here. The work is one click away.</p>
-        <div class="h-cta"><a class="btn-solid" href="/#work">See my work</a><a class="btn-line" href="/">Home</a></div>
+        <div class="nf-text">
+          <p class="kicker">404 · Not found</p>
+          <h1>This page fails closed.</h1>
+          <p class="nf-sub">The address doesn’t match anything here, so nothing is shown. The work is one click away.</p>
+          <div class="nf-actions">
+            <a class="btn-solid" href="/#work">See my work <span aria-hidden="true">→</span></a>
+            <a class="btn-line" href="/">Home</a>
+          </div>
+        </div>
+        <figure class="win m-shell nf-win" aria-hidden="true">
+          <div class="titlebar"><span class="lights"><i></i><i></i><i></i></span><span class="win-title">~</span><span class="win-kind">zsh</span></div>
+          <div class="win-body">
+            <div class="ln t-cmd"><span class="pfx">% </span><span class="txt">curl -I https://nityashree.vercel.app<span data-path>/this-page</span></span></div>
+            <div class="ln t-err"><span class="pfx"></span><span class="txt">HTTP/2 404 · no page at this address</span></div>
+            <div class="ln t-ok"><span class="pfx"></span><span class="txt">failed closed · try /#work</span></div>
+          </div>
+        </figure>
       </section>
     </main>
+    <script is:inline>
+      // Show the address the visitor actually asked for (text only, never HTML).
+      (function () { var el = document.querySelector('[data-path]'); var p = location.pathname; if (el && p && p !== '/404' && p !== '/404.html') el.textContent = p.length > 40 ? p.slice(0, 39) + '…' : p; })();
+    </script>
   </body>
 </html>
 
 <style>
-  .nf { min-height: 100vh; min-height: 100svh; display: grid; align-content: center; padding: 120px var(--sec-x, 6vw) 80px; }
-  .nf h1 { font-size: clamp(44px, 6vw, 88px); line-height: 1; letter-spacing: -0.045em; font-weight: 600; margin: 18px 0 20px; }
-  .nf-sub { color: var(--ink-2); font-size: 18px; line-height: 1.6; max-width: 520px; margin: 0; }
+  /* the whole canvas is the dark page colour (html carries the site's grey by default) */
+  html.nf-html, body.nf-page { background: var(--bg); }
+  .nf { box-sizing: border-box; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); align-items: center; column-gap: clamp(40px, 5vw, 88px);
+    min-height: 100vh; min-height: 100svh; padding: 132px var(--sec-x, 20px) 96px; }
+  .nf-text { min-width: 0; }
+  .nf h1 { font-size: clamp(40px, 5.6vw, 84px); line-height: 1.02; letter-spacing: -0.045em; font-weight: 600; margin: 16px 0 20px; }
+  .nf-sub { color: var(--ink-2); font-size: 18px; line-height: 1.6; max-width: 30em; margin: 0; }
+  .nf-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+  .nf-actions a { min-height: 46px; gap: 8px; }
+  .nf-win { margin: 0; min-width: 0; }
+  .nf-win .win-body { font-size: 13.5px; }
+  .nf-win .ln { visibility: visible; }
+  @media (min-width: 961px) {
+    /* the zoomed laptop layouts: one screen tall in CSS pixels */
+    .nf { min-height: calc(100vh / var(--z, 1)); min-height: calc(100svh / var(--z, 1)); }
+  }
+  @media (max-width: 960px) {
+    .nf { grid-template-columns: minmax(0, 1fr); row-gap: 44px; align-content: center; padding-top: 120px; padding-bottom: 72px; }
+  }
+  @media (max-width: 680px) {
+    .nf { padding-top: 108px; padding-bottom: 56px; row-gap: 36px; }
+    .nf-sub { font-size: 17px; }
+    .nf-win .win-body { font-size: 12.5px; }
+  }
 </style>

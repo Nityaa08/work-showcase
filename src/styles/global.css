@@ -2449,3 +2449,115 @@ html.js .ct-fly:not(.in) .ct-plane { opacity: 0; transform: translate(-13px, 63p
 /* The phone's floor shadow: a soft radial gradient instead of filter: blur(22px), which made the compositor draw an
    extra blurred pass every frame while the phone was on screen (measured as long compositor frames at the work/how seam). */
 .phone-shadow { filter: none; left: 0; right: -20%; bottom: -60px; height: 70px; background: radial-gradient(closest-side, rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.18) 55%, transparent); }
+
+/* =====================================================================
+   Round 20: an independent review. Appended last on purpose: later rules win.
+   Neutral labels on the case pages (green only for real status), an outcome line under every case title, a "Let's
+   talk" row at the end of every case, case 03's findings merged into one list, a skip link, and home spacing fixes.
+   ===================================================================== */
+
+/* --- Skip link: off screen until it has keyboard focus, then a pill at the top left, above the nav --- */
+.skip { position: fixed; top: 10px; left: 10px; z-index: 100; display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 999px; background: #ecebe6; color: #0b0b0c; font: 600 15px var(--sans); transform: translateY(-160%); transition: transform var(--t-fast) var(--ease); }
+.skip:focus, .skip:focus-visible { transform: none; outline: 2px solid #ecebe6; outline-offset: 3px; }
+main:focus { outline: none; }
+@media (prefers-reduced-motion: reduce) { .skip { transition: none; } }
+
+/* --- Case pages: "What changed", the outcome in one plain line under the title --- */
+.cs-changed { margin: 0 0 18px; max-width: 34em; padding-left: 14px; border-left: 2px solid rgba(255, 255, 255, 0.3); font-size: clamp(16px, 1.25vw, 18.5px); line-height: 1.5; color: #e9e8e4; }
+.cs-changed b { display: block; margin-bottom: 4px; font: 600 12px var(--sans); letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); }
+.cs-hero .cs-changed { max-width: 30em; }
+
+/* --- Case pages: the last row, "Let's talk", with an email tile and a resume tile --- */
+.cs-talk { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px 32px; margin: 0 var(--sec-x); padding: 40px 0 88px; border-top: 1px solid var(--hair); }
+.cs-talk h2 { margin: 0; font-size: clamp(28px, 2.6vw, 40px); line-height: 1.05; letter-spacing: -0.035em; font-weight: 600; color: #f1f0ec; }
+.cs-talk-links { list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; width: min(100%, 420px); margin: 0; padding: 0; }
+.cs-talk-links li { min-width: 0; }
+.cs-talk-links a { position: relative; display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; padding: 0 14px; border-radius: 14px; font: 600 15.5px var(--sans); color: #ecebe6; background: linear-gradient(180deg, #161618, #111113); box-shadow: 0 0 0 1px var(--hair), inset 0 1px 0 rgba(255, 255, 255, 0.06); transition: transform var(--t-fast) var(--ease); }
+.cs-talk-links a::after { content: ''; position: absolute; top: 0; right: 0; bottom: 0; left: 0; border-radius: inherit; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.24), 0 18px 30px -20px rgba(0, 0, 0, 0.9); opacity: 0; transition: opacity var(--t-fast) var(--ease); pointer-events: none; }
+.cs-talk-links .ct-ic { flex: none; display: block; color: #ecebe6; }
+.cs-talk-links .ct-arr { display: grid; place-items: center; color: var(--ink-3); transition: transform var(--t-fast) var(--ease); }
+.cs-talk-links .ct-arr svg { display: block; }
+.cs-talk-links a:focus-visible { outline: 2px solid #ecebe6; outline-offset: 3px; }
+@media (hover: hover) {
+  .cs-talk-links a:hover { transform: translateY(-2px); }
+  .cs-talk-links a:hover::after { opacity: 1; }
+  .cs-talk-links a:hover .ct-arr { color: #ecebe6; transform: translate(2px, -2px); }
+  .cs-talk-links a[href^='mailto']:hover .ct-arr { transform: translateX(3px); }
+}
+@media (max-width: 680px) { .cs-talk { flex-direction: column; align-items: stretch; padding: 32px 0 56px; } .cs-talk-links { width: 100%; } }
+@media (prefers-reduced-motion: reduce) { .cs-talk-links a, .cs-talk-links a::after, .cs-talk-links .ct-arr { transition: none; } }
+/* the case nav sits right above it now, so it needs less room below */
+.case-nav { padding-bottom: 40px; }
+@media (max-width: 680px) { .case-nav { padding-bottom: 32px; } }
+
+/* --- Neutral labels on the case pages. Step labels, numerals, decision chips and permission strings are labels,
+   not status, so they are off-white or grey. Green stays for real status only: success lines, Resolved, closed,
+   Blocked, passing tests and fixes. --- */
+.step .step-state { color: #d9d8d3; }
+.step .step-state span, .ls-list span, .chap-no, .how-proved span, .tst-no span { color: var(--ink-3); }
+.chap-tag { color: #d9d8d3; background: rgba(255, 255, 255, 0.05); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14); }
+.tool-list em { color: #b9bab8; }
+.tool-chip b { color: #e9e8e4; }
+.mx-steps li.on span { color: #e9e8e4; }
+.node.on .nk { fill: #e9e8e4; }
+.node.on .nno-c { stroke: #e9e8e4; fill: rgba(255, 255, 255, 0.08); }
+.node.on rect { stroke: rgba(233, 232, 228, 0.8); }
+.edge.on { stroke: #e9e8e4; }
+.mx-pkt { box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.45); }
+
+/* the case 01 branch legend: neutral shades told apart by shape and line style (runs: ring and solid stub;
+   reads: square and dashed stub; writes: diamond and dotted stub) */
+.ln-runs { --lc: #e9e8e4; } .ln-reads { --lc: #b9bab8; } .ln-writes { --lc: #8f9196; }
+.lg-chip i { width: 10px; height: 10px; border-radius: 50%; background: none; box-shadow: inset 0 0 0 2px var(--lc); }
+.lg-chip.ln-reads i { border-radius: 2px; background: var(--lc); box-shadow: none; }
+.lg-chip.ln-writes i { width: 9px; height: 9px; border-radius: 1px; background: none; box-shadow: inset 0 0 0 2px var(--lc); transform: rotate(45deg); }
+.g-row.ln-reads .g-node { border-radius: 2px; background: var(--lc); box-shadow: 0 0 0 2px var(--bg); }
+.g-row.ln-writes .g-node { width: 11px; height: 11px; border-radius: 1px; transform: rotate(45deg); }
+.g-row::after { height: 0; background: none; border-top: 2px solid var(--lc); opacity: 0.7; }
+.g-row.ln-reads::after { border-top-style: dashed; }
+.g-row.ln-writes::after { border-top-style: dotted; }
+.g-log code { color: #e9e8e4; }
+
+/* --- Case 03: one list of findings. Each row is the attack in plain words and replays it; the open row adds the fix,
+   and the terminal beside it shows the attack, what happened before and what happens now. "closed" stays green
+   (a status); the playing row's accents are off-white. --- */
+.fd-hint { max-width: 40em; }
+.fd { grid-template-columns: 62px 74px minmax(0, 1fr); align-items: start; }
+.fd-id { font: 500 14px/1.45 var(--sans); color: #c9c8c4; }
+.fd.on .fd-id { color: #f1f0ec; }
+.fd-txt { grid-column: 3 / -1; font-size: 13.5px; }
+.fd-txt em { font-style: normal; font-weight: 600; color: #e9e8e4; }
+.fd.on { background: linear-gradient(90deg, rgba(255, 255, 255, 0.05), transparent 80%); box-shadow: inset 2px 0 0 #e9e8e4; }
+.fd.on .fd-go { background: #ecebe6; }
+.fd:focus-visible { outline-color: #ecebe6; }
+.fd-bar i { background: rgba(233, 232, 228, 0.7); }
+@media (max-width: 960px) { .fd-txt { grid-column: 2 / -1; } }
+@media (max-width: 680px) { .fd { grid-template-columns: 64px minmax(0, 1fr); } .fd-txt { grid-column: 2 / -1; } }
+
+/* --- Home: "How I work" second paragraph, and the faded "Work" label in the switch at 3:1 contrast or more --- */
+.h-how .how-text > p.how-people { margin-top: 14px; }
+.offsep-w { opacity: 0.5; }
+html.js .offsep-b:not(.in) .offsep-o { opacity: 0.5; }
+/* the resume opens in a new tab, so its arrow leans out like the others on hover too */
+@media (hover: hover) { .ct-links a[href$='.pdf']:hover .ct-arr { transform: translate(2px, -2px); } }
+
+/* --- Home: no empty band between the desk and Contact on laptops (the desk's floor line ends its section) --- */
+@media (min-width: 961px) {
+  .home .offzone > section.h-outside { padding-bottom: 12px; }
+  .home .offzone > section.h-contact { padding-top: calc(var(--rhythm) * 0.45); }
+}
+/* Case 02's opening holds the title, the outcome, the intro and all five steps beside the diagram, so on laptops its
+   outcome line is set compact (label inline) and the steps sit a little tighter, keeping the opening one screen tall. */
+@media (min-width: 961px) {
+  .mx-head .cs-changed { margin-bottom: clamp(10px, 1.6vh, 18px); margin-bottom: clamp(10px, 1.6svh, 18px); font-size: clamp(15px, 2.1vh, 17.5px); font-size: clamp(15px, 2.1svh, 17.5px); }
+  .mx-head .cs-changed b { display: inline; margin: 0 8px 0 0; }
+  .mx-head .mx-steps { margin-top: clamp(10px, 2vh, 28px); margin-top: clamp(10px, 2svh, 28px); }
+  .mx-steps li { padding: clamp(7px, 1.15vh, 13px) 0; padding: clamp(7px, 1.15svh, 13px) 0; }
+  .mx-hero { padding-bottom: calc(3vh / var(--z, 1)) !important; padding-bottom: calc(3svh / var(--z, 1)) !important; }
+}
+/* the nav's Resume opens the PDF in a new tab: the same ↗ as everywhere else (left out on phones, where room is tight) */
+.nav-ext { font-size: 0.85em; color: var(--ink-3); }
+@media (max-width: 680px) { .nav-ext { display: none; } }
+/* Case 01's story windows: no large blurred drop shadow (it is invisible on the near-black page, and rastering it as the
+   sticky window first came into view dropped frames while scrolling, measured at 1512x982, DPR 2). Ring and edge stay. */
+.sticky-rig .win { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.055), inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 1px 1px rgba(0, 0, 0, 0.4) !important; }

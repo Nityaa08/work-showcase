@@ -2,6 +2,7 @@
 interface Props { crumb?: string; active?: 'work' | 'about' }
 const { crumb, active } = Astro.props;
 ---
+<a class="skip" href="#main">Skip to content</a>
 <header class="nav" id="nav">
   <a class="brand" href="/" aria-label="Nityashree S, home">
     <span class="brand-who"><b>Nityashree S</b></span>
@@ -10,7 +11,7 @@ const { crumb, active } = Astro.props;
   <nav class="links" aria-label="Main">
     <a href="/#about" aria-current={active === 'about' ? 'page' : undefined}>About</a>
     <a href="/#work" aria-current={active === 'work' ? 'page' : undefined}>Work</a>
-    <a href="/Nityashree_S_Resume.pdf" target="_blank" rel="noopener">Resume</a>
+    <a href="/Nityashree_S_Resume.pdf" target="_blank" rel="noopener">Resume<span class="nav-ext" aria-hidden="true"> ↗</span></a>
     <a class="cta" href="/#contact">Contact</a>
   </nav>
 </header>

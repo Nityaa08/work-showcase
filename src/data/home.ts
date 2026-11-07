@@ -1,14 +1,16 @@
 // Home page content. Used by the page (src/pages/index.astro) and its markdown twin (src/pages/index.md.ts).
 export const hero = {
-  hi: 'Hi, I’m Nitya.',
+  hi: 'Hi, I’m Nitya, an AI engineer.',
   headline: 'I build AI agents that hold up in production.',
   sub: 'Most of my days go into AI agents: the connectors they use, the evals that tell me they work, and the guardrails that keep people safe. I like the quiet part of the job, where I prove something works before anyone has to trust it.',
 };
 export const how = {
   title: 'One laptop, a team of agents, and me in the loop.',
   text: 'I don’t hand-write code. I direct AI coding agents, and I prove every change before it ships. Subagents research, challenge and review in parallel, while I set the bar, read every line and own what goes out.',
+  /** One sentence about working close to the people who use the work (only facts from the career kit). */
+  people: 'I like working close to the people who use what I build: real questions from Sales and Business Development shaped how I tested, and finance’s own rules shaped the agents I built for them.',
   steps: ['Plan', 'Delegate', 'Prove', 'Own'],
-  tools: 'Tools I work with: Claude Code, Claude Design, Cursor, DeepSeek and Grok, plus personal agents in Slack that run my pull-request workflow.',
+  tools: 'Tools I work with: Claude Code and Claude Design every day, plus Cursor, DeepSeek and Grok. Personal agents in Slack run my pull-request workflow.',
 };
 export const contact = {
   email: 'nitya08shree@gmail.com',
@@ -21,7 +23,7 @@ export const contact = {
  * and its `line` under a small drawing. No dates. `when` is the stop's number, used by the markdown twin.
  */
 export const path = [
-  { when: '01', title: 'Studied', line: 'I studied computer science, with a focus on AI and data science, at SASTRA University.' },
+  { when: '01', title: 'Studied', line: 'Computer science, with a focus on AI and data science, at SASTRA University.' },
   { when: '02', title: 'Payments data', line: 'I looked after the payments data an AI assistant answered from, and learnt how much an answer depends on its data.' },
   { when: '03', title: 'Testing AI', line: 'I tested that assistant before launch and caught its wrong answers. That’s when AI engineering clicked for me.' },
   { when: '04', title: 'Shipping agents', line: 'Then I moved to building and securing AI agents that people rely on at work: the platform, the tools and the guardrails.' },

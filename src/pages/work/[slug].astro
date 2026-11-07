@@ -12,10 +12,11 @@ import Stage from '../../components/Stage.astro';
 import Nav from '../../components/Nav.astro';
 import Meta from '../../components/Meta.astro';
 import CaseNav from '../../components/CaseNav.astro';
+import CaseTalk from '../../components/CaseTalk.astro';
 import Glance from '../../components/Glance.astro';
 import Lessons from '../../components/Lessons.astro';
 import Incidents from '../../components/Incidents.astro';
-import { cases, stackOf } from '../../data/cases';
+import { cases } from '../../data/cases';
 
 export function getStaticPaths() {
   return cases.filter((c) => c.ready && !c.custom).map((c) => ({ params: { slug: c.slug }, props: { c } }));
@@ -53,14 +54,14 @@ const process = (c.steps ?? []).map((s) => ({ label: s.state, heading: s.heading
       {c.model && <a href="#ch-model" data-ch="ch-model"><span>04</span>The model</a>}
       {c.bugs && <a href="#ch-broke" data-ch="ch-broke"><span>05</span>Things that broke</a>}
     </nav>
-    <main>
+    <main id="main" tabindex="-1">
       <section class="cs-hero" id="ch-overview">
         <div class="cs-hero-text">
           <a class="cs-back" href="/#work"><span aria-hidden="true">←</span> All work</a>
           <p class="kicker">Case {c.no}</p>
           <h1>{c.title}</h1>
+          {c.changed && <p class="cs-changed"><b>What changed</b> {c.changed}</p>}
           <p class="cs-intro">{c.lede ?? c.intro}</p>
-          <ul class="cs-stack" aria-label="Stack">{stackOf(c).map((t) => <li>{t}</li>)}</ul>
         </div>
         <div class="cs-hero-visual">{has3D ? <MacBook3D><Stage stage={c.steps?.[1]?.stage ?? c.card} /></MacBook3D> : <Laptop />}</div>
       </section>
@@ -86,7 +87,7 @@ const process = (c.steps ?? []).map((s) => ({ label: s.state, heading: s.heading
             </div>
             <div class="wb-side">
               <p class="wb-cap">How I ship a change like this</p>
-              <Stage stage={workbench} />
+              <Stage stage={workbench} quick pre={3} />
               <ul class="wb-keys">
                 <li><b>worktree</b> an isolated copy of the repo per task, so parallel work never collides</li>
                 <li><b>subagents</b> separate AI agents that research, challenge and review, so the writer never grades its own work</li>
@@ -100,6 +101,7 @@ const process = (c.steps ?? []).map((s) => ({ label: s.state, heading: s.heading
 
       {c.lessons && <Lessons items={c.lessons} />}
       <CaseNav slug={c.slug} />
+      <CaseTalk />
     </main>
     <StagePlayer />
     <script>

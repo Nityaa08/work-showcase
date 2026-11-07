@@ -21,7 +21,7 @@ const caseFooter = (site: URL | undefined, c: Case) => {
     prev ? `- Previous: [${prev.title}](${abs(site, `/work/${prev.slug}.md`)})` : `- [All work](${abs(site, '/index.md')})`,
     next ? `- Next: [${next.title}](${abs(site, `/work/${next.slug}.md`)})` : `- [Back to home](${abs(site, '/index.md')})`,
   ];
-  return `## More\n\n${links.join('\n')}\n- [Resume (PDF)](${abs(site, home.contact.resume)})`;
+  return `## More\n\n${links.join('\n')}\n\n## Let’s talk\n\n- Email: ${home.contact.email}\n- [Resume (PDF)](${abs(site, home.contact.resume)})`;
 };
 
 export function homeMd(site?: URL) {
@@ -41,6 +41,8 @@ ${work.map((c) => `### Case ${c.no}: ${home.cards[c.slug].headline}\n\n**${c.tit
 ## How I work
 
 ${home.how.title} ${home.how.text}
+
+${home.how.people}
 
 ${numbered(home.how.steps)}
 
@@ -69,10 +71,12 @@ ${home.contactLine}
 `;
 }
 
+const changed = (c: Case) => (c.changed ? `**What changed:** ${c.changed}\n\n` : '');
+
 function platformMd(site: URL | undefined, c: Case) {
   return `# Case ${c.no}: ${c.title}
 
-${c.intro}
+${changed(c)}${c.intro}
 
 Stack: ${stackOf(c).join(', ')}
 
@@ -105,7 +109,7 @@ ${caseFooter(site, c)}
 function mcpMd(site: URL | undefined, c: Case) {
   return `# Case ${c.no}: ${c.title}
 
-${mcp.intro}
+${changed(c)}${mcp.intro}
 
 Stack: ${stackOf(c).join(', ')}
 
@@ -139,7 +143,7 @@ ${code(mcp.proof.lines)}
 
 A teammate who didn’t build it asked their own agent a normal question, without naming the connector. The agent chose the right tool by itself, found the answer in a ticket, and named the tools it used so the answer could be checked.
 
-## The result: many apps, one gateway
+## Where it plugs in: many apps, one gateway
 
 ${mcp.connectors.map(([, n, d]) => `- **${n}:** ${d}`).join('\n')}
 
@@ -156,7 +160,7 @@ ${caseFooter(site, c)}
 function securityMd(site: URL | undefined, c: Case) {
   return `# Case ${c.no}: ${c.title}
 
-${sec.intro}
+${changed(c)}${sec.intro}
 
 Stack: ${stackOf(c).join(', ')}
 
@@ -168,15 +172,11 @@ ${sec.layers.map(([n, d], i) => `${i + 1}. **${n}** (${d}). Attack: ${sec.attack
 
 ${glance(c)}
 
-## Every finding
-
-| Layer | Attack | Before | After |
-|---|---|---|---|
-${sec.table.map((r) => `| ${r.layer} | ${r.attack} | ${r.before} | ${r.after} |`).join('\n')}
-
 ## Replay the attack
 
-${sec.findings.map((f) => `### ${f.id} (${f.layer})\n\n${f.risk} Fix: ${f.fix}\n\n${code(f.lines)}`).join('\n\n')}
+Each finding is an attack I closed, replayed: the attack, what happened before, and what happens now.
+
+${sec.findings.map((f, i) => `### ${f.id} (${f.layer})\n\n${f.risk} Fix: ${f.fix}\n\n- Before: ${sec.table[i].before}\n- Now: ${sec.table[i].after}\n\n${code(f.lines)}`).join('\n\n')}
 
 ## The sweep
 
@@ -201,7 +201,7 @@ export function llmsTxt(site?: URL) {
   const work = cases.filter((c) => c.ready);
   return `# ${SITE_NAME}
 
-> AI engineer. ${home.hero.headline} ${home.hero.sub} Every page on this site also has a plain markdown version, linked below.
+> ${home.hero.hi} ${home.hero.headline} ${home.hero.sub} Every page on this site also has a plain markdown version, linked below.
 
 ## Pages
 

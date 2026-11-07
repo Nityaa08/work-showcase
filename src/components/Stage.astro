@@ -2,15 +2,17 @@
 import type { Stage } from '../data/cases';
 import StatusIcons from './StatusIcons.astro';
 // quick: the story terminals. They open with their first line already there, stream the rest in about a second, then hold.
-interface Props { stage: Stage; play?: boolean; mini?: boolean; quick?: boolean }
-const { stage, play = true, mini = false, quick = false } = Astro.props;
+// pre: how many lines are already on screen in the HTML (quick windows only), so the window is never an empty box, even
+// before it scrolls into view; the rest streams in once it is seen.
+interface Props { stage: Stage; play?: boolean; mini?: boolean; quick?: boolean; pre?: number }
+const { stage, play = true, mini = false, quick = false, pre = 0 } = Astro.props;
 const prompts: Record<string, Record<string, string>> = {
   shell: { cmd: '% ' }, logs: { cmd: '' }, claude: { you: '> ', tool: '⏺ ', ai: '⏺ ' },
 };
 const kinds: Record<string, string> = { shell: 'zsh', logs: 'logs', claude: 'claude code', phone: '' };
 const isPhone = stage.medium === 'phone';
 ---
-<figure class:list={[isPhone ? 'iphone' : 'win', `m-${stage.medium}`, { mini }]} data-stage={play && !mini ? '' : undefined} data-quick={quick ? '' : undefined}>
+<figure class:list={[isPhone ? 'iphone' : 'win', `m-${stage.medium}`, { mini }]} data-stage={play && !mini ? '' : undefined} data-quick={quick ? '' : undefined} data-pre={quick && pre ? pre : undefined}>
   {isPhone ? (
     <div class="ios-bar"><span data-clock="ios">--:--</span><span class="ios-island" /><StatusIcons kind="ios" /></div>
   ) : (
@@ -23,9 +25,9 @@ const isPhone = stage.medium === 'phone';
       const caret = !mini && i === stage.lines.length - 1 && l.t !== 'log';
       if (l.t === 'log') {
         const [time, level, service, msg] = l.s.split('|');
-        return <div class:list={['ln', 'logrow', `lv-${level.toLowerCase()}`]} data-t="log"><span class="lg-time">{time}</span><span class="lg-level">{level}</span><span class="lg-svc">{service}</span><span class="txt">{msg}</span></div>;
+        return <div class:list={['ln', 'logrow', `lv-${level.toLowerCase()}`, { shown: quick && i < pre }]} data-t="log"><span class="lg-time">{time}</span><span class="lg-level">{level}</span><span class="lg-svc">{service}</span><span class="txt">{msg}</span></div>;
       }
-      return <div class:list={['ln', `t-${l.t}`]} data-t={l.t}>{stage.medium === 'logs' && l.t === 'cmd' && <span class="lg-q">⌕</span>}<span class="pfx">{prompts[stage.medium]?.[l.t] ?? ''}</span><span class="txt">{l.s}</span>{caret && <span class="cursor" aria-hidden="true" />}</div>;
+      return <div class:list={['ln', `t-${l.t}`, { shown: quick && i < pre }]} data-t={l.t}>{stage.medium === 'logs' && l.t === 'cmd' && <span class="lg-q">⌕</span>}<span class="pfx">{prompts[stage.medium]?.[l.t] ?? ''}</span><span class="txt">{l.s}</span>{caret && <span class="cursor" aria-hidden="true" />}</div>;
     })}
     {!mini && stage.lines[stage.lines.length - 1]?.t === 'log' && <span class="cursor" aria-hidden="true" />}
   </div>

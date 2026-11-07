@@ -53,11 +53,12 @@
     lines.forEach((l) => { const t = l.querySelector<HTMLElement>('.txt')!; t.dataset.full ??= t.textContent ?? ''; t.textContent = t.dataset.full; l.classList.add('shown'); });
     if (cursor && lines.length) lines[lines.length - 1].querySelector('.txt')!.after(cursor);
     if (body) { body.style.height = ''; body.style.overflow = ''; const h = body.offsetHeight; if (h) { body.style.height = `${h}px`; body.style.overflow = 'hidden'; } }
-    lines.forEach((l, n) => l.classList.toggle('shown', n === 0));
+    const first = Math.max(1, Number(f.dataset.pre) || 0); // lines already there when the window opens
+    lines.forEach((l, n) => l.classList.toggle('shown', n < first));
     f.classList.add('playing');
-    if (cursor) lines[0]?.querySelector('.txt')!.after(cursor);
-    await sleep(260);
-    for (const l of lines.slice(1)) {
+    if (cursor) lines[first - 1]?.querySelector('.txt')!.after(cursor);
+    await sleep(first > 1 ? 120 : 260);
+    for (const l of lines.slice(first)) {
       if (!alive()) break;
       const t = l.querySelector<HTMLElement>('.txt')!;
       const full = t.dataset.full!;

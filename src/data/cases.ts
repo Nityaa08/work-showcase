@@ -11,6 +11,8 @@ export type Case = {
   slug: string; no: string; title: string; intro: string; ready: boolean;
   /** One-sentence opener shown under the case title. */
   lede?: string;
+  /** "What changed": the outcome in one plain sentence, no numbers, shown under the case title. */
+  changed?: string;
   card: Stage;
   steps?: Step[];
   features?: Feature[];
@@ -26,7 +28,8 @@ export const cases: Case[] = [
   {
     slug: 'agent-platform', no: '01', ready: true,
     title: 'Building an AI agent platform',
-    lede: 'I worked on the platform under company-wide AI agents: the engine behind every turn, the studio where agents are made, and the gateways to chat and tools.',
+    lede: 'Teams across the company built their AI agents on one shared platform, and I worked on it: the engine behind every turn, the studio where agents are made, and the gateways to chat and tools.',
+    changed: 'A single bad file can no longer take an agent down, and every provider error now names a precise reason.',
     intro: 'Teams across the company built their own AI agents, with skills, memory and tools, inside their chat apps. I worked on what runs underneath: the engine behind every turn, the studio where agents are made, and the gateways to chat and tools.',
     glance: [
       ['My role', 'AI engineer on the platform team. I took fixes and features end to end: root cause, failing test, review, release, then watching it.'],
@@ -123,6 +126,7 @@ export const cases: Case[] = [
   {
     slug: 'mcp-connections', no: '02', ready: true, custom: true,
     title: 'Building MCP connections',
+    changed: 'Each person’s agent reaches only what that person may see, with no shared keys.',
     intro: 'Connectors that let AI agents use real company apps with each person’s own access, and the gateway every call passes through.',
     glance: [
       ['My role', 'Built the per-user OAuth (PKCE) connector and its MCP server. Audited the tool gateway and shipped its reliability fixes.'],
@@ -144,6 +148,7 @@ export const cases: Case[] = [
   {
     slug: 'security', no: '03', ready: true, custom: true,
     title: 'Security across an agent fleet',
+    changed: 'Each layer is closed by default, and every fix is proven by replaying its attack.',
     intro: 'Agents read untrusted text, hold people’s accounts and run code. Every layer has to say no by default.',
     glance: [
       ['My role', 'Found and closed security gaps across the agent fleet, each fix shipped with a test that replays the attack.'],

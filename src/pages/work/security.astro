@@ -3,6 +3,7 @@ import '../../styles/global.css';
 import Nav from '../../components/Nav.astro';
 import Meta from '../../components/Meta.astro';
 import CaseNav from '../../components/CaseNav.astro';
+import CaseTalk from '../../components/CaseTalk.astro';
 import Glance from '../../components/Glance.astro';
 import Lessons from '../../components/Lessons.astro';
 import Stage from '../../components/Stage.astro';
@@ -25,12 +26,13 @@ const first = attacks.findIndex((a) => a.layer === 2);
   </head>
   <body class="studio sec">
     <Nav crumb={`Case ${c.no}`} active="work" />
-    <main>
+    <main id="main" tabindex="-1">
       <section class="sx-hero">
         <div class="sx-head">
           <a class="cs-back" href="/#work"><span aria-hidden="true">←</span> All work</a>
           <p class="kicker">Case {c.no}</p>
           <h1>{c.title}</h1>
+          {c.changed && <p class="cs-changed"><b>What changed</b> {c.changed}</p>}
           <p class="cs-intro">{intro}</p>
         </div>
         <div class="stack" id="stack" data-k={first}>
@@ -50,28 +52,20 @@ const first = attacks.findIndex((a) => a.layer === 2);
 
       <section class="mx-sec">
         <div class="story-head"><p class="kicker">Attacks stopped</p><h2>Replay the attack. Watch it fail.</h2></div>
-        <div class="fx-table-wrap">
-          <table class="fx-table">
-            <caption>Every finding at a glance</caption>
-            <thead><tr><th scope="col">Layer</th><th scope="col">Attack</th><th scope="col">Before</th><th scope="col">After</th></tr></thead>
-            <tbody>
-              {table.map((r) => <tr><td class="fx-l">{r.layer}</td><td class="fx-a">{r.attack}</td><td class="fx-b">{r.before}</td><td class="fx-n">{r.after}</td></tr>)}
-            </tbody>
-          </table>
-        </div>
-        <p class="fd-hint">Pick an attack to replay it.</p>
+        <p class="fd-hint">Each row is an attack I closed. Pick one to replay it: the attack, what happened before, and what happens now.</p>
         <div class="replay">
-          <ol class="findings" role="tablist">
-            {findings.map((f, i) => (
-              <li><button type="button" class:list={['fd', { on: i === 0 }]} data-i={i} aria-label={`Replay ${f.id}`}>
-                <span class="fd-st">closed</span><span class="fd-layer">{f.layer}</span><span class="fd-id">{f.id}</span>
+          <ol class="findings" aria-label="Findings">
+            {table.map((r, i) => (
+              <li><button type="button" class:list={['fd', { on: i === 0 }]} data-i={i} aria-pressed={i === 0 ? 'true' : 'false'} aria-controls="replay-stage">
+                <span class="fd-st">closed</span><span class="fd-layer">{r.layer}</span><span class="fd-id">{r.attack}</span>
                 <span class="fd-go" aria-hidden="true"><svg class="fd-ic-play" width="10" height="10" viewBox="0 0 10 10"><path d="M2.5 1.5v7l6-3.5z" fill="currentColor" /></svg><svg class="fd-ic-on" width="12" height="10" viewBox="0 0 12 10"><rect x="1" y="3" width="2" height="6" rx="1" /><rect x="5" y="1" width="2" height="8" rx="1" /><rect x="9" y="4" width="2" height="5" rx="1" /></svg></span>
-                <span class="fd-txt">{f.risk} <em>→ {f.fix}</em></span>
+                <span class="fd-txt"><em>Fix:</em> {findings[i].fix}</span>
+                <span class="sr-only">Before: {r.before}. Now: {r.after}. Replay this attack.</span>
                 <span class="fd-bar" aria-hidden="true"><i /></span>
               </button></li>
             ))}
           </ol>
-          <div class="replay-stage">
+          <div class="replay-stage" id="replay-stage">
             {findings.map((f, i) => (
               <div class:list={['desk-slot', { active: i === 0 }]} data-slot={i}>
                 <Stage stage={{ medium: 'shell', label: `replay · ${f.id}`, lines: f.lines }} />
@@ -92,6 +86,7 @@ const first = attacks.findIndex((a) => a.layer === 2);
 
       <Lessons items={principles.map(([h, d]) => [h.replace(/\.$/, ''), d] as [string, string])} />
       <CaseNav slug={c.slug} />
+      <CaseTalk />
     </main>
     <StagePlayer />
     <script>
