@@ -2320,11 +2320,6 @@ body.studio::before { content: none; display: none; }
 .tr-fy path { fill: #fdfcf9; stroke: var(--n-ink-2); stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
 .tr-fy path + path { fill: var(--n-tint); }
 
-/* "you are here": a small tag with a drawn arrow, by the last stop */
-.tr-here { position: absolute; top: calc(50% + var(--art) / 2 + 2px); left: 50%; width: 76px; margin-left: -38px; display: flex; flex-direction: column; align-items: center; pointer-events: none; }
-.tr-here span { display: block; font: 500 13.5px/1.1 var(--sans); color: var(--n-ink-2); text-align: center; transform: rotate(-4deg); }
-.tr-here svg { order: -1; flex: none; display: block; width: 18px; height: 16px; margin: 0 0 4px 6px; overflow: visible; transform: rotate(-100deg); }
-.tr-here path { fill: none; stroke: var(--n-ink-2); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 .tr { margin-bottom: 18px; }
 
 @media (min-width: 961px) {
@@ -2341,13 +2336,10 @@ body.studio::before { content: none; display: none; }
   .tr-start { top: calc(var(--row) / 2 - 4.5px); left: -4.5px; }
   .tr-fx { transform: translateX(100%); }
   .tr-fy { top: 50%; left: 0; transform: var(--h-land); }
-  .tr-here { top: -14px; left: auto; right: calc(50% + 26px); width: auto; margin: 0; flex-direction: row; align-items: flex-start; white-space: nowrap; }
-  .tr-here span { font-size: 14.5px; line-height: 1; padding-right: 2px; }
-  .tr-here svg { order: 0; width: 34px; height: 26px; margin: 4px 0 0; transform: none; }
 }
 
 /* motion: hidden until the trail comes into view, then each part plays once */
-html.js .tr:not(.in) .tr-line, html.js .tr:not(.in) .tr-start, html.js .tr:not(.in) .tr-art > svg, html.js .tr:not(.in) .tr-txt, html.js .tr:not(.in) .tr-fly, html.js .tr:not(.in) .tr-here { opacity: 0; }
+html.js .tr:not(.in) .tr-line, html.js .tr:not(.in) .tr-start, html.js .tr:not(.in) .tr-art > svg, html.js .tr:not(.in) .tr-txt, html.js .tr:not(.in) .tr-fly { opacity: 0; }
 .tr.in .tr-start { animation: tr-fade var(--t-base) var(--ease) var(--tr-start) both; }
 .tr.in .tr-line { animation: tr-clip-v var(--tr-travel) var(--ease-in-out) var(--tr-start) both; }
 .tr.in .tr-line svg { animation: tr-unclip-v var(--tr-travel) var(--ease-in-out) var(--tr-start) both; }
@@ -2355,7 +2347,6 @@ html.js .tr:not(.in) .tr-line, html.js .tr:not(.in) .tr-start, html.js .tr:not(.
 .tr.in .tr-fy { animation: tr-fy-v var(--tr-travel) linear var(--tr-start) both; }
 .tr.in .tr-art > svg { animation: tr-pop var(--t-slow) var(--ease) var(--d) both; }
 .tr.in .tr-txt { animation: tr-rise var(--t-slow) var(--ease) calc(var(--d) + 0.12s) both; }
-.tr.in .tr-here { animation: tr-tag var(--t-slow) var(--ease) calc(var(--tr-done) + 0.1s) both; }
 @media (min-width: 961px) {
   .tr.in .tr-line { animation-name: tr-clip-h; }
   .tr.in .tr-line svg { animation-name: tr-unclip-h; }
@@ -2371,7 +2362,6 @@ html.js .tr.off * { animation-play-state: paused !important; }
 @keyframes tr-fx-v { from { transform: none; } to { transform: translateY(100%); } }
 @keyframes tr-pop { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: none; } }
 @keyframes tr-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-@keyframes tr-tag { from { opacity: 0; transform: translateY(6px) scale(0.92); } to { opacity: 1; transform: none; } }
 @keyframes tr-fade { from { opacity: 0; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) {
   .tr *, .tr.in * { animation: none !important; transition: none !important; }
