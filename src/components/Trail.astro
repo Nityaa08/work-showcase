@@ -12,7 +12,7 @@
 // Motion (plays once, when the list scrolls into view): the line is revealed by a clip that slides with it (a
 // translated wrapper and a counter-translated svg, both transform only); the plane rides the reveal's front edge
 // (one element moves along the trail by transform, a second adds the swing, its tilt and the final hop to the
-// robot's hand, sampled from the same curve); each stop pops in (scale and opacity) as the line reaches it.
+// agent hub, sampled from the same curve); each stop pops in (scale and opacity) as the line reaches it.
 import { path } from '../data/home';
 
 const STOPS = [1 / 7, 3 / 7, 5 / 7, 1];
@@ -53,7 +53,7 @@ const ease = (x: number) => {
 const invEase = (y: number) => { let lo = 0, hi = 1; for (let i = 0; i < 50; i++) { const mid = (lo + hi) / 2; if (ease(mid) < y) lo = mid; else hi = mid; } return (lo + hi) / 2; };
 const START = 0.35, TRAVEL = 2.8; // seconds
 const NOSE = 18.4; // the plane is drawn nose up-right, 18.4deg above its tail
-const LAND = -16; // its resting tilt beside the robot (as the contact plane rests)
+const LAND = -16; // its resting tilt beside the agent hub (as the contact plane rests)
 const smooth = (x: number) => { const k = Math.min(1, Math.max(0, x)); return k * k * (3 - 2 * k); };
 const frames = (L: typeof H, vertical: boolean) => {
   const out: string[] = [];
@@ -95,14 +95,15 @@ const art = [
    <path class="tr-tick" d="M32 38.5l6 6 12.5-12.5"/>
    <path class="tr-handle" d="M77.5 71.5 86 80"/>
    <circle class="tr-lens" cx="66" cy="61" r="14.5"/><circle class="tr-fn" cx="66" cy="61" r="11"/><path class="tr-glint" d="M58.5 56.5a9 9 0 0 1 6-4.6"/>`,
-  // Shipping agents: a small friendly robot, one arm up to send the paper plane
+  // Shipping agents: an agent network, one hub with an AI spark orchestrating three connected nodes
   `<ellipse class="tr-shadow" cx="50" cy="85" rx="31" ry="3.2"/>
-   <path class="tr-ln" d="M50 26v-9"/><circle class="tr-k" cx="50" cy="14.5" r="3.2"/>
-   <rect class="tr-tn" x="24.5" y="35" width="6" height="13" rx="2.2"/><rect class="tr-tn" x="69.5" y="35" width="6" height="13" rx="2.2"/>
-   <rect class="tr-pp" x="29" y="26" width="42" height="32" rx="10"/>
-   <circle class="tr-k" cx="42" cy="40.5" r="3"/><circle class="tr-k" cx="58" cy="40.5" r="3"/><path class="tr-ln" d="M44.5 48q5.5 4.5 11 0"/>
-   <path class="tr-ln" d="M36 66q-8 4-10 11M64 65q9-3 12-12"/><circle class="tr-pp" cx="26" cy="78" r="2.8"/><circle class="tr-pp" cx="76.5" cy="51.5" r="2.8"/>
-   <rect class="tr-tn" x="35" y="60" width="30" height="21" rx="7"/><circle class="tr-pp" cx="50" cy="70.5" r="3"/>`,
+   <path class="tr-ln" d="M50 52 23 27M50 52 78 22M50 52 24 77"/>
+   <circle class="tr-pp" cx="23" cy="27" r="8"/><path class="tr-ln" d="M19.5 25h7M19.5 29h5"/>
+   <circle class="tr-pp" cx="78" cy="22" r="8"/><circle class="tr-k" cx="78" cy="22" r="2.6"/>
+   <circle class="tr-pp" cx="24" cy="77" r="8"/><path class="tr-ln" d="M20.5 77.5l2.5 2.5 4.5-5"/>
+   <rect class="tr-tn" x="33" y="35" width="34" height="34" rx="10"/>
+   <path class="tr-k" d="M50 41.5c1 6.4 2.1 7.5 8.5 8.5-6.4 1-7.5 2.1-8.5 8.5-1-6.4-2.1-7.5-8.5-8.5 6.4-1 7.5-2.1 8.5-8.5Z"/>
+   <circle class="tr-k" cx="60" cy="42" r="1.6"/>`,
 ];
 ---
 <div class="tr" data-reveal style={vars}>
@@ -125,6 +126,6 @@ const art = [
       </li>
     ))}
   </ol>
-  {/* The traveller: a little paper plane (the same drawing as the one in Contact) that flies the trail once and lands by the robot. */}
+  {/* The traveller: a little paper plane (the same drawing as the one in Contact) that flies the trail once and lands by the agent hub. */}
   <span class="tr-fly" aria-hidden="true"><span class="tr-fx"><span class="tr-fy"><svg viewBox="0 0 40 30" focusable="false"><path d="M2 14 L38 2 L26 28 L18 18 Z" /><path d="M38 2 L18 18 L16 27 L22 21" /></svg></span></span></span>
 </div>

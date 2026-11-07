@@ -2268,7 +2268,7 @@ body.studio::before { content: none; display: none; }
    Motion plays once when the trail scrolls into view ([data-reveal] gets .in), only by transform and opacity, and is
    paused while the trail is off screen (.off): the line is uncovered by a clip that slides with it (the wrapper
    moves one way, the svg the other, so the drawing stays put and is never repainted), the paper plane rides the
-   front edge and lands by the robot, and each stop pops in as the line reaches it. The final state is the default:
+   front edge and lands by the agent hub, and each stop pops in as the line reaches it. The final state is the default:
    without JavaScript, or with motion turned off, the whole trail is simply there. */
 .h-path .path-head { display: block; margin: 0 0 clamp(36px, 3.6vw, 52px); }
 /* the plane's mover is as wide as the trail and slides by its own width: keep that from widening the page */
