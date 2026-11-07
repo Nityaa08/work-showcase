@@ -48,5 +48,4 @@ The resume PDF is built from `resume/resume.html` with `node resume/make-pdf.mjs
 | `src/data/` | All page copy, kept apart from layout |
 | `src/styles/global.css` | Styles and the motion and colour tokens |
 | `src/lib/markdown.ts` | The markdown and `llms.txt` versions of each page |
-| `SITE-GUIDE.md` | Design rules and how each section works |
 | `DEPLOY.md` | How the site deploys on Vercel |

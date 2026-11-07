@@ -2046,7 +2046,7 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 }
 
 /* =====================================================================
-   Round 15: scroll performance (measured; see SITE-GUIDE "Performance"). Appended last on purpose.
+   Round 15: scroll performance (measured). Appended last on purpose.
    ===================================================================== */
 
 /* The fixed, full-screen noise overlay (mix-blend-mode: overlay) changed no pixel by more than 1/255, yet it forced
