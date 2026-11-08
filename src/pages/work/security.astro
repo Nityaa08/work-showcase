@@ -3,7 +3,6 @@ import '../../styles/global.css';
 import Nav from '../../components/Nav.astro';
 import Meta from '../../components/Meta.astro';
 import CaseNav from '../../components/CaseNav.astro';
-import CaseTalk from '../../components/CaseTalk.astro';
 import Glance from '../../components/Glance.astro';
 import Lessons from '../../components/Lessons.astro';
 import Stage from '../../components/Stage.astro';
@@ -86,7 +85,6 @@ const first = attacks.findIndex((a) => a.layer === 2);
 
       <Lessons items={principles.map(([h, d]) => [h.replace(/\.$/, ''), d] as [string, string])} />
       <CaseNav slug={c.slug} />
-      <CaseTalk />
     </main>
     <StagePlayer />
     <script>

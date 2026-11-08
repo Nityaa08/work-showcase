@@ -21,7 +21,7 @@ const caseFooter = (site: URL | undefined, c: Case) => {
     prev ? `- Previous: [${prev.title}](${abs(site, `/work/${prev.slug}.md`)})` : `- [All work](${abs(site, '/index.md')})`,
     next ? `- Next: [${next.title}](${abs(site, `/work/${next.slug}.md`)})` : `- [Back to home](${abs(site, '/index.md')})`,
   ];
-  return `## More\n\n${links.join('\n')}\n\n## Let’s talk\n\n- Email: ${home.contact.email}\n- [Resume (PDF)](${abs(site, home.contact.resume)})`;
+  return `## More\n\n${links.join('\n')}`;
 };
 
 export function homeMd(site?: URL) {

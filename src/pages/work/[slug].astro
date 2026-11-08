@@ -12,7 +12,6 @@ import Stage from '../../components/Stage.astro';
 import Nav from '../../components/Nav.astro';
 import Meta from '../../components/Meta.astro';
 import CaseNav from '../../components/CaseNav.astro';
-import CaseTalk from '../../components/CaseTalk.astro';
 import Glance from '../../components/Glance.astro';
 import Lessons from '../../components/Lessons.astro';
 import Incidents from '../../components/Incidents.astro';
@@ -101,7 +100,6 @@ const process = (c.steps ?? []).map((s) => ({ label: s.state, heading: s.heading
 
       {c.lessons && <Lessons items={c.lessons} />}
       <CaseNav slug={c.slug} />
-      <CaseTalk />
     </main>
     <StagePlayer />
     <script>

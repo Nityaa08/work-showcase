@@ -2467,28 +2467,6 @@ main:focus { outline: none; }
 .cs-changed b { display: block; margin-bottom: 4px; font: 600 12px var(--sans); letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); }
 .cs-hero .cs-changed { max-width: 30em; }
 
-/* --- Case pages: the last row, "Let's talk", with an email tile and a resume tile --- */
-.cs-talk { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px 32px; margin: 0 var(--sec-x); padding: 40px 0 88px; border-top: 1px solid var(--hair); }
-.cs-talk h2 { margin: 0; font-size: clamp(28px, 2.6vw, 40px); line-height: 1.05; letter-spacing: -0.035em; font-weight: 600; color: #f1f0ec; }
-.cs-talk-links { list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; width: min(100%, 420px); margin: 0; padding: 0; }
-.cs-talk-links li { min-width: 0; }
-.cs-talk-links a { position: relative; display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; padding: 0 14px; border-radius: 14px; font: 600 15.5px var(--sans); color: #ecebe6; background: linear-gradient(180deg, #161618, #111113); box-shadow: 0 0 0 1px var(--hair), inset 0 1px 0 rgba(255, 255, 255, 0.06); transition: transform var(--t-fast) var(--ease); }
-.cs-talk-links a::after { content: ''; position: absolute; top: 0; right: 0; bottom: 0; left: 0; border-radius: inherit; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.24), 0 18px 30px -20px rgba(0, 0, 0, 0.9); opacity: 0; transition: opacity var(--t-fast) var(--ease); pointer-events: none; }
-.cs-talk-links .ct-ic { flex: none; display: block; color: #ecebe6; }
-.cs-talk-links .ct-arr { display: grid; place-items: center; color: var(--ink-3); transition: transform var(--t-fast) var(--ease); }
-.cs-talk-links .ct-arr svg { display: block; }
-.cs-talk-links a:focus-visible { outline: 2px solid #ecebe6; outline-offset: 3px; }
-@media (hover: hover) {
-  .cs-talk-links a:hover { transform: translateY(-2px); }
-  .cs-talk-links a:hover::after { opacity: 1; }
-  .cs-talk-links a:hover .ct-arr { color: #ecebe6; transform: translate(2px, -2px); }
-  .cs-talk-links a[href^='mailto']:hover .ct-arr { transform: translateX(3px); }
-}
-@media (max-width: 680px) { .cs-talk { flex-direction: column; align-items: stretch; padding: 32px 0 56px; } .cs-talk-links { width: 100%; } }
-@media (prefers-reduced-motion: reduce) { .cs-talk-links a, .cs-talk-links a::after, .cs-talk-links .ct-arr { transition: none; } }
-/* the case nav sits right above it now, so it needs less room below */
-.case-nav { padding-bottom: 40px; }
-@media (max-width: 680px) { .case-nav { padding-bottom: 32px; } }
 
 /* --- Neutral labels on the case pages. Step labels, numerals, decision chips and permission strings are labels,
    not status, so they are off-white or grey. Green stays for real status only: success lines, Resolved, closed,
