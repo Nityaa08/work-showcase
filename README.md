@@ -1,5 +1,7 @@
 # nityashree.vercel.app
 
+[![Portfolio preview](public/og.png)](https://nityashree.vercel.app)
+
 My portfolio: three case studies on building, connecting and securing AI agents in production, plus a little about me.
 
 **Live:** https://nityashree.vercel.app
