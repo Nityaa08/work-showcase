@@ -1,10 +1,10 @@
-# nityashree.vercel.app
+# nityashree.in
 
-[![Portfolio preview](public/og.png)](https://nityashree.vercel.app)
+[![Portfolio preview](public/og.png)](https://nityashree.in)
 
 My portfolio: three case studies on building, connecting and securing AI agents in production, plus a little about me.
 
-**Live:** https://nityashree.vercel.app
+**Live:** https://nityashree.in
 
 ## What's on it
 
@@ -29,7 +29,7 @@ I don't hand-write code. I direct AI coding agents, review every change, test it
 - Hand-drawn line illustrations as inline SVG.
 - Animation uses only transform and opacity, plays once and stops off screen. It respects reduced motion.
 - Works in Safari 14+, Chrome/Edge 100+ and Firefox 100+, from phones up to 4K screens.
-- Every page also has a plain markdown version for AI agents: [`/llms.txt`](https://nityashree.vercel.app/llms.txt).
+- Every page also has a plain markdown version for AI agents: [`/llms.txt`](https://nityashree.in/llms.txt).
 
 ## Run it locally
 

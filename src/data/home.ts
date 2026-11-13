@@ -13,7 +13,7 @@ export const how = {
   tools: 'Tools I work with: Claude Code and Claude Design every day, plus Cursor, DeepSeek and Grok. Personal agents in Slack run my pull-request workflow.',
 };
 export const contact = {
-  email: 'nitya08shree@gmail.com',
+  email: 'nityashreesundararajan@gmail.com',
   linkedin: 'https://www.linkedin.com/in/nityashree-s-b34b1b291',
   github: 'https://github.com/Nityaa08',
   resume: '/Nityashree_S_Resume.pdf',
