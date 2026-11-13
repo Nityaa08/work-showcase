@@ -1,6 +1,7 @@
 ---
 interface Props { crumb?: string; active?: 'work' | 'about' }
 const { crumb, active } = Astro.props;
+import CommandMenu from './CommandMenu.astro';
 ---
 <a class="skip" href="#main">Skip to content</a>
 <header class="nav" id="nav">
@@ -14,7 +15,12 @@ const { crumb, active } = Astro.props;
     <a href="/Nityashree_S_Resume.pdf" target="_blank" rel="noopener">Resume<span class="nav-ext" aria-hidden="true"> ↗</span></a>
     <a class="cta" href="/#contact">Contact</a>
   </nav>
+  <button type="button" class="cmdk-btn" id="cmdk-btn" aria-haspopup="dialog" aria-controls="cmdk" aria-expanded="false" aria-label="Open quick menu" hidden>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5" /><path d="m16 16 4.5 4.5" /></svg>
+    <kbd class="cmdk-kbd" aria-hidden="true"></kbd>
+  </button>
 </header>
+<CommandMenu />
 <script>
   // Show the bar at the top, when scrolling up on purpose, when the pointer reaches the top edge,
   // or when it has keyboard focus. Hide it only after a deliberate scroll down.

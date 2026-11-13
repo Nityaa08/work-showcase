@@ -9,6 +9,7 @@ import { hero, how, contact, offClock, cards, desk, outsideIntro, contactLine, l
 import Desk from '../components/Desk.astro';
 import Trail from '../components/Trail.astro';
 import ContactLinks from '../components/ContactLinks.astro';
+import { projects, projectsIntro } from '../data/projects';
 // The envelope's stamp: a rectangle with a perforated (scalloped) edge, traced clockwise.
 const stampEdge = (() => {
   const w = 60, h = 72, r = 2.4, n = [8, 10];
@@ -78,6 +79,29 @@ const work = cases.filter((c) => c.ready);
               </div>
             </a>
           ))}
+        </div>
+
+        {/* Side projects: compact rows a recruiter can try right away. Copy in src/data/projects.ts. */}
+        <div class="pj" id="projects">
+          <div class="pj-head">
+            <h3 id="pj-title">{projectsIntro.title}</h3>
+            <p>{projectsIntro.text}</p>
+          </div>
+          <ul class="pj-list">
+            {projects.map((p) => (
+              <li class="pj-row">
+                <div class="pj-txt">
+                  <h4>{p.name}</h4>
+                  <p>{p.line}</p>
+                </div>
+                <div class="pj-links">
+                  <a class="pj-try" href={p.live} target="_blank" rel="noopener">Try it<span class="sr-only">: {p.name} live demo, opens in a new tab</span> <span aria-hidden="true">↗</span></a>
+                  <a class="pj-code" href={p.code} target="_blank" rel="noopener">Code<span class="sr-only">: {p.name} on GitHub, opens in a new tab</span> <span aria-hidden="true">↗</span></a>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <p class="pj-note">{projectsIntro.note}</p>
         </div>
       </section>
 

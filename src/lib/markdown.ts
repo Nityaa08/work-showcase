@@ -4,6 +4,7 @@ import { cases, stackOf, type Case, type Line } from '../data/cases';
 import * as home from '../data/home';
 import * as mcp from '../data/mcp';
 import * as sec from '../data/security';
+import { projects, projectsIntro } from '../data/projects';
 
 export const SITE_NAME = 'Nityashree S';
 const abs = (site: URL | undefined, p: string) => (site ? new URL(p, site).href : p);
@@ -11,6 +12,7 @@ const bullets = (xs: string[]) => xs.map((x) => `- ${x}`).join('\n');
 const numbered = (xs: string[]) => xs.map((x, i) => `${i + 1}. ${x}`).join('\n');
 const code = (lines: Line[]) => '```\n' + lines.map((l) => (l.t === 'log' ? l.s.split('|').join('  ') : l.s)).join('\n') + '\n```';
 const glance = (c: Case) => (c.glance ?? []).map(([k, v]) => `- **${k}:** ${v}`).join('\n');
+const projectList = () => projects.map((p) => `- **${p.name}.** ${p.line} Try it: ${p.live} · Code: ${p.code}`).join('\n');
 const lessons = (items: [string, string][], title = 'Lessons') => `## ${title}\n\n` + items.map(([h, p]) => `- **${h}.** ${p}`).join('\n');
 // Same order as the case nav at the end of each page: no loop-around.
 const caseFooter = (site: URL | undefined, c: Case) => {
@@ -37,6 +39,12 @@ Resume: ${abs(site, home.contact.resume)}
 ## Selected work
 
 ${work.map((c) => `### Case ${c.no}: ${home.cards[c.slug].headline}\n\n**${c.title}.** ${home.cards[c.slug].text}\n\n- Stack: ${stackOf(c).join(', ')}\n- Case study: ${abs(site, `/work/${c.slug}/`)} (markdown: ${abs(site, `/work/${c.slug}.md`)})`).join('\n\n')}
+
+## ${projectsIntro.title}
+
+${projectsIntro.text} ${projectsIntro.note}
+
+${projectList()}
 
 ## How I work
 
@@ -205,8 +213,12 @@ export function llmsTxt(site?: URL) {
 
 ## Pages
 
-- [Home](${abs(site, '/index.md')}): who I am, selected work, how I work, my path (a journey with four stops), life outside work, contact
+- [Home](${abs(site, '/index.md')}): who I am, selected work, side projects to try, how I work, my path (a journey with four stops), life outside work, contact
 ${work.map((c) => `- [Case ${c.no}: ${c.title}](${abs(site, `/work/${c.slug}.md`)}): ${home.blurbs[c.slug]}`).join('\n')}
+
+## Side projects (live demos)
+
+${projects.map((p) => `- [${p.name}](${p.live}): ${p.line} Code: ${p.code}`).join('\n')}
 
 ## Contact
 

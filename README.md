@@ -11,6 +11,7 @@ My portfolio: three case studies on building, connecting and securing AI agents 
 - **Home:**
   - who I am
   - three case studies, each led by its outcome
+  - four side projects you can try live, each with its code
   - how I work
   - my path, as a hand-drawn trail
   - a desk of things I do off the clock
@@ -29,6 +30,7 @@ I don't hand-write code. I direct AI coding agents, review every change, test it
 - Hand-drawn line illustrations as inline SVG.
 - Animation uses only transform and opacity, plays once and stops off screen. It respects reduced motion.
 - Works in Safari 14+, Chrome/Edge 100+ and Firefox 100+, from phones up to 4K screens.
+- A small command menu (Cmd+K / Ctrl+K, "/" or the search button in the nav) jumps to each case, the side projects, the resume, email, GitHub and LinkedIn. Vanilla JS, keyboard and screen-reader friendly.
 - Every page also has a plain markdown version for AI agents: [`/llms.txt`](https://nityashree.in/llms.txt).
 
 ## Run it locally

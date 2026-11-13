@@ -2539,3 +2539,94 @@ html.js .offsep-b:not(.in) .offsep-o { opacity: 0.5; }
 /* Case 01's story windows: no large blurred drop shadow (it is invisible on the near-black page, and rastering it as the
    sticky window first came into view dropped frames while scrolling, measured at 1512x982, DPR 2). Ring and edge stay. */
 .sticky-rig .win { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.055), inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 1px 1px rgba(0, 0, 0, 0.4) !important; }
+
+/* =====================================================================
+   Round 21: "Try my side projects" under the case studies, and a small command menu (Cmd+K / Ctrl+K, "/" or the
+   nav button). Appended last on purpose. Same rules: one sans, neutral palette, hover only where it can hover,
+   only transform and opacity animate, nothing loops, no backdrop-filter.
+   ===================================================================== */
+
+/* --- Side projects: compact rows inside "Selected work" (dark). Two columns on wide screens, one below. --- */
+.pj { margin-top: clamp(56px, 6vw, 88px); scroll-margin-top: 84px; }
+.pj:focus { outline: none; }
+.pj-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 24px; margin-bottom: 18px; }
+.pj-head h3 { margin: 0; font: 600 clamp(22px, 2vw, 28px)/1.15 var(--sans); letter-spacing: -0.025em; color: #f1f0ec; }
+.pj-head p { margin: 0; color: var(--ink-2); font-size: 15px; line-height: 1.5; }
+.pj-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(28px, 3.5vw, 48px); }
+.pj-row { display: flex; align-items: center; justify-content: space-between; gap: 14px 22px; padding: 20px 0; border-top: 1px solid rgba(255, 255, 255, 0.11); }
+.pj-row:nth-last-child(-n + 2) { border-bottom: 1px solid rgba(255, 255, 255, 0.11); }
+.pj-txt { min-width: 0; }
+.pj-txt h4 { margin: 0; font: 600 17px/1.3 var(--sans); letter-spacing: -0.01em; color: #f1f0ec; }
+.pj-txt p { margin: 5px 0 0; color: var(--ink-2); font-size: 14.5px; line-height: 1.5; }
+.pj-links { flex: none; display: flex; gap: 8px; }
+.pj-links a { display: inline-flex; align-items: center; gap: 5px; min-height: 38px; padding: 0 15px; border-radius: 999px; font: 500 14px var(--sans); white-space: nowrap; }
+.pj-links a > span[aria-hidden] { display: inline-block; transition: transform var(--t-fast) var(--ease); }
+.pj-try { background: #ecebe6; color: #0b0b0c; }
+.pj-code { color: #ecebe6; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2); }
+.pj-links a:focus-visible { outline: 2px solid #ecebe6; outline-offset: 3px; }
+@media (hover: hover) {
+  .pj-try:hover { background: #fff; }
+  .pj-code:hover { background: rgba(255, 255, 255, 0.07); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.34); }
+  .pj-links a:hover > span[aria-hidden] { transform: translate(2px, -2px); }
+}
+.pj-note { margin: 16px 0 0; color: var(--ink-3); font-size: 13.5px; line-height: 1.5; }
+@media (max-width: 1100px) {
+  .pj-list { grid-template-columns: minmax(0, 1fr); }
+  .pj-row:nth-last-child(2) { border-bottom: 0; }
+}
+@media (max-width: 680px) {
+  .pj-row { flex-direction: column; align-items: flex-start; padding: 18px 0; }
+}
+@media (pointer: coarse) { .pj-links a { min-height: 44px; } }
+@media (prefers-reduced-motion: reduce) { .pj-links a > span[aria-hidden] { transition: none; } }
+
+/* --- The nav's menu button: a quiet ring with a search mark, plus the shortcut where there is a keyboard. --- */
+.cmdk-btn { position: relative; flex: none; display: inline-flex; align-items: center; justify-content: center; gap: 7px; height: 32px; min-width: 32px; margin: 0; padding: 0 11px 0 10px; border: 0; border-radius: 999px; background: transparent; color: #a3a5a9; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16); font: 500 12.5px var(--sans); cursor: pointer; -webkit-appearance: none; appearance: none; }
+.cmdk-btn[hidden] { display: none; }
+.cmdk-btn kbd { font: inherit; letter-spacing: 0.02em; }
+.cmdk-btn:focus-visible { outline: 2px solid #ecebe6; outline-offset: 3px; }
+.nav.on-light .cmdk-btn { color: #55575c; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18); }
+.nav.on-light .cmdk-btn:focus-visible { outline-color: #0b0b0c; }
+@media (hover: hover) {
+  .cmdk-btn:hover { color: #f2f1ee; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3); }
+  .nav.on-light .cmdk-btn:hover { color: #0b0b0c; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.32); }
+}
+/* No keyboard shortcut to show on touch screens or narrow windows: just the round button. */
+@media (max-width: 960px), (hover: none) { .cmdk-btn { padding: 0; width: 32px; } .cmdk-btn kbd { display: none; } }
+@media (pointer: coarse) { .cmdk-btn::before { content: ''; position: absolute; top: 50%; left: 50%; width: 44px; height: 44px; transform: translate(-50%, -50%); } }
+@media (max-width: 680px) { .nav { gap: 12px; } }
+@media (max-width: 380px) { .nav { gap: 10px; } .cmdk-btn { width: 30px; min-width: 30px; height: 30px; } }
+
+/* --- The menu: a light panel over a dimmed page. It fades and settles in by opacity and transform only. --- */
+html.cmdk-lock { overflow: hidden; }
+.cmdk { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 200; display: flex; align-items: flex-start; justify-content: center; padding: 12vh 16px 16px; opacity: 0; transition: opacity var(--t-fast) var(--ease); }
+@media (max-width: 680px) { .cmdk { padding-top: 72px; } }
+.cmdk[hidden], .cmdk [hidden] { display: none !important; }
+.cmdk.on { opacity: 1; }
+.cmdk-scrim { position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: rgba(11, 11, 12, 0.58); }
+.cmdk-panel { position: relative; display: flex; flex-direction: column; width: 100%; max-width: 560px; max-height: 100%; overflow: hidden; border-radius: 16px; background: #f5f5f2; color: #0b0b0c; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 30px 80px -24px rgba(0, 0, 0, 0.65); transform: translateY(-10px) scale(0.98); transition: transform var(--t-base) var(--ease); }
+.cmdk.on .cmdk-panel { transform: none; }
+.cmdk-bar { flex: none; display: flex; align-items: center; gap: 10px; padding: 0 8px 0 16px; border-bottom: 1px solid rgba(0, 0, 0, 0.09); }
+.cmdk-ic { flex: none; color: #66686d; }
+.cmdk-input { flex: 1 1 auto; min-width: 0; height: 58px; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent; color: #0b0b0c; font: 400 17px var(--sans); outline: none; -webkit-appearance: none; appearance: none; }
+.cmdk-input::placeholder { color: #8a8c90; opacity: 1; }
+.cmdk-x { flex: none; display: inline-flex; align-items: center; justify-content: center; min-width: 44px; height: 44px; padding: 0 8px; border: 0; border-radius: 10px; background: transparent; color: #55575c; cursor: pointer; -webkit-appearance: none; appearance: none; }
+.cmdk-x:focus-visible { outline: 2px solid #0b0b0c; outline-offset: -4px; }
+.cmdk .cmdk-x kbd { display: none; }
+@media (hover: hover) and (pointer: fine) { .cmdk .cmdk-x kbd { display: inline-flex; margin: 0; } .cmdk-x svg { display: none; } .cmdk-x:hover { background: rgba(0, 0, 0, 0.05); } }
+.cmdk-list { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding: 4px 8px 8px; }
+.cmdk-gh { margin: 12px 12px 4px; font: 600 11.5px/1.4 var(--sans); letter-spacing: 0.08em; text-transform: uppercase; color: #66686d; }
+.cmdk-opt { display: flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 44px; padding: 0 12px; border-radius: 10px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.cmdk-opt[aria-selected='true'] { background: #e6e5df; }
+.cmdk-l { min-width: 0; font-size: 15.5px; font-weight: 500; line-height: 1.3; }
+.cmdk-h { flex: none; color: #66686d; font-size: 13px; }
+.cmdk-empty { margin: 14px 12px 10px; color: #55575c; font-size: 15px; line-height: 1.5; }
+.cmdk-foot { flex: none; display: flex; gap: 18px; margin: 0; padding: 10px 16px; border-top: 1px solid rgba(0, 0, 0, 0.09); color: #66686d; font-size: 12.5px; }
+.cmdk kbd { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; margin-right: 3px; padding: 0 5px; border-radius: 5px; background: #fff; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14); color: #3a3b3f; font: 500 11.5px var(--sans); }
+@media (hover: none), (pointer: coarse) { .cmdk-foot { display: none; } }
+@media (max-width: 420px) { .cmdk-h { font-size: 12.5px; } }
+@media (prefers-reduced-motion: reduce) { .cmdk, .cmdk-panel { transition: none; } .cmdk-panel { transform: none; } }
+/* Narrow phones: with the menu button in the nav (it is only there when JavaScript runs), the nav's Resume link steps
+   aside below 420px, as it already did below 340px. The resume stays one tap away: the hero button, the Contact tiles
+   and "Download resume" in the menu. */
+@media (max-width: 420px) { .nav.has-menu .links a[href$=".pdf"] { display: none; } }
