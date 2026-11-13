@@ -2,7 +2,7 @@
 export const hero = {
   hi: 'Hi, I’m Nitya, an AI engineer.',
   headline: 'I build AI agents that hold up in production.',
-  sub: 'Most of my days go into AI agents: the connectors they use, the evals that tell me they work, and the guardrails that keep people safe. I like the quiet part of the job, where I prove something works before anyone has to trust it.',
+  sub: 'Most of my days go into LLM agents: the MCP connectors they use, the evals that tell me they work, and the guardrails that keep people safe. I like the quiet part of the job, where I prove something works before anyone has to trust it.',
 };
 export const how = {
   title: 'One laptop, a team of agents, and me in the loop.',
@@ -10,7 +10,7 @@ export const how = {
   /** One sentence about working close to the people who use the work (only facts from the career kit). */
   people: 'I like working close to the people who use what I build: real questions from Sales and Business Development shaped how I tested, and finance’s own rules shaped the agents I built for them.',
   steps: ['Plan', 'Delegate', 'Prove', 'Own'],
-  tools: 'Tools I work with: Claude Code and Claude Design every day, plus Cursor, DeepSeek and Grok. Personal agents in Slack run my pull-request workflow.',
+  tools: 'Tools I work with: Claude Code and Claude Design every day, plus Cursor, DeepSeek and Grok. Personal agents in Slack run my pull-request workflow. My side projects, an LLM gateway and a multi-agent research API, are on my GitHub.',
 };
 export const contact = {
   email: 'nityashreesundararajan@gmail.com',
