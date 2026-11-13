@@ -24,7 +24,7 @@ Screens on the site are illustrations of how the work behaves, not screenshots o
 
 ## How it's built
 
-I don't hand-write code. I direct AI coding agents, review every change, test it and own what ships. That's why the commits carry a co-author line.
+I don't hand-write code. I direct AI coding agents, review every change, test it and own what ships.
 
 - [Astro](https://astro.build), a static site with no framework runtime.
 - Hand-drawn line illustrations as inline SVG.
