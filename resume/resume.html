@@ -31,96 +31,60 @@ ul{margin:2px 0 0 15px;padding:0}li{margin:3px 0}
 
 <header>
   <h1>Nityashree S</h1>
-  <div class="role">AI Engineer · LLM agents, MCP, evals and AI security in production</div>
+  <div class="role">AI Engineer · LLM agents, MCP, evals and AI security</div>
   <div class="links">
-    +91 78270 76283<span class="sep">·</span><a href="mailto:nityashreesundararajan@gmail.com">nityashreesundararajan@gmail.com</a><span class="sep">·</span>India (open to Bengaluru)<br>
-    <b><a href="https://nityashree.in">nityashree.in</a></b><span class="sep">·</span><a href="https://www.linkedin.com/in/nityashree-s-b34b1b291">linkedin.com/in/nityashree-s-b34b1b291</a><span class="sep">·</span><a href="https://github.com/Nityaa08">github.com/Nityaa08</a>
+    +91 78270 76283<span class="sep">·</span><a href="mailto:nityashreesundararajan@gmail.com">nityashreesundararajan@gmail.com</a><span class="sep">·</span>India<span class="sep">·</span><b><a href="https://nityashree.in">Portfolio</a></b><span class="sep">·</span><a href="https://www.linkedin.com/in/nityashree-s-b34b1b291">LinkedIn</a><span class="sep">·</span><a href="https://github.com/Nityaa08">GitHub</a>
   </div>
 </header>
 
 <h2>Summary</h2>
-<p class="summary">AI Engineer shipping production LLM agents at a payments startup: tool calling and MCP connectors, per-user OAuth access, evals, guardrails, observability and LLM cost control. I came to AI by testing an assistant with its business users before launch, and I still work close to the people I build for. I build by directing AI coding agents (Claude Code), and I review, test and verify every change before it ships.</p>
+<p class="summary">AI Engineer who builds and ships production LLM agents end to end at a payments startup: MCP connectors with per-user OAuth, evals, guardrails and AI red-teaming, built close to the teams who use them. I build by directing AI coding agents, and I own the design, the tests and every change that ships.</p>
 
 <h2>Experience</h2>
 
 <div class="job">
   <div class="jh"><span class="jt">AI Engineer · Yuno</span><span class="jm">Jun 2026 – Present</span></div>
-  <div class="co">AI Team · Onsite, India</div>
-
-  <div class="grp">Platform and reliability</div>
   <ul>
-    <li>Root-caused a production agent outage to one malformed instruction file; reproduced it with a failing test, then fixed it at save time and read time so one bad file can no longer take an agent down.</li>
-    <li>Shipped timeouts, request metrics and structured logs on the MCP tool gateway that every agent tool call passes through. The new logs exposed a connector failing silently in production, which I then fixed.</li>
-    <li>Fixed agent-session failures: tool-call history with duplicate or orphaned entries that model providers rejected, and failed turns that lost the user's message.</li>
-  </ul>
-
-  <div class="grp">Access and security</div>
-  <ul>
-    <li>Red-teamed the new agent engine before launch: chained a leaked system prompt into removing the agent's safety rules and poisoning its memory, and filed each finding as a bug report. The fix moved those guardrails out of the prompt and into the platform.</li>
-    <li>Built a per-user OAuth 2.0 (PKCE) MCP connector so each employee's agent can only search what that employee may see; we chose per-user sign-in over a shared key. Live in production.</li>
-    <li>Wrote the technical design and built guest access to personal AI assistants across five services, to rules set by our lead: per-guest permissions, separate credentials and isolated sessions. Released behind a feature flag.</li>
-    <li>Closed web-security gaps: a cross-site request forgery (CSRF) logout, unverified webhook events, and credential checks that failed open (they now fail closed).</li>
-  </ul>
-
-  <div class="grp">Evals and model behaviour</div>
-  <ul>
-    <li>Built the reply-language resolver for multilingual agents; ran it in shadow mode beside the old logic and evaluated it on a labelled test set before shipping it to production.</li>
-    <li>Ran a small A/B test with the prompt held fixed and showed that the model, not the prompt, made agents ignore instructions; the team changed the default model.</li>
-    <li>Added a per-turn outcome record to the agent engine, so the team can measure agent success per conversation turn in production.</li>
-  </ul>
-
-  <div class="grp">Agents for business teams and customers</div>
-  <ul>
-    <li>Built finance-operations agents with the finance team: invoice intake, where the model extracts the fields and tested code applies the rules, and a scheduled mailbox sorter whose projected model cost I cut by changing its schedule after measuring empty runs.</li>
-    <li>Built a collections demo agent for a talk at a customer's event: turned a colleague's script and a long thread of corrections into requirements, and tested it in the customer's language.</li>
+    <li>Kept company-wide LLM agents reliable: root-caused a production outage to one malformed instruction file, and added timeouts, metrics and logs to the MCP tool gateway, which exposed a silently failing connector.</li>
+    <li>Built a per-user OAuth 2.0 MCP connector so each employee's agent reaches only what that employee can see; designed and built multi-tenant guest access with isolated sessions and credentials.</li>
+    <li>Red-teamed the agent engine before launch (prompt injection to guardrail removal and memory poisoning); the fix moved guardrails into the platform. Closed CSRF, webhook and fail-open auth gaps.</li>
+    <li>Ran evals in production: shadow-tested a multilingual reply-language step on a labelled set before release, and an A/B test that led the team to change the default model.</li>
+    <li>Built finance agents with the finance team (invoice intake: the LLM extracts, tested code validates) and a demo agent for a customer event.</li>
   </ul>
   <p class="lor">Letter of recommendation from Yuno's VP of AI available on request.</p>
 </div>
 
 <div class="job">
-  <div class="jh"><span class="jt">Payments Analyst Intern · Yuno</span><span class="jm">Dec 2025 – Jun 2026</span></div>
-  <div class="co">Office of the CEO · Onsite, India</div>
+  <div class="jh"><span class="jt">Payments Analyst Intern · Yuno, Office of the CEO</span><span class="jm">Dec 2025 – Jun 2026</span></div>
   <ul>
-    <li>Tested an internal AI assistant before launch with real questions from Sales and Business Development, and caught a data error behind a wrong answer.</li>
-    <li>Built an interactive KPI dashboard for team leads by directing AI coding tools; it pulls live data from Salesforce, MongoDB and Google Sheets through their APIs.</li>
-    <li>Built and maintained a database of which payment providers and methods work in which markets, and audited it for data-quality errors (duplicates, wrong categories, wrong regions).</li>
-    <li>Automated manual work across the company, above all keeping partnership and payment-provider information up to date, so teams stopped updating it by hand.</li>
-    <li>Worked directly with leadership, Sales and Partnerships to turn their questions into data they could act on.</li>
+    <li>Tested an internal AI assistant with Sales and BD before launch and caught the data error behind its wrong answers.</li>
+    <li>Built a live KPI dashboard from Salesforce, MongoDB and Google Sheets APIs, and automated partner and payment-provider data upkeep.</li>
   </ul>
 </div>
 
+<!--PROGRAMS-->
+
 <h2>Projects</h2>
 <ul class="proj">
-  <li><b>Smart Router</b> · LLM gateway · Python, FastAPI, Redis, PostgreSQL, Docker · <a href="https://github.com/Nityaa08/smart-router">github.com/Nityaa08/smart-router</a><br>OpenAI-compatible API: routes each prompt to a cheaper or stronger model by rules, falls back if a provider fails, caches repeated prompts and logs each request's estimated cost; unit tests in CI.</li>
-  <li><b>Meridian</b> · multi-agent RAG research API · Python, FastAPI, embeddings, SSE · <a href="https://github.com/Nityaa08/meridian">github.com/Nityaa08/meridian</a><br>A planner agent splits a question, researcher agents retrieve sources in parallel, local embeddings rank the passages, a critic agent flags gaps and an LLM writes the report; every step streams live.</li>
-  <li><b>Cross-Border Fee API</b> · payments · TypeScript, Express, Jest · <a href="https://github.com/Nityaa08/cross-border-fee-api">github.com/Nityaa08/cross-border-fee-api</a><br>REST API (<a href="https://cross-border-fee-api.vercel.app">live demo</a>) that itemises the price of a Latin American cross-border payment: FX spread, provider fees and local taxes.</li>
-  <li><b>Fraud Pattern Explorer</b> · risk analytics · TypeScript, Next.js · <a href="https://github.com/Nityaa08/fraud-pattern-explorer">github.com/Nityaa08/fraud-pattern-explorer</a><br>Risk-analyst dashboard: filters, charts, risk scores and a suspicious-patterns panel over generated data.</li>
+  <li><b>Smart Router</b> · LLM gateway that routes each prompt to a cheaper or stronger model, with fallback, Redis caching and cost logs · <a href="https://github.com/Nityaa08/smart-router">Code</a></li>
+  <li><b>Meridian</b> · Multi-agent RAG research API: planner, parallel researchers, embedding ranking, critic and writer, streamed live · <a href="https://github.com/Nityaa08/meridian">Code</a></li>
+  <li><b>Cross-Border Fee API</b> · Itemises the cost of a cross-border payment: FX spread, fees and taxes · <a href="https://cross-border-fee-api.vercel.app">Live</a> · <a href="https://github.com/Nityaa08/cross-border-fee-api">Code</a></li>
+  <li><b>Fraud Pattern Explorer</b> · Risk-analyst dashboard with risk scores and suspicious-pattern alerts · <a href="https://github.com/Nityaa08/fraud-pattern-explorer">Code</a></li>
 </ul>
 
 <h2>Skills</h2>
 <div class="skills">
-  <p><b>AI engineering:</b> LLMs, AI agents, agentic workflows, tool calling (function calling), Model Context Protocol (MCP), multi-agent workflows, prompt engineering, embeddings, scheduled agents</p>
-  <p><b>Evals and quality:</b> LLM evaluation (evals) with labelled test sets, shadow testing, A/B model comparison, acceptance testing, root-cause analysis</p>
-  <p><b>AI security:</b> red-teaming, prompt-injection defence, guardrails, OAuth 2.0 (PKCE), access control, multi-tenant isolation, webhook verification</p>
-  <p><b>Production:</b> observability (logging, metrics), incident debugging, feature-flagged releases, LLM cost optimisation, REST APIs, webhooks</p>
-  <p><b>Stack:</b> Python, TypeScript, Go, FastAPI, Express, Next.js, React, PostgreSQL, MongoDB, Redis, Docker, Kubernetes, AWS, Git, GitHub Actions (CI/CD), Vercel; OpenAI and Groq APIs; Salesforce and Google Sheets APIs. (built by directing AI coding agents; I review, test and own what ships)</p>
-  <p><b>AI tools:</b> Claude Code, Claude Design, Cursor, DeepSeek, Grok; personal agents in Slack for my pull request workflow</p>
-  <p><b>Ways of working:</b> requirements gathering with business stakeholders, customer demos, cross-functional work across India and Latin America, payments and fintech domain</p>
+  <p><b>AI:</b> LLM agents, tool calling, MCP, RAG, prompt engineering, evals, guardrails, AI red-teaming</p>
+  <p><b>Engineering:</b> Python, FastAPI, REST APIs, OAuth 2.0, SQL, Docker, Git, CI/CD, observability, system design</p>
+  <p><b>Tools:</b> Claude Code, Cursor, Vercel</p>
 </div>
 
 <h2>Education</h2>
 <p class="edu"><b>B.Tech, Computer Science and Engineering (AI and Data Science)</b> · SASTRA University · 2022 – 2026</p>
-<p class="edu"><b>Class XII, CBSE</b> · Convent of Jesus and Mary</p>
 
 <h2>Certifications</h2>
-<ul class="certs">
-  <li><b>OWASP Top 10:2025 in Go</b> · SecureFlag · 2026</li>
-  <li><b>Introduction to Generative AI</b> and <b>Prompt Design in Vertex AI</b> (skill badge) · Google Cloud · 2024</li>
-  <li><b>Supervised Machine Learning: Regression and Classification</b> · DeepLearning.AI and Stanford University (Coursera) · 2024</li>
-  <li><b>Prompt Engineering for Everyone</b> and <b>Create a Voice Assistant with OpenAI GPT-3 and IBM Watson</b> · IBM Cognitive Class · 2024</li>
-  <li><b>Artificial Intelligence Use Cases and Applications</b> · AWS · 2024; <b>Machine Learning Pipelines with Azure ML Studio</b> · Coursera · 2024</li>
-</ul>
+<p class="edu">OWASP Top 10 (SecureFlag, 2026) · Supervised Machine Learning (DeepLearning.AI and Stanford, 2024) · Generative AI and Prompt Design in Vertex AI (Google Cloud, 2024)</p>
 
 <h2>Languages</h2>
-<p style="margin:0">English (full professional proficiency) · Hindi (native) · Tamil (native)</p>
+<p style="margin:0">English (professional) · Hindi (native) · Tamil (native)</p>
 </body></html>
