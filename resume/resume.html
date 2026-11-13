@@ -3,9 +3,9 @@
 <!-- Source for public/Nityashree_S_Resume.pdf. Build: node resume/make-pdf.mjs
      Nitya chose (3 Nov) to show her phone number on the public copy too. -->
 <style>
-@page{size:A4;margin:13mm 15mm 12mm}
+@page{size:A4;margin:11mm 14mm 10mm}
 *{box-sizing:border-box}
-body{font:9.8pt/1.45 "Helvetica Neue",Helvetica,Arial,sans-serif;color:#1a1a1a;margin:0;background:#fff}
+body{font:9.7pt/1.42 "Helvetica Neue",Helvetica,Arial,sans-serif;color:#1a1a1a;margin:0;background:#fff}
 a{color:#1a1a1a;text-decoration:none;border-bottom:1px solid #b9b9b9}
 header{padding-bottom:7px;border-bottom:1.5px solid #111}
 h1{font-size:22pt;line-height:1;margin:0;letter-spacing:-.3px;font-weight:700}
@@ -49,6 +49,7 @@ ul{margin:2px 0 0 15px;padding:0}li{margin:3px 0}
     <li>Built a per-user OAuth 2.0 MCP connector so each employee's agent reaches only what that employee can see; designed and built multi-tenant guest access with isolated sessions and credentials.</li>
     <li>Red-teamed the agent engine before launch (prompt injection to guardrail removal and memory poisoning); the fix moved guardrails into the platform. Closed CSRF, webhook and fail-open auth gaps.</li>
     <li>Ran evals in production: shadow-tested a multilingual reply-language step on a labelled set before release, and an A/B test that led the team to change the default model.</li>
+    <li>Fixed agent-session failures (duplicate or orphaned tool-call history that LLM providers rejected, failed turns that lost the user's message) and added a per-turn outcome record so agent success is measured in production.</li>
     <li>Built finance agents with the finance team (invoice intake: the LLM extracts, tested code validates) and a demo agent for a customer event.</li>
   </ul>
   <p class="lor">Letter of recommendation from Yuno's VP of AI available on request.</p>
@@ -59,6 +60,7 @@ ul{margin:2px 0 0 15px;padding:0}li{margin:3px 0}
   <ul>
     <li>Tested an internal AI assistant with Sales and BD before launch and caught the data error behind its wrong answers.</li>
     <li>Built a live KPI dashboard from Salesforce, MongoDB and Google Sheets APIs, and automated partner and payment-provider data upkeep.</li>
+    <li>Built and audited a database of which payment providers and methods work in which markets, fixing data-quality errors.</li>
   </ul>
 </div>
 
@@ -75,6 +77,7 @@ ul{margin:2px 0 0 15px;padding:0}li{margin:3px 0}
   <p><b>AI:</b> LLM agents, tool calling, MCP, RAG, prompt engineering, evals, guardrails, AI red-teaming</p>
   <p><b>Engineering:</b> Python, FastAPI, REST APIs, OAuth 2.0, SQL, Docker, Git, CI/CD, observability, system design</p>
   <p><b>Tools:</b> Claude Code, Cursor, Vercel</p>
+  <p><b>Languages:</b> English (professional), Hindi and Tamil (native)</p>
 </div>
 
 <h2>Education</h2>
@@ -83,6 +86,4 @@ ul{margin:2px 0 0 15px;padding:0}li{margin:3px 0}
 <h2>Certifications and programs</h2>
 <p class="edu">Data Analytics &amp; AI Launchpad Program (PwC Acceleration Centers India, 2025) · OWASP Top 10 (SecureFlag, 2026) · Supervised Machine Learning (DeepLearning.AI and Stanford, 2024) · Generative AI and Prompt Design in Vertex AI (Google Cloud, 2024)</p>
 
-<h2>Languages</h2>
-<p style="margin:0">English (professional) · Hindi (native) · Tamil (native)</p>
 </body></html>
