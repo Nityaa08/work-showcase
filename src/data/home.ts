@@ -2,7 +2,7 @@
 export const hero = {
   hi: 'Hi, I’m Nitya, an AI engineer.',
   headline: 'I build AI agents that hold up in production.',
-  sub: 'Most of my days go into LLM agents: the MCP connectors they use, the evals that tell me they work, and the guardrails that keep people safe. I like the quiet part of the job, where I prove something works before anyone has to trust it.',
+  sub: 'I build the systems companies run AI agents on: the MCP connectors they use, the evals that tell me they work, and the guardrails that keep people safe. I like the quiet part of the job, where I prove something works before anyone has to trust it.',
 };
 export const how = {
   title: 'One laptop, a team of agents, and me in the loop.',
