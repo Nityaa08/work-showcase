@@ -9,7 +9,8 @@ import { hero, how, contact, offClock, cards, desk, outsideIntro, contactLine, l
 import Desk from '../components/Desk.astro';
 import Trail from '../components/Trail.astro';
 import ContactLinks from '../components/ContactLinks.astro';
-import { projects, projectsIntro } from '../data/projects';
+import { cornerCopy } from '../data/corner';
+import { getNotes } from '../lib/notes';
 // The envelope's stamp: a rectangle with a perforated (scalloped) edge, traced clockwise.
 const stampEdge = (() => {
   const w = 60, h = 72, r = 2.4, n = [8, 10];
@@ -24,6 +25,9 @@ const stampEdge = (() => {
 const write = mailto(letter.subject, letter.body);
 
 const work = cases.filter((c) => c.ready);
+// My corner's words depend on whether a note is published yet; the desk's laptop note follows them.
+const cc = cornerCopy((await getNotes()).length > 0);
+const deskNotes = desk.map((d) => (d.id === 'laptop' ? { ...d, note: cc.laptop } : d));
 ---
 <!doctype html>
 <html lang="en">
@@ -81,28 +85,11 @@ const work = cases.filter((c) => c.ready);
           ))}
         </div>
 
-        {/* Side projects: compact rows a recruiter can try right away. Copy in src/data/projects.ts. */}
-        <div class="pj" id="projects">
-          <div class="pj-head">
-            <h3 id="pj-title">{projectsIntro.title}</h3>
-            <p>{projectsIntro.text}</p>
-          </div>
-          <ul class="pj-list">
-            {projects.map((p) => (
-              <li class="pj-row">
-                <div class="pj-txt">
-                  <h4>{p.name}</h4>
-                  <p>{p.line}</p>
-                </div>
-                <div class="pj-links">
-                  <a class="pj-try" href={p.live} target="_blank" rel="noopener">Try it<span class="sr-only">: {p.name} live demo, opens in a new tab</span> <span aria-hidden="true">↗</span></a>
-                  <a class="pj-code" href={p.code} target="_blank" rel="noopener">Code<span class="sr-only">: {p.name} on GitHub, opens in a new tab</span> <span aria-hidden="true">↗</span></a>
-                </div>
-              </li>
-            ))}
-          </ul>
-          <p class="pj-note">{projectsIntro.note}</p>
-        </div>
+        {/* One quiet link row to "My corner" (side projects, notes, bookshelf), under the case cards. */}
+        <a class="cr-row" href="/corner/">
+          <span class="cr-row-t"><b>{cc.homeRow.label}</b><span>{cc.homeRow.hint}</span></span>
+          <span class="cr-row-go" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+        </a>
       </section>
 
       <section class="h-how" id="how">
@@ -148,12 +135,13 @@ const work = cases.filter((c) => c.ready);
               <button type="button" class="dk-close" aria-label="Close note"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /></svg></button>
             </div>
             <p class="dk-text" id="dk-text"></p>
+            <a class="dk-link" id="dk-link" href="/corner/" hidden><span></span> <i aria-hidden="true">→</i></a>
           </article>
           <p class="sr-only" id="dk-live" aria-live="polite"></p>
-          <template id="dk-notes">{desk.map((d) => <div data-k={d.id} data-name={d.name} data-note={d.note} />)}</template>
+          <template id="dk-notes">{deskNotes.map((d) => <div data-k={d.id} data-name={d.name} data-note={d.note} data-href={d.href} data-link={d.link} />)}</template>
           <noscript>
             <style is:inline>.dk-hint { display: none !important; }</style>
-            <ul class="dk-plain">{desk.map((d) => <li><b>{d.name}.</b> {d.note}</li>)}</ul>
+            <ul class="dk-plain">{deskNotes.map((d) => <li><b>{d.name}.</b> {d.note}{d.href && <> <a href={d.href}>{d.link}</a></>}</li>)}</ul>
           </noscript>
         </div>
       </section>
@@ -259,12 +247,17 @@ const work = cases.filter((c) => c.ready);
         const notes = new Map([...(document.getElementById('dk-notes') as HTMLTemplateElement).content.querySelectorAll<HTMLElement>('[data-k]')].map((n) => [n.dataset.k!, n.dataset]));
         const card = document.getElementById('dk-card')!, hint = document.getElementById('dk-hint')!, live = document.getElementById('dk-live')!;
         const nameEl = card.querySelector('.dk-name')!, textEl = card.querySelector('.dk-text')!;
+        const linkEl = document.getElementById('dk-link') as HTMLAnchorElement;
         const btns = [...deskEl.querySelectorAll<HTMLButtonElement>('.dk-hit')];
         const btn = (k: string) => btns.find((x) => x.dataset.k === k)!;
         const objs = (k: string) => deskEl.querySelectorAll(`[data-obj="${k}"], [data-for="${k}"]`);
         const mark = (k: string, cls: string, on: boolean) => objs(k).forEach((o) => o.classList.toggle(cls, on));
         let open = '', seq = 0;
-        const setText = (k: string) => { const n = notes.get(k)!; nameEl.textContent = n.name!; textEl.textContent = n.note!; };
+        const setText = (k: string) => {
+          const n = notes.get(k)!; nameEl.textContent = n.name!; textEl.textContent = n.note!;
+          // A note can lead somewhere (the books open my shelf, the laptop My corner).
+          linkEl.hidden = !n.href; if (n.href) { linkEl.href = n.href; linkEl.querySelector('span')!.textContent = n.link!; }
+        };
         const close = (focusBack = false) => {
           if (!open) return;
           const b = btn(open);

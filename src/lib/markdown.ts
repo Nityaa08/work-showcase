@@ -5,6 +5,8 @@ import * as home from '../data/home';
 import * as mcp from '../data/mcp';
 import * as sec from '../data/security';
 import { projects, projectsIntro } from '../data/projects';
+import { corner, cornerCopy, books } from '../data/corner';
+import type { Note } from './notes';
 
 export const SITE_NAME = 'Nityashree S';
 const abs = (site: URL | undefined, p: string) => (site ? new URL(p, site).href : p);
@@ -26,7 +28,8 @@ const caseFooter = (site: URL | undefined, c: Case) => {
   return `## More\n\n${links.join('\n')}`;
 };
 
-export function homeMd(site?: URL) {
+export function homeMd(site: URL | undefined, notes: Note[] = []) {
+  const cc = cornerCopy(notes.length > 0);
   const work = cases.filter((c) => c.ready);
   return `# ${SITE_NAME}: AI engineer
 
@@ -39,12 +42,6 @@ Resume: ${abs(site, home.contact.resume)}
 ## Selected work
 
 ${work.map((c) => `### Case ${c.no}: ${home.cards[c.slug].headline}\n\n**${c.title}.** ${home.cards[c.slug].text}\n\n- Stack: ${stackOf(c).join(', ')}\n- Case study: ${abs(site, `/work/${c.slug}/`)} (markdown: ${abs(site, `/work/${c.slug}.md`)})`).join('\n\n')}
-
-## ${projectsIntro.title}
-
-${projectsIntro.text} ${projectsIntro.note}
-
-${projectList()}
 
 ## How I work
 
@@ -66,7 +63,11 @@ ${home.path.map((p) => `${Number(p.when)}. **${p.title}.** ${p.line}`).join('\n'
 
 *${home.offClock}.* ${home.outsideIntro.text}
 
-${home.desk.map((d) => `- **${d.name}.** ${d.note}`).join('\n')}
+${home.desk.filter((d) => d.id !== 'laptop').map((d) => `- **${d.name}.** ${d.note}${d.href ? ` ${d.link}: ${abs(site, d.href)}` : ''}`).join('\n')}
+
+## ${corner.name}
+
+${cc.homeRow.label}: ${cc.summary}. ${abs(site, '/corner/')} (markdown: ${abs(site, '/corner.md')})
 
 ## Contact
 
@@ -205,7 +206,64 @@ export function caseMd(site: URL | undefined, slug: string) {
   return platformMd(site, c);
 }
 
-export function llmsTxt(site?: URL) {
+const noteLink = (site: URL | undefined, n: Note) => n.data.externalUrl ?? abs(site, `/notes/${n.id}.md`);
+const noteList = (site: URL | undefined, notes: Note[]) =>
+  notes.map((n) => `- [${n.data.title}](${noteLink(site, n)})${n.data.tag ? ` (${n.data.tag})` : ''}: ${n.data.summary} (${n.data.readMinutes} min read)`).join('\n');
+
+export function cornerMd(site: URL | undefined, notes: Note[]) {
+  const cc = cornerCopy(notes.length > 0);
+  return `# ${corner.name}: ${cc.title}
+
+${cc.intro}
+
+## ${projectsIntro.title}
+
+${projectsIntro.text} ${projectsIntro.note}
+
+${projectList()}
+${notes.length ? `
+## ${corner.notes.title}
+
+${corner.notes.text}
+
+${noteList(site, notes)}
+` : ''}
+## ${corner.shelf.title}
+
+${corner.shelf.text}
+
+${books.map((b) => `- *${b.title}*${b.series ? ' (the series)' : ''} by ${b.author}${b.why ? `. ${b.why}` : ''}`).join('\n')}
+
+## More
+
+- [Home](${abs(site, '/index.md')})
+`;
+}
+
+export function notesMd(site: URL | undefined, notes: Note[]) {
+  return `# Notes
+
+${corner.notes.text}
+
+${noteList(site, notes)}
+
+- [${corner.name}](${abs(site, '/corner.md')})
+`;
+}
+
+export function noteMd(site: URL | undefined, n: Note) {
+  const c = n.data.case ? cases.find((x) => x.slug === n.data.case && x.ready) : undefined;
+  return `# ${n.data.title}
+
+${n.data.tag ? `\`${n.data.tag}\` · ` : ''}*${n.data.summary}* (${n.data.readMinutes} min read)
+
+${(n.body ?? '').trim()}
+${c ? `\nThe full story: [Case ${c.no}: ${c.title}](${abs(site, `/work/${c.slug}.md`)})\n` : ''}
+- [All notes](${abs(site, '/notes.md')})
+`;
+}
+
+export function llmsTxt(site: URL | undefined, notes: Note[] = []) {
   const work = cases.filter((c) => c.ready);
   return `# ${SITE_NAME}
 
@@ -213,9 +271,15 @@ export function llmsTxt(site?: URL) {
 
 ## Pages
 
-- [Home](${abs(site, '/index.md')}): who I am, selected work, side projects to try, how I work, my path (a journey with four stops), life outside work, contact
+- [Home](${abs(site, '/index.md')}): who I am, selected work, how I work, my path (a journey with four stops), life outside work, contact
 ${work.map((c) => `- [Case ${c.no}: ${c.title}](${abs(site, `/work/${c.slug}.md`)}): ${home.blurbs[c.slug]}`).join('\n')}
+- [${corner.name}](${abs(site, '/corner.md')}): ${cornerCopy(notes.length > 0).title.replace(/\.$/, '')}: ${cornerCopy(notes.length > 0).summary}
+${notes.length ? `- [Notes](${abs(site, '/notes.md')}): ${corner.notes.text}
 
+## ${corner.notes.kicker}
+
+${noteList(site, notes)}
+` : ''}
 ## Side projects (live demos)
 
 ${projects.map((p) => `- [${p.name}](${p.live}): ${p.line} Code: ${p.code}`).join('\n')}

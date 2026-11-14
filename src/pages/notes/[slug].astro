@@ -1,0 +1,62 @@
+---
+// One note, rendered from its markdown file in src/content/notes/.
+// A 'work' note reads on the dark case-study page (the site's rule: work is dark); a 'personal' note on light paper.
+// Notes posted elsewhere (externalUrl) get no page here: their card links out.
+import '../../styles/global.css';
+import Nav from '../../components/Nav.astro';
+import Meta from '../../components/Meta.astro';
+import { render } from 'astro:content';
+import { cases } from '../../data/cases';
+import { getNotes, type Note } from '../../lib/notes';
+
+export async function getStaticPaths() {
+  const all = await getNotes();
+  const own = all.filter((n) => !n.data.externalUrl);
+  return own.map((n, i) => ({ params: { slug: n.id }, props: { n, prev: own[i - 1], next: own[i + 1] } }));
+}
+const { n, prev, next } = Astro.props as { n: Note; prev?: Note; next?: Note };
+const { Content } = await render(n);
+const c = n.data.case ? cases.find((x) => x.slug === n.data.case && x.ready) : undefined;
+const light = n.data.kind === 'personal';
+const left = prev ? { href: `/notes/${prev.id}/`, k: 'Previous note', t: prev.data.title } : { href: '/notes/', k: '', t: 'All notes' };
+const right = next ? { href: `/notes/${next.id}/`, k: 'Next note', t: next.data.title } : { href: '/corner/', k: '', t: 'Back to my corner' };
+const title = `${n.data.title} · Nityashree S`;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={n.data.summary} />
+    <Meta title={title} description={n.data.summary} path={`/notes/${n.id}/`} />
+  </head>
+  <body class:list={['studio', 'note-page', { 'note-light': light }]}>
+    <Nav crumb="Note" light={light} />
+    <main id="main" tabindex="-1" class:list={{ light }}>
+      <article class="note">
+        <header class="note-head">
+          <a class="cs-back" href="/notes/"><span aria-hidden="true">←</span> All notes</a>
+          <p class="note-tag">{n.data.tag && <span class="fn-tag"><b>{n.data.tag.split(' · ')[0]}</b>{n.data.tag.includes(' · ') && <> · {n.data.tag.split(' · ').slice(1).join(' · ')}</>}</span>}<span class="kicker">{n.data.readMinutes} min read</span></p>
+          <h1>{n.data.title}</h1>
+          <p class="cs-intro">{n.data.summary}</p>
+        </header>
+        <div class="note-body"><Content /></div>
+        {c && (
+          <p class="note-more">
+            <a href={`/work/${c.slug}/`}><span class="note-more-k">Case {c.no}</span><span class="note-more-t">{c.title}: the full case study</span><i aria-hidden="true">→</i></a>
+          </p>
+        )}
+      </article>
+      <footer class="case-nav">
+        <a class="cn prev" href={left.href}>
+          <span class="cn-btn" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 8H3M7 4L3 8l4 4"/></svg></span>
+          <span class="cn-meta">{left.k && <em>{left.k}</em>}<b>{left.t}</b></span>
+        </a>
+        <a class="cn next" href={right.href}>
+          <span class="cn-meta">{right.k && <em>{right.k}</em>}<b>{right.t}</b></span>
+          <span class="cn-btn" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+        </a>
+      </footer>
+    </main>
+  </body>
+</html>

@@ -13,8 +13,11 @@ import { desk } from '../data/home';
 const W = 600, H = 400, Y0 = 40, VH = H - Y0;
 // Hit areas in drawing units: centre x/y, width, height. CSS keeps each at least 44px on screen.
 const hits: Record<string, [number, number, number, number]> = {
-  books: [137, 132, 140, 100],
-  globe: [285, 126, 96, 108],
+  // books, laptop and globe sit close together on the wall shelf: their hit areas meet at the gaps between the
+  // drawings (x 201 and 269), and on phones the laptop's (widened to 44px) sits on top, so a tap on it is always its own.
+  books: [134, 132, 134, 100],
+  laptop: [235, 150, 54, 64],
+  globe: [313, 126, 88, 108], // the globe is drawn at x 285 and moved 24 units right (dk-globe-at) to make room for the laptop
   ghungroo: [124, 312, 156, 50],
   mug: [255, 292, 72, 84],
   mat: [368, 312, 128, 48],
@@ -144,7 +147,24 @@ const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(
       </g>
     </g>
 
-    <!-- a small globe -->
+    <!-- a small open laptop on the shelf, between the books and the globe. Its note links to My corner.
+         Opening it re-types the lines on its screen once, and the prompt (its one near-black accent) appears last. -->
+    <g class="dk-obj dk-laptop" data-obj="laptop">
+      <ellipse class="dk-shadow" cx="233" cy="177.5" rx="30" ry="2.4" />
+      <g class="dk-lift">
+        <rect class="dk-paper" x="211" y="134" width="44" height="36" rx="3.5" />
+        <rect class="dk-screen" x="215" y="138" width="36" height="27" rx="1.5" />
+        <path class="dk-faint dk-type" style="--d:0s" d="M219.5 144 H236" />
+        <path class="dk-faint dk-type" style="--d:.18s" d="M219.5 149 H244" />
+        <path class="dk-faint dk-type" style="--d:.36s" d="M223.5 154 H239" />
+        <g class="dk-prompt"><path d="M219.5 158 l3 2.2 l-3 2.2" /><rect x="224.5" y="161" width="5" height="1.6" rx="0.6" /></g>
+        <path class="dk-paper" d="M205 170 H261 L259 175.6 Q258.6 176.6 257.4 176.6 H208.6 Q207.4 176.6 207 175.6 Z" />
+        <path class="dk-faint" d="M226 170.6 H240" />
+      </g>
+    </g>
+
+    <!-- a small globe, moved 24 units right to make room for the laptop -->
+    <g class="dk-globe-at" transform="translate(24 0)">
     <g class="dk-obj dk-globe" data-obj="globe">
       <ellipse class="dk-shadow" cx="285" cy="177.5" rx="30" ry="2.4" />
       <g class="dk-lift">
@@ -168,6 +188,7 @@ const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(
         <circle class="dk-pin dk-pin2" cx="270.2" cy="131.6" r="3" />
         <g class="dk-plane"><path d="M6 0 L-5 -4.4 L-2.4 0 L-5 4.4 Z" /><animateMotion begin="indefinite" dur="1.8s" fill="freeze" rotate="auto" calcMode="spline" keyTimes="0;1" keyPoints="0;1" keySplines="0.45 0 0.55 1"><mpath href="#dk-route" /></animateMotion></g>
       </g>
+    </g>
     </g>
 
     <!-- ghungroo: a pair of ankle bells -->

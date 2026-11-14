@@ -1,0 +1,174 @@
+---
+// My corner: one light page on the site's off-white paper. The header, the Workbench (side projects as light
+// technical cards, Invoice Agent as the wide lead), then on the dot-grid paper: Field notes (src/content/notes/,
+// only once a note is published) and the Shelf (an ink drawing; each book opens a note card like the home desk's).
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Meta from '../components/Meta.astro';
+import NoteCard from '../components/NoteCard.astro';
+import Shelf from '../components/Shelf.astro';
+import Bench from '../components/Bench.astro';
+import { corner, cornerCopy, books, whySoon } from '../data/corner';
+import { projectsIntro } from '../data/projects';
+import { getNotes } from '../lib/notes';
+
+const notes = await getNotes();
+const cc = cornerCopy(notes.length > 0);
+const title = `${corner.name} · Nityashree S`;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={cc.intro} />
+    <Meta title={title} description={cc.intro} path="/corner/" />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+  </head>
+  <body class="studio cr-page">
+    <Nav light />
+    <main id="main" tabindex="-1">
+      <div class="cr-top light" data-light>
+        <header class="cr-head">
+          <a class="cs-back" href="/"><span aria-hidden="true">←</span> Home</a>
+          <p class="kicker">{corner.name}</p>
+          <h1>{cc.title}</h1>
+          <p class="cr-intro">{cc.intro}</p>
+          <nav class="cr-jump" aria-label="On this page">
+            <a href="#built">{corner.bench.kicker}</a>{notes.length > 0 && <a href="#notes">{corner.notes.kicker}</a>}<a href="#shelf">{corner.shelf.kicker}</a>
+          </nav>
+        </header>
+
+        <section class="cr-sec cr-bench" id="built" aria-labelledby="built-t">
+          <div class="cr-sec-head">
+            <div><p class="kicker">{corner.bench.kicker}</p><h2 id="built-t">{corner.bench.title}</h2></div>
+            <p>{projectsIntro.text}</p>
+          </div>
+          <Bench />
+          <p class="cr-note">{projectsIntro.note}</p>
+        </section>
+      </div>
+
+      <div class="cr-paper light" data-light>
+        {notes.length > 0 && (
+        <section class="cr-sec cr-notes" id="notes" aria-labelledby="notes-t">
+          <div class="cr-sec-head">
+            <div><p class="kicker">{corner.notes.kicker}</p><h2 id="notes-t">{corner.notes.title}</h2></div>
+            <p>{corner.notes.text}</p>
+          </div>
+          <ul class="fn-grid">{notes.map((n, i) => <NoteCard n={n} i={i} />)}</ul>
+          <a class="cr-more" href="/notes/">{corner.notes.all} <span aria-hidden="true">→</span></a>
+        </section>
+        )}
+
+        <section class="cr-sec cr-shelf" id="shelf" aria-labelledby="shelf-t">
+          <div class="shf-text">
+            <p class="kicker">{corner.shelf.kicker}</p>
+            <h2 id="shelf-t">{corner.shelf.title}</h2>
+            <p class="shf-intro">{corner.shelf.text}</p>
+          </div>
+          <div class="shf-side"><Shelf /></div>
+          <div class="shf-note">
+            <p class="dk-hint" id="sh-hint"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V10m0-1.5a1.5 1.5 0 0 1 3 0V11m0-1a1.5 1.5 0 0 1 3 0v4.5A6.5 6.5 0 0 1 11.5 21h-.6a6 6 0 0 1-4.6-2.2L3.6 15.4a1.6 1.6 0 0 1 2.4-2.1L9 16" /></svg><span>{corner.shelf.hint}</span></p>
+            <article class="dk-card" id="sh-card" tabindex="-1" hidden aria-labelledby="sh-name">
+              <div class="dk-card-top">
+                <h3 class="dk-name" id="sh-name"></h3>
+                <button type="button" class="dk-close" aria-label="Close note"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /></svg></button>
+              </div>
+              <p class="sh-by" id="sh-by"></p>
+              <p class="dk-text" id="sh-text"></p>
+            </article>
+            <p class="sr-only" id="sh-live" aria-live="polite"></p>
+            <noscript>
+              <style is:inline>#sh-hint { display: none !important; }</style>
+              <ul class="dk-plain">{books.map((b) => <li><b>{b.title}</b>{b.series ? ' (the series)' : ''} by {b.author}. {b.why || whySoon}</li>)}</ul>
+            </noscript>
+          </div>
+        </section>
+      </div>
+    </main>
+    <footer class="foot light cr-foot" data-light>
+      <span>© Nityashree S</span>
+      <span class="foot-sig">Made with care. No prompts injected.</span>
+      <a href="#main">Back to top ↑</a>
+    </footer>
+    <script>
+      const still = matchMedia('(prefers-reduced-motion: reduce)');
+
+      // Nav: light style over the page's light parts (all of it, today; kept so a dark part can be added later).
+      const navEl = document.getElementById('nav')!;
+      const lights = [...document.querySelectorAll<HTMLElement>('[data-light]')];
+      let queued = false;
+      const paint = () => {
+        queued = false; const y = 34;
+        navEl.classList.toggle('on-light', lights.some((el) => { const r = el.getBoundingClientRect(); return r.top <= y && r.bottom > y; }));
+      };
+      const queue = () => { if (!queued) { queued = true; requestAnimationFrame(paint); } };
+      paint(); addEventListener('scroll', queue, { passive: true }); addEventListener('resize', queue);
+
+      // Workbench pictures: each plays once as its card comes into view (.in) and pauses while off screen (.off).
+      const plays = [...document.querySelectorAll<HTMLElement>('[data-play]')];
+      if (still.matches || !('IntersectionObserver' in window)) plays.forEach((el) => el.classList.add('in', 'done'));
+      else {
+        const io = new IntersectionObserver((es) => es.forEach((e) => {
+          const el = e.target as HTMLElement;
+          if (e.isIntersecting && e.intersectionRatio >= 0.35) el.classList.add('in');
+          el.classList.toggle('off', !e.isIntersecting);
+        }), { threshold: [0, 0.35] });
+        plays.forEach((el) => io.observe(el));
+      }
+
+      // --- The shelf: every book is a button that opens one note at a time, the same way the desk does on home. ---
+      const shelf = document.querySelector<HTMLElement>('[data-shelf]');
+      if (shelf) {
+        const notes = new Map([...(document.getElementById('sh-notes') as HTMLTemplateElement).content.querySelectorAll<HTMLElement>('[data-k]')].map((n) => [n.dataset.k!, n.dataset]));
+        const card = document.getElementById('sh-card')!, hint = document.getElementById('sh-hint')!, live = document.getElementById('sh-live')!;
+        const nameEl = document.getElementById('sh-name')!, byEl = document.getElementById('sh-by')!, textEl = document.getElementById('sh-text')!;
+        const btns = [...shelf.querySelectorAll<HTMLButtonElement>('.bk-hit')];
+        const objs = (k: string) => shelf.querySelectorAll(`[data-obj="${k}"]`);
+        const mark = (k: string, cls: string, on: boolean) => objs(k).forEach((o) => o.classList.toggle(cls, on));
+        const setExp = (k: string, on: boolean) => btns.filter((b) => b.dataset.k === k).forEach((b) => b.setAttribute('aria-expanded', String(on)));
+        let open = '', seq = 0, opener: HTMLButtonElement | null = null;
+        const setText = (k: string) => {
+          const n = notes.get(k)!;
+          nameEl.textContent = n.name!; byEl.textContent = `by ${n.by}`; textEl.textContent = n.note!;
+          textEl.classList.toggle('soon', n.soon !== undefined);
+        };
+        const close = (focusBack = false) => {
+          if (!open) return;
+          mark(open, 'open', false); setExp(open, false);
+          seq++; card.classList.remove('show', 'swap'); card.hidden = true; hint.hidden = false; live.textContent = '';
+          open = '';
+          if (focusBack && opener) opener.focus();
+        };
+        const show = (k: string, from: HTMLButtonElement) => {
+          const n = notes.get(k)!, was = open, my = ++seq;
+          opener = from;
+          if (was) { mark(was, 'open', false); setExp(was, false); }
+          open = k; mark(k, 'open', true); setExp(k, true);
+          if (was && !card.hidden) {
+            card.classList.add('swap');
+            window.setTimeout(() => { if (my !== seq) return; setText(k); card.classList.remove('swap'); }, still.matches ? 0 : 180);
+          } else {
+            setText(k); card.classList.remove('show', 'swap');
+            hint.hidden = true; card.hidden = false;
+            requestAnimationFrame(() => requestAnimationFrame(() => { if (my === seq || open === k) card.classList.add('show'); }));
+          }
+          live.textContent = `${n.name}, by ${n.by}. ${n.note}`;
+          const r = card.getBoundingClientRect();
+          if (r.bottom > innerHeight) card.scrollIntoView({ block: 'nearest', behavior: still.matches ? 'auto' : 'smooth' });
+        };
+        btns.forEach((b) => {
+          const k = b.dataset.k!;
+          b.addEventListener('pointerenter', () => mark(k, 'hot', true));
+          b.addEventListener('pointerleave', () => mark(k, 'hot', false));
+          b.addEventListener('focus', () => b.matches(':focus-visible') && mark(k, 'hot', true));
+          b.addEventListener('blur', () => mark(k, 'hot', false));
+          b.addEventListener('click', () => (open === k ? close() : show(k, b)));
+        });
+        card.querySelector('.dk-close')!.addEventListener('click', () => close(true));
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && open) close(true); });
+      }
+    </script>
+  </body>
+</html>

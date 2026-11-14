@@ -1,0 +1,45 @@
+---
+// /notes/: every published note as a card. Notes are one .md file each in src/content/notes/.
+// A rest route only so that the page is not built at all while no note is published (all are `draft: true`).
+import '../../styles/global.css';
+import Nav from '../../components/Nav.astro';
+import Meta from '../../components/Meta.astro';
+import NoteCard from '../../components/NoteCard.astro';
+import { corner } from '../../data/corner';
+import { getNotes } from '../../lib/notes';
+
+export async function getStaticPaths() {
+  return (await getNotes()).length ? [{ params: { index: undefined } }] : [];
+}
+const notes = await getNotes();
+const title = `Notes · Nityashree S`;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={corner.notes.text} />
+    <Meta title={title} description={corner.notes.text} path="/notes/" />
+  </head>
+  <body class="studio corner-page">
+    <Nav light />
+    <main id="main" tabindex="-1" class="cr light">
+      <header class="cr-head">
+        <a class="cs-back" href="/corner/"><span aria-hidden="true">←</span> {corner.name}</a>
+        <p class="kicker">Notes</p>
+        <h1>{corner.notes.title}</h1>
+        <p class="cr-intro">{corner.notes.text}</p>
+      </header>
+      <section class="cr-sec cr-sec-first" aria-label="All notes">
+        <ul class="fn-grid">{notes.map((n, i) => <NoteCard n={n} i={i} level="h2" />)}</ul>
+      </section>
+    </main>
+    <footer class="foot light">
+      <span>© Nityashree S</span>
+      <span class="foot-sig">Made with care. No prompts injected.</span>
+      <a href="#main">Back to top ↑</a>
+    </footer>
+    <script>document.getElementById('nav')?.classList.add('on-light');</script>
+  </body>
+</html>

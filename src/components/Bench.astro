@@ -1,0 +1,103 @@
+---
+// My corner's Workbench: the side projects as dark technical cards on the light page, each with a live-looking
+// picture of what it does, drawn in HTML/CSS in the same language as the home page's case cards (no image files).
+// A 2-column grid with Invoice Agent (the first project in src/data/projects.ts) as the wide lead card.
+// Motion: each picture plays once when its card scrolls into view (.in), pauses while off screen (.off), and moves
+// only by transform and opacity (the script is in src/pages/corner.astro). With motion off, or without JavaScript,
+// every picture shows its finished state.
+import { projects } from '../data/projects';
+const bars = [18, 24, 20, 30, 26, 22, 28, 34, 92, 30, 24, 27, 21, 25, 19, 23];
+const spike = bars.indexOf(Math.max(...bars));
+---
+<div class="wb-wrap">
+  <ul class="wbn">
+    {projects.map((p, i) => (
+      <li class:list={['wb-card', `wb-${p.id}`, { 'wb-lead': i === 0 }]} data-play>
+        <div class="wb-art" aria-hidden="true">
+          {p.id === 'invoice-agent' && (
+            <div class="v v-inv">
+              <div class="vi-col">
+                <span class="v-k">read</span>
+                <div class="vi-doc"><b>Invoice</b><i style="--w:72%" /><i style="--w:54%" /><i style="--w:64%" /><span class="vi-amt"><i style="--w:40%" /><em>total</em></span></div>
+              </div>
+              <span class="v-link"><i /></span>
+              <div class="vi-col">
+                <span class="v-k">check</span>
+                <ul class="vi-checks">
+                  <li class="ok"><s>✓</s>vendor known</li>
+                  <li class="ok"><s>✓</s>totals add up</li>
+                  <li class="q"><s>?</s>order number missing</li>
+                </ul>
+              </div>
+              <span class="v-link"><i /></span>
+              <div class="vi-col">
+                <span class="v-k">decide</span>
+                <div class="vi-doc vi-held"><b>Invoice</b><i style="--w:72%" /><i style="--w:54%" /><i style="--w:64%" /><span class="vi-amt"><i style="--w:40%" /><em>total</em></span><span class="vi-stamp">Review</span></div>
+                <span class="vi-cap">waits for a person</span>
+              </div>
+            </div>
+          )}
+          {p.id === 'smart-router' && (
+            <div class="v v-rt">
+              <span class="vr-prompt"><span class="vr-k">prompt</span>“Summarise this long contract”</span>
+              <div class="vr-rows">
+                <div class="vr-row"><span class="vr-rule">short question</span><b><i /></b><span class="vr-tier">small</span></div>
+                <div class="vr-row"><span class="vr-rule">has code</span><b><i /></b><span class="vr-tier">mid</span></div>
+                <div class="vr-row on"><span class="vr-rule">long document</span><b><i /></b><span class="vr-tier">large</span></div>
+              </div>
+              <span class="vr-cost">routed · cost estimated</span>
+            </div>
+          )}
+          {p.id === 'meridian' && (
+            <div class="v v-md">
+              <div class="vm-src"><span><sup>1</sup>Wikipedia</span><span><sup>2</sup>arXiv</span></div>
+              <span class="vm-wires"><svg width="60" height="80" viewBox="0 0 60 80" preserveAspectRatio="none" focusable="false"><path d="M0 22 C 30 22, 30 40, 60 40" /><path d="M0 58 C 30 58, 30 40, 60 40" /></svg></span>
+              <div class="vm-doc">
+                <b>Report</b>
+                <p><i style="--w:86%" /><em>[1]</em></p>
+                <p><i style="--w:62%" /><em>[2]</em></p>
+                <p><i style="--w:74%" /><em>[1][2]</em></p>
+                <p><i style="--w:48%" /></p>
+              </div>
+            </div>
+          )}
+          {p.id === 'cross-border-fee-api' && (
+            <div class="v v-rc">
+              <span class="vc-slot" />
+              <div class="vc-clip">
+                <div class="vc-paper">
+                  <span class="vc-h">USD → BRL</span>
+                  <ul>
+                    <li><span>Send</span><span>100.00</span></li>
+                    <li><span>FX margin</span><span>0.90</span></li>
+                    <li><span>Network fee</span><span>0.35</span></li>
+                    <li><span>Payout fee</span><span>0.50</span></li>
+                    <li><span>IOF tax</span><span>0.38</span></li>
+                  </ul>
+                  <p class="vc-tot"><span>All-in</span><span>102.13</span></p>
+                </div>
+              </div>
+            </div>
+          )}
+          {p.id === 'fraud-pattern-explorer' && (
+            <div class="v v-fr">
+              <div class="vf-chart">
+                {bars.map((h, j) => <i class:list={{ spike: j === spike }} style={`--h:${h}%;--j:${j}`} />)}
+                <span class="vf-tip" style={`--x:${((spike + 0.5) / bars.length) * 100}%`}>spike · filter applied</span>
+              </div>
+              <div class="vf-rows"><i /><i /><i /></div>
+            </div>
+          )}
+        </div>
+        <div class="wb-meta">
+          <h3>{p.name}</h3>
+          <p>{p.short}</p>
+          <span class="wb-links">
+            <a class="wb-try" href={p.live} target="_blank" rel="noopener">Try it<span class="sr-only">: {p.name} live demo, opens in a new tab</span> <span aria-hidden="true">↗</span></a>
+            <a class="wb-code" href={p.code} target="_blank" rel="noopener">Code<span class="sr-only">: {p.name} on GitHub, opens in a new tab</span> <span aria-hidden="true">↗</span></a>
+          </span>
+        </div>
+      </li>
+    ))}
+  </ul>
+</div>

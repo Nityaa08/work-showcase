@@ -53,8 +53,12 @@ export const outsideIntro = {
  *  - My dance forms: the `note` of the item with id 'ghungroo' (for example "…two Indian classical forms, … and …").
  *  - My favourite books: the `note` of the item with id 'books' (for example add "Current favourite: …").
  */
-export const desk = [
-  { id: 'books', name: 'Books', label: 'My stack of books', note: 'Any book adaptation out there? I’ve probably read the book first.' },
+export type DeskItem = { id: string; name: string; label: string; note: string; href?: string; link?: string };
+export const desk: DeskItem[] = [
+  { id: 'books', name: 'Books', label: 'My stack of books', note: 'Any book adaptation out there? I’ve probably read the book first.', href: '/corner/#shelf', link: 'See my shelf' },
+  // The books and the laptop lead to My corner (its shelf, and its top): `href` and `link` add a link under the note.
+  // The laptop's note is replaced by cornerCopy().laptop (src/data/corner.ts), which mentions notes only once one is published.
+  { id: 'laptop', name: 'Laptop', label: 'My laptop', note: 'Where the things I make on my own live: side projects to try, short notes, and the books on my shelf.', href: '/corner/', link: 'Open my corner' },
   { id: 'ghungroo', name: 'Ghungroo', label: 'My ghungroo, the ankle bells of Indian classical dance', note: 'Dance came first, before almost anything else I learnt. Not one but two Indian classical forms, all the way to competition stages.' },
   { id: 'mat', name: 'Yoga mat', label: 'My yoga mat', note: 'Yoga began as a daily ritual and grew into competitions. It taught me that stillness takes practice.' },
   { id: 'mug', name: 'Mug', label: 'My mug', note: 'Not every object needs a story. This one just keeps the desk company.' },

@@ -1,10 +1,10 @@
 ---
-interface Props { crumb?: string; active?: 'work' | 'about' }
-const { crumb, active } = Astro.props;
+interface Props { crumb?: string; active?: 'work' | 'about'; light?: boolean }
+const { crumb, active, light } = Astro.props;
 import CommandMenu from './CommandMenu.astro';
 ---
 <a class="skip" href="#main">Skip to content</a>
-<header class="nav" id="nav">
+<header class:list={["nav", { "on-light": light }]} id="nav">
   <a class="brand" href="/" aria-label="Nityashree S, home">
     <span class="brand-who"><b>Nityashree S</b></span>
   </a>

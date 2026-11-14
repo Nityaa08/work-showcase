@@ -2,7 +2,9 @@
 // A small command menu: Cmd+K / Ctrl+K or "/" opens it, and so does the button in the nav (for touch screens).
 // An accessible dialog with a filterable list (combobox + listbox): arrows move, Enter opens, Esc closes and focus
 // returns to where it was. Vanilla JS, no framework. Copy lives in src/data/menu.ts.
-import { menuItems, menuCopy } from '../data/menu';
+import { getMenuItems, menuCopy } from '../data/menu';
+import { getNotes } from '../lib/notes';
+const menuItems = getMenuItems((await getNotes()).length > 0);
 const groups = [...new Set(menuItems.map((m) => m.group))];
 ---
 <div class="cmdk" id="cmdk" role="dialog" aria-modal="true" aria-labelledby="cmdk-title" hidden>

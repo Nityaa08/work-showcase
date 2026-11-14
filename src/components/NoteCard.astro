@@ -1,0 +1,26 @@
+---
+// One note as a field-notebook entry. A ruled page with a margin rule, its index number in the margin,
+// a small mono tag line like an engineer's log ('INCIDENT · agent offline'), the title, a one-line summary and
+// "x min read". Work notes carry harder tags (INCIDENT, DECISION, ATTACK); personal ones softer (READING, TIL).
+// A note posted elsewhere opens in a new tab (↗).
+import { noteHref, isExternal, type Note } from '../lib/notes';
+interface Props { n: Note; i: number; level?: 'h2' | 'h3' }
+const { n, i, level = 'h3' } = Astro.props;
+const ext = isExternal(n);
+const H = level;
+const where = ext ? new URL(n.data.externalUrl!).hostname.replace(/^www\./, '') : '';
+const [kind, ...rest] = (n.data.tag ?? (n.data.kind === 'work' ? 'NOTE' : 'TIL')).split(' · ');
+const topic = rest.join(' · ');
+---
+<li>
+  <a class:list={['fn', { 'fn-soft': n.data.kind === 'personal' }]} href={noteHref(n)} target={ext ? '_blank' : undefined} rel={ext ? 'noopener' : undefined}>
+    <span class="fn-no" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+    <span class="fn-tag"><b>{kind}</b>{topic && <> · {topic}</>}</span>
+    <H class="fn-t">{n.data.title}</H>
+    <p class="fn-s">{n.data.summary}</p>
+    <span class="fn-foot">
+      <span>{n.data.readMinutes} min read{ext && <span class="fn-where"> · on {where}</span>}{ext && <span class="sr-only">, opens in a new tab</span>}</span>
+      <i aria-hidden="true">{ext ? '↗' : '→'}</i>
+    </span>
+  </a>
+</li>
