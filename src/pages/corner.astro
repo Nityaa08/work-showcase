@@ -8,8 +8,9 @@ import Meta from '../components/Meta.astro';
 import NoteCard from '../components/NoteCard.astro';
 import Shelf from '../components/Shelf.astro';
 import Bench from '../components/Bench.astro';
+import CornerDesk from '../components/CornerDesk.astro';
 import { corner, cornerCopy, books, whySoon } from '../data/corner';
-import { projectsIntro } from '../data/projects';
+import { projectsIntro, projects } from '../data/projects';
 import { getNotes } from '../lib/notes';
 
 const notes = await getNotes();
@@ -29,20 +30,26 @@ const title = `${corner.name} · Nityashree S`;
     <Nav light />
     <main id="main" tabindex="-1">
       <div class="cr-top light" data-light>
-        <header class="cr-head">
-          <a class="cs-back" href="/"><span aria-hidden="true">←</span> Home</a>
-          <p class="kicker">{corner.name}</p>
-          <h1>{cc.title}</h1>
-          <p class="cr-intro">{cc.intro}</p>
-          <nav class="cr-jump" aria-label="On this page">
-            <a href="#built">{corner.bench.kicker}</a>{notes.length > 0 && <a href="#notes">{corner.notes.kicker}</a>}<a href="#shelf">{corner.shelf.kicker}</a>
-          </nav>
+        <header class="cr-head cr-hero">
+          <div class="cr-hero-text">
+            <a class="cs-back" href="/"><span aria-hidden="true">←</span> Home</a>
+            <p class="kicker">{corner.name}</p>
+            <h1>{cc.title}</h1>
+            <p class="cr-intro">{cc.intro}</p>
+            <nav class="cr-jump" aria-label="On this page">
+              <a href="#built">{corner.bench.kicker}</a>{notes.length > 0 && <a href="#notes">{corner.notes.kicker}</a>}<a href="#shelf">{corner.shelf.kicker}</a>
+            </nav>
+          </div>
+          <div class="cr-hero-art"><CornerDesk /></div>
         </header>
 
         <section class="cr-sec cr-bench" id="built" aria-labelledby="built-t">
           <div class="cr-sec-head">
             <div><p class="kicker">{corner.bench.kicker}</p><h2 id="built-t">{corner.bench.title}</h2></div>
-            <p>{projectsIntro.text}</p>
+            <div class="cr-bench-side">
+              <p>{projectsIntro.text}</p>
+              <p class="cr-status"><i aria-hidden="true"></i>{corner.benchStatus(projects.length).map((t, i) => <span>{i > 0 && <b aria-hidden="true">·</b>}{t}</span>)}</p>
+            </div>
           </div>
           <Bench />
           <p class="cr-note">{projectsIntro.note}</p>

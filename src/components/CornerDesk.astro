@@ -1,0 +1,60 @@
+---
+// The picture at the top of My corner: a larger ink drawing of the small laptop from the home desk, its screen typing
+// out a `~/corner` listing once (mono only inside the screen), a stack of books beside it, and a "Right now" note pinned
+// above the books in the desk-note style. Same line-art as the desk: 1.5px grey ink, white and light-grey fills, the
+// desk's soft shadow, and one near-black accent per drawing (the cursor; the book stack's ribbon).
+// Motion: the listing types once when the picture is on screen (.in), pauses off screen (.off), and moves only by
+// transform and opacity (the observer is the Workbench's, in corner.astro). With motion off or without JavaScript the
+// finished screen is simply there.
+// The listing follows src/data/projects.ts; the note's lines live in src/data/corner.ts (`now`).
+import { projects } from '../data/projects';
+import { now, nowLines } from '../data/corner';
+
+const entries = [...projects.map((p) => `${p.id}/`), 'shelf.md'];
+const X = 72, Y0 = 80, LH = 19;
+const lastY = Y0 + (entries.length + 1) * LH;
+---
+<div class="cd" data-play>
+  <div class="cd-lap">
+    <svg class="cd-svg" aria-hidden="true" viewBox="0 0 400 280" width="400" height="280" focusable="false">
+      <ellipse class="dk-shadow" cx="200" cy="275" rx="184" ry="3" />
+      <rect class="dk-paper" x="44" y="14" width="312" height="240" rx="12" />
+      <rect class="cd-screen" x="57" y="27" width="286" height="214" rx="4" />
+      <circle class="cd-cam" cx="200" cy="20.5" r="1.6" />
+      <g class="cd-term">
+        <text class="cd-tx" x={X} y={Y0}><tspan class="cd-dim">~/corner $</tspan><tspan dx="8">ls</tspan></text>
+        <rect class="cd-cover" x={X + 86} y={Y0 - 12} width="22" height="16" />
+        {entries.map((e, i) => (
+          <text class:list={['cd-tx cd-ls', { 'cd-file': !e.endsWith('/') }]} x={X} y={Y0 + (i + 1) * LH} style={`--i:${i}`}>{e}</text>
+        ))}
+        <g class="cd-end">
+          <text class="cd-tx" x={X} y={lastY}><tspan class="cd-dim">~/corner $</tspan></text>
+          <rect class="cd-cur" x={X + 86} y={lastY - 11} width="8" height="14" rx="1" />
+        </g>
+      </g>
+      <path class="dk-paper" d="M18 254 H382 L376 270 Q374.4 274 370 274 H30 Q25.6 274 24 270 Z" />
+      <path class="dk-faint" d="M176 255.5 Q200 260 224 255.5" />
+    </svg>
+  </div>
+  <div class="cd-side">
+    <div class="cd-now">
+      <span class="cd-pin" />
+      <h2 class="cd-now-t">{now.title}</h2>
+      <dl>{nowLines().map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
+    </div>
+    <svg class="cd-books" aria-hidden="true" viewBox="0 0 220 104" width="220" height="104" focusable="false">
+      <ellipse class="dk-shadow" cx="106" cy="99" rx="94" ry="2.6" />
+      <rect class="dk-paper" x="18" y="74" width="176" height="24" rx="3" />
+      <path class="dk-line" d="M32 74 V98 M38 74 V98" />
+      <path class="dk-faint" d="M172 80 H186 M172 86 H186 M172 92 H186" />
+      <rect class="dk-green-fill" x="30" y="52" width="158" height="22" rx="3" />
+      <path class="dk-faint" d="M44 58 H120 M44 66 H96" />
+      <rect class="dk-paper" x="22" y="32" width="164" height="20" rx="3" />
+      <path class="dk-line" d="M170 32 V52 M176 32 V52" />
+      <path class="cd-ribbon" d="M120 52 V66 L124 62 L128 66 V52 Z" />
+      <!-- a mug on the stack -->
+      <path class="dk-paper" d="M58 6 H90 V26 Q90 32 84 32 H64 Q58 32 58 26 Z" />
+      <path class="dk-line" d="M90 11 Q100 11 100 18 Q100 25 90 25" />
+    </svg>
+  </div>
+</div>

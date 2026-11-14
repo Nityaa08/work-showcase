@@ -5,7 +5,7 @@ import * as home from '../data/home';
 import * as mcp from '../data/mcp';
 import * as sec from '../data/security';
 import { projects, projectsIntro } from '../data/projects';
-import { corner, cornerCopy, books } from '../data/corner';
+import { corner, cornerCopy, books, now, nowLines, nowReading } from '../data/corner';
 import type { Note } from './notes';
 
 export const SITE_NAME = 'Nityashree S';
@@ -67,7 +67,7 @@ ${home.desk.filter((d) => d.id !== 'laptop').map((d) => `- **${d.name}.** ${d.no
 
 ## ${corner.name}
 
-${cc.homeRow.label}: ${cc.summary}. ${abs(site, '/corner/')} (markdown: ${abs(site, '/corner.md')})
+${cc.homeRow.sub} ${abs(site, '/corner/')} (markdown: ${abs(site, '/corner.md')})
 
 ## Contact
 
@@ -216,6 +216,10 @@ export function cornerMd(site: URL | undefined, notes: Note[]) {
 
 ${cc.intro}
 
+## ${now.title}
+
+${nowLines().map(([k, v]) => `- **${k}:** ${v}`).join('\n')}
+
 ## ${projectsIntro.title}
 
 ${projectsIntro.text} ${projectsIntro.note}
@@ -232,7 +236,7 @@ ${noteList(site, notes)}
 
 ${corner.shelf.text}
 
-${books.map((b) => `- *${b.title}*${b.series ? ' (the series)' : ''} by ${b.author}${b.why ? `. ${b.why}` : ''}`).join('\n')}
+${books.map((b) => `- *${b.title}*${b.series ? ' (the series)' : ''} by ${b.author}${b.id === nowReading ? ' (now reading)' : ''}${b.why ? `. ${b.why}` : ''}`).join('\n')}
 
 ## More
 
@@ -273,7 +277,7 @@ export function llmsTxt(site: URL | undefined, notes: Note[] = []) {
 
 - [Home](${abs(site, '/index.md')}): who I am, selected work, how I work, my path (a journey with four stops), life outside work, contact
 ${work.map((c) => `- [Case ${c.no}: ${c.title}](${abs(site, `/work/${c.slug}.md`)}): ${home.blurbs[c.slug]}`).join('\n')}
-- [${corner.name}](${abs(site, '/corner.md')}): ${cornerCopy(notes.length > 0).title.replace(/\.$/, '')}: ${cornerCopy(notes.length > 0).summary}
+- [${corner.name}](${abs(site, '/corner.md')}): ${cornerCopy(notes.length > 0).title.replace(/\.$/, '')}: ${cornerCopy(notes.length > 0).summary}, and a short note on what I’m doing right now
 ${notes.length ? `- [Notes](${abs(site, '/notes.md')}): ${corner.notes.text}
 
 ## ${corner.notes.kicker}

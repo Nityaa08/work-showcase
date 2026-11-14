@@ -7,7 +7,7 @@
 // the plant close by. Add a book to `books` in src/data/corner.ts (one line) and the shelf draws it. Up to 8 books
 // stand on one shelf on wide screens and up to 4 per shelf on phones (so spine text stays legible); when both come
 // out the same (4 books or fewer) only one drawing is made.
-import { books, whySoon } from '../data/corner';
+import { books, whySoon, nowReading } from '../data/corner';
 
 type Look = { w: number; h: number; fill: 'paper' | 'tint' | 'ink'; spine?: string };
 // Per-book look in drawing units (1 unit = 1 CSS px at the drawing's natural size). Unknown books get a default.
@@ -36,9 +36,20 @@ function spine(x: number, base: number, w: number, h: number, fill: string, titl
     + (foot ? `<text class="bk-a bk-t-${fill}" transform="translate(${cx} ${base - 18}) rotate(90)" dy="0.35em" text-anchor="end">${esc(foot)}</text>` : '');
 }
 
+// The book I'm reading now: a near-black bookmark ribbon hangs out of it over the plank's edge, and a small
+// hand-written-style tag above it says so (`nowReading` in src/data/corner.ts).
+function ribbon(x: number, base: number, w: number) {
+  const rx = x + w * 0.62;
+  return `<path class="bk-ribbon" d="M${rx - 3} ${base - 4} V${base + 24} L${rx} ${base + 20} L${rx + 3} ${base + 24} V${base - 4} Z"/>`;
+}
+function nowTag(cx: number, top: number) {
+  return `<g class="bk-now"><text class="bk-now-t" x="${cx}" y="${top - 22}" text-anchor="middle">Now reading</text>`
+    + `<path class="bk-now-l" d="M${cx} ${top - 15} q 3 5 0 10 M${cx - 3} ${top - 8} l3 3.5 l3 -3.5"/></g>`;
+}
 function book(id: string, x: number, base: number) {
   const i = books.findIndex((q) => q.id === id), b = books[i], l = lookOf(id, i);
-  return { svg: `<g class="bk" data-obj="${id}"><g class="bk-lift">${spine(x, base, l.w, l.h, l.fill, b.title, l.spine)}</g></g>`, hit: { id, x, y: base - l.h, w: l.w, h: l.h } as Hit, w: l.w };
+  const now = id === nowReading;
+  return { svg: `<g class="bk" data-obj="${id}"><g class="bk-lift">${spine(x, base, l.w, l.h, l.fill, b.title, l.spine)}${now ? ribbon(x, base, l.w) : ''}</g>${now ? nowTag(x + l.w / 2, base - l.h) : ''}</g>`, hit: { id, x, y: base - l.h, w: l.w, h: l.h } as Hit, w: l.w };
 }
 
 const GAP = 4, END = 37, PLANT = 58, PLANT_GAP = 12, EDGE = 4, INSET = 12, ROW_H = 270, TOP = 236;
@@ -105,5 +116,5 @@ const pct = (v: number, of: number) => `${((v / of) * 100).toFixed(3)}%`;
       })}
     </div>
   ))}
-  <template id="sh-notes">{books.map((b) => <div data-k={b.id} data-name={b.title} data-by={b.author} data-note={b.why || whySoon} data-soon={b.why ? undefined : ''} />)}</template>
+  <template id="sh-notes">{books.map((b) => <div data-k={b.id} data-name={b.title} data-by={b.id === nowReading ? `${b.author} · now reading` : b.author} data-note={b.why || whySoon} data-soon={b.why ? undefined : ''} />)}</template>
 </div>

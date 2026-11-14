@@ -2605,17 +2605,6 @@ html.cmdk-lock { overflow: hidden; }
    targets on touch, no backdrop-filter or blend modes.
    ===================================================================== */
 
-/* --- Home: one quiet link row to My corner under the case cards, in the case-nav row style (dark, hairline, round arrow) --- */
-.cr-row { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-top: clamp(20px, 2vw, 28px); min-height: 76px; padding: 16px 18px 16px 24px; border-radius: 18px; color: #ecebe6; background: linear-gradient(180deg, #161618, #111113); box-shadow: 0 0 0 1px var(--hair), inset 0 1px 0 rgba(255, 255, 255, 0.06); }
-.cr-row::after { content: ''; position: absolute; top: 0; right: 0; bottom: 0; left: 0; border-radius: inherit; background: rgba(255, 255, 255, 0.035); opacity: 0; transition: opacity var(--t-fast) var(--ease); pointer-events: none; }
-.cr-row-t { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; min-width: 0; }
-.cr-row-t b { font: 600 clamp(17px, 1.4vw, 19px)/1.3 var(--sans); letter-spacing: -0.015em; color: #f1f0ec; }
-.cr-row-t span { font-size: 14.5px; line-height: 1.45; color: var(--ink-2); }
-.cr-row-go { flex: none; width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; background: #ecebe6; color: #0b0b0c; transition: transform var(--t-base) var(--ease); }
-.cr-row:focus-visible { outline: 2px solid #ecebe6; outline-offset: 3px; }
-@media (hover: hover) { .cr-row:hover::after { opacity: 1; } .cr-row:hover .cr-row-go { transform: translateX(4px); } }
-@media (max-width: 680px) { .cr-row { padding: 14px 14px 14px 18px; } .cr-row-t { display: grid; } }
-
 /* --- The desk's laptop (home): its note links to My corner. The globe sits 24 units right to make room. --- */
 .dk-screen { fill: #f3f1ea; stroke: var(--ink-d); stroke-width: 1.2; }
 .dk-prompt path { fill: none; stroke: var(--g); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
@@ -2635,7 +2624,7 @@ html.cmdk-lock { overflow: hidden; }
 .dk-link i { display: inline-block; font-style: normal; transition: transform var(--t-fast) var(--ease); }
 .dk-link:focus-visible { outline: 2px solid #0b0b0c; outline-offset: 2px; border-radius: 4px; }
 @media (hover: hover) { .dk-link:hover { text-decoration-color: #0b0b0c; } .dk-link:hover i { transform: translateX(3px); } }
-@media (prefers-reduced-motion: reduce) { .desk.in .dk-laptop.open .dk-type, .desk.in .dk-laptop.open .dk-prompt { animation: none; } .dk-link i, .cr-row::after, .cr-row-go { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .desk.in .dk-laptop.open .dk-type, .desk.in .dk-laptop.open .dk-prompt { animation: none; } .dk-link i { transition: none; } }
 
 /* --- My corner and /notes/: light, on the desk's dot-grid paper --- */
 body.corner-page { background-color: var(--n-paper); background-image: radial-gradient(circle at 1.5px 1.5px, rgba(11, 11, 12, 0.12) 1.1px, transparent 1.6px); background-size: 24px 24px; color: #0b0b0c; }
@@ -2954,8 +2943,6 @@ html.js .wb-card.in:not(.off) *, html.js .wb-card.in:not(.off) *::before, html.j
 /* Safari 14.0 has no flex `gap` (added in 14.1, together with `inset`, which is used here only as the feature test):
    the same spacing as margins, so nothing touches. Grid gaps are fine there. */
 @supports not (inset: 0) {
-  .cr-row-go { margin-left: 20px; }
-  .cr-row-t > span { margin-left: 16px; }
   .cr-jump a { margin-right: 22px; }
   .wb-meta > * + * { margin-top: 8px; }
   .vi-col > * + * { margin-top: 10px; }
@@ -2963,4 +2950,189 @@ html.js .wb-card.in:not(.off) *, html.js .wb-card.in:not(.off) *::before, html.j
   .vm-doc p i { margin-right: 5px; }
   .vf-chart i + i { margin-left: 4px; }
   .note-tag > * + * { margin-left: 16px; }
+}
+
+/* =====================================================================
+   Round 23: My corner gets a real first screen, and home a clear way in.
+   ===================================================================== */
+
+/* --- Home: the way into My corner, a card inside Selected work. Words and a button on the left; on the right a small
+       preview of the page itself (three project pictures and three ink spines on light paper). The whole card is the link. --- */
+.cr-card {
+  position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr); grid-template-areas: 'text peek' 'go peek';
+  grid-template-rows: auto 1fr; column-gap: clamp(28px, 4vw, 64px); align-items: start;
+  margin-top: clamp(20px, 2vw, 28px); padding: clamp(26px, 3vw, 40px) clamp(24px, 3vw, 40px); border-radius: 22px; color: #ecebe6;
+  background: linear-gradient(180deg, #19191b, #121214); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+.cr-card::after { content: ''; position: absolute; top: 0; right: 0; bottom: 0; left: 0; border-radius: inherit; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3); opacity: 0; transition: opacity var(--t-fast) var(--ease); pointer-events: none; }
+.crc-text { grid-area: text; display: block; align-self: end; }
+.crc-k { display: block; font: 500 12px var(--sans); letter-spacing: 0.18em; text-transform: uppercase; color: #9a9b9f; }
+.crc-t { display: block; margin-top: 12px; font: 600 clamp(32px, 3.4vw, 48px)/1.02 var(--sans); letter-spacing: -0.04em; color: #f4f3ef; }
+.crc-s { display: block; max-width: 30ch; margin-top: 12px; font-size: clamp(16.5px, 1.3vw, 18.5px); line-height: 1.5; color: #b9bab6; }
+.crc-go { grid-area: go; justify-self: start; align-self: start; display: inline-flex; align-items: center; gap: 10px; min-height: 48px; margin-top: 24px; padding: 0 22px 0 24px; border-radius: 999px; background: #f1f0ec; color: #0b0b0c; font: 600 16px var(--sans); box-shadow: 0 10px 24px -14px rgba(0, 0, 0, 0.9); }
+.crc-go i { display: inline-block; font-style: normal; transition: transform var(--t-fast) var(--ease); }
+.cr-card:focus-visible { outline: 2px solid #ecebe6; outline-offset: 4px; }
+/* the preview: a scrap of the corner's own paper */
+.crc-peek {
+  grid-area: peek; align-self: center; display: flex; align-items: flex-end; justify-content: center; padding: 28px 24px 22px; border-radius: 16px;
+  background-color: #f5f5f2; background-image: radial-gradient(circle at 1.5px 1.5px, rgba(11, 11, 12, 0.11) 1px, transparent 1.5px); background-size: 16px 16px;
+  box-shadow: 0 24px 40px -28px rgba(0, 0, 0, 0.9); transform: rotate(-1.2deg); transition: transform var(--t-base) var(--ease);
+}
+.crc-tiles { display: flex; align-items: flex-end; flex: 1 1 auto; min-width: 0; max-width: 440px; }
+.crc-tile { position: relative; flex: 1 1 0; min-width: 0; height: 112px; margin-right: 12px; box-sizing: border-box; border-radius: 10px; background: #fff; box-shadow: 0 0 0 1.5px #3a3b3f, 0 12px 20px -16px rgba(40, 30, 20, 0.6); transition: transform var(--t-base) var(--ease); }
+.crc-tile:nth-child(2) { height: 124px; }
+/* invoice: a doc with a REVIEW stamp */
+.crc-inv { display: flex; align-items: center; justify-content: center; }
+.cri-doc { position: relative; display: block; width: 56%; max-width: 60px; padding: 8px 7px 9px; border-radius: 4px; box-shadow: 0 0 0 1.2px #3a3b3f; }
+.cri-doc b { display: block; width: 60%; height: 4px; margin-bottom: 6px; border-radius: 2px; background: #3a3b3f; }
+.cri-doc i { display: block; height: 3px; margin-top: 5px; border-radius: 2px; background: rgba(11, 11, 12, 0.18); }
+.cri-doc i:nth-of-type(2) { width: 70%; } .cri-doc i:nth-of-type(3) { width: 84%; }
+.cri-doc em { position: absolute; left: 50%; top: 56%; padding: 1px 4px; border: 1.5px solid #0b0b0c; border-radius: 3px; background: rgba(255, 255, 255, 0.85); font: normal 700 8.5px var(--sans); letter-spacing: 0.12em; text-transform: uppercase; color: #0b0b0c; transform: translate(-50%, -50%) rotate(-12deg); }
+/* router: three lanes, one lit */
+.crc-rt { display: flex; flex-direction: column; justify-content: center; padding: 0 12px; }
+.crr { display: flex; align-items: center; margin: 6px 0; opacity: 0.45; }
+.crr i { flex: none; width: 30%; height: 13px; border-radius: 4px; box-shadow: inset 0 0 0 1.2px #3a3b3f; }
+.crr i + b + i { width: 22%; }
+.crr b { flex: 1; height: 1.5px; margin: 0 4px; background: rgba(11, 11, 12, 0.25); }
+.crr.on { opacity: 1; }
+.crr.on i { box-shadow: inset 0 0 0 1.6px #0b0b0c; }
+.crr.on b { background: #0b0b0c; }
+/* fraud: bars with one spike */
+.crc-fr { display: flex; align-items: flex-end; padding: 14px 10px 12px; }
+.crc-fr i { flex: 1; margin-right: 2px; border-radius: 2px 2px 0 0; background: rgba(11, 11, 12, 0.15); }
+.crc-fr i:last-child { margin-right: 0; }
+.crc-fr i.spike { background: #0b0b0c; }
+/* the books */
+.crc-books { flex: none; width: 128px; height: auto; margin-left: 4px; overflow: visible; }
+.crb { stroke: #3a3b3f; stroke-width: 1.5; } .crb-paper { fill: #fff; } .crb-tint { fill: #e6e5df; } .crb-ink { fill: #2a2b2f; }
+.crb-band { fill: none; stroke: rgba(58, 59, 63, 0.35); stroke-width: 1; } .crb-band-ink { stroke: rgba(255, 255, 255, 0.25); }
+.crb-rib { fill: #0b0b0c; }
+.crb-end { fill: #e6e5df; stroke: #3a3b3f; stroke-width: 1.5; stroke-linejoin: round; }
+.crb-plank { fill: #fbfaf6; stroke: #3a3b3f; stroke-width: 1.5; }
+@media (hover: hover) {
+  .cr-card:hover::after { opacity: 1; }
+  .cr-card:hover .crc-go i { transform: translateX(4px); }
+  .cr-card:hover .crc-peek { transform: rotate(0deg) translateY(-3px); }
+  .cr-card:hover .crc-tile:nth-child(1) { transform: translateY(-4px); }
+  .cr-card:hover .crc-tile:nth-child(2) { transform: translateY(-6px); }
+  .cr-card:hover .crc-tile:nth-child(3) { transform: translateY(-4px); }
+  .cr-card:active .crc-go { transform: translateY(1px); }
+}
+@media (max-width: 860px) {
+  .cr-card { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'text' 'peek' 'go'; grid-template-rows: auto; }
+  .crc-peek { margin-top: 24px; transform: none; }
+  .crc-go { margin-top: 22px; }
+}
+@media (max-width: 420px) {
+  .cr-card { padding: 24px 18px 20px; }
+  .crc-peek { padding: 16px 12px 14px; }
+  .crc-tile { height: 84px; margin-right: 8px; } .crc-tile:nth-child(2) { height: 92px; }
+  .crc-rt { padding: 0 8px; }
+  .crc-books { width: 78px; }
+  .crc-go { align-self: stretch; justify-self: stretch; justify-content: center; }
+}
+@media (max-width: 340px) { .crc-tile:nth-child(3) { display: none; } }
+@media (prefers-reduced-motion: reduce) { .cr-card::after, .crc-go i, .crc-peek, .crc-tile { transition: none; } }
+
+/* --- /corner/: the first screen. Words on the left, the laptop, the "Right now" note and the books on the right;
+       shorter than home's hero so the Workbench starts on the first screen of a laptop. --- */
+.cr-page .cr-hero { display: grid; grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr); column-gap: clamp(32px, 5vw, 80px); align-items: center; max-width: none; padding-top: clamp(96px, 8.5vw, 124px); }
+.cr-page .cr-hero h1 { font-size: clamp(38px, 4.3vw, 62px); line-height: 1.02; text-wrap: balance; }
+.cr-page .cr-hero .cr-intro { max-width: 470px; margin-top: 18px; }
+.cr-page .cr-hero .cr-jump { margin-top: 14px; }
+.cr-page .cr-hero .cs-back { margin-bottom: 10px; }
+.cr-hero-art { min-width: 0; }
+.cd { --ink-d: #3a3b3f; --g: var(--n-ink); --g-tint: var(--n-tint); position: relative; display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); align-items: end; max-width: 680px; margin-left: auto; }
+.cd-lap { min-width: 0; }
+/* one desk line under the laptop and the books */
+.cd::after { content: ''; position: absolute; left: -8px; right: -8px; bottom: 4px; height: 1.5px; border-radius: 1px; background: var(--ink-d); }
+.cd-svg, .cd-books { display: block; width: 100%; height: auto; overflow: visible; }
+.cd-svg path, .cd-svg rect, .cd-svg ellipse, .cd-books path, .cd-books rect { vector-effect: non-scaling-stroke; }
+.cd-screen { fill: #f3f1ea; stroke: var(--ink-d); stroke-width: 1.2; }
+.cd-cam { fill: var(--n-mid); }
+.cd-desk { fill: none; stroke: var(--ink-d); stroke-width: 1.5; stroke-linecap: round; }
+.cd-tx { font: 500 13px var(--mono); fill: #0b0b0c; }
+.cd-dim { fill: #7c7e82; }
+.cd-file { fill: #55575c; }
+.cd-cover { fill: #f3f1ea; transform-box: fill-box; transform-origin: 100% 50%; transform: scaleX(0); }
+.cd-cur { fill: var(--n-ink); }
+.cd-ribbon { fill: var(--n-ink); }
+.cd-side { display: flex; flex-direction: column; align-items: center; min-width: 0; }
+.cd-books { max-width: 220px; }
+.cd-now {
+  position: relative; width: 100%; max-width: 232px; box-sizing: border-box; margin: 0 0 14px -6px; padding: 20px 18px 16px; border-radius: 12px; background: #fff;
+  box-shadow: inset 0 0 0 1.5px var(--ink-d), 0 18px 34px -24px rgba(40, 30, 20, 0.45); transform: rotate(2deg);
+}
+.cd-pin { position: absolute; left: 50%; top: -7px; width: 13px; height: 13px; margin-left: -6.5px; border-radius: 50%; background: var(--n-tint); box-shadow: inset 0 0 0 1.5px var(--ink-d), 0 3px 4px -1px rgba(0, 0, 0, 0.18); }
+.cr-page .cd-now-t { margin: 0; font: 600 12px/1.4 var(--sans); letter-spacing: 0.08em; text-transform: uppercase; color: #0b0b0c; }
+.cd-now dl { margin: 8px 0 0; }
+.cd-now dl > div { padding: 7px 0 6px; border-top: 1px dashed rgba(11, 11, 12, 0.14); }
+.cd-now dl > div:first-child { border-top: 0; padding-top: 2px; }
+.cd-now dt { font: 500 11px/1.3 var(--sans); letter-spacing: 0.12em; text-transform: uppercase; color: #6c6e72; }
+.cd-now dd { margin: 2px 0 0; font: 500 15.5px/1.35 var(--sans); color: #0b0b0c; letter-spacing: -0.005em; }
+/* the listing types once: the command, then the files, then the prompt and a cursor that blinks three times */
+@keyframes cd-wipe { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+@keyframes cd-show { from { opacity: 0; } to { opacity: 1; } }
+@keyframes cd-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@keyframes cd-pinned { from { opacity: 0; transform: translateY(-10px) rotate(5deg); } to { opacity: 1; transform: rotate(2deg); } }
+html.js .cd .cd-cover { transform-box: fill-box; transform-origin: 100% 50%; animation: cd-wipe 360ms steps(2, end) 0.55s both; }
+html.js .cd .cd-ls { animation: cd-show 120ms linear calc(1.05s + var(--i) * 90ms) both; }
+html.js .cd .cd-end { animation: cd-show 120ms linear 1.75s both; }
+html.js .cd .cd-cur { animation: cd-blink 1s linear 1.9s 3; }
+html.js .cd .cd-now { animation: cd-pinned 560ms var(--ease) 0.2s both; }
+html.js .cd *, html.js .cd { animation-play-state: paused; }
+html.js .cd.in:not(.off) * { animation-play-state: running; }
+@media (prefers-reduced-motion: reduce) { html.js .cd * { animation: none !important; } }
+@media (max-width: 960px) {
+  .cr-page .cr-hero { grid-template-columns: minmax(0, 1fr); padding-top: 108px; }
+  .cr-hero-art { margin-top: 28px; }
+  .cd { margin-left: 0; max-width: 600px; }
+}
+@media (max-width: 560px) {
+  .cd { grid-template-columns: minmax(0, 1fr); }
+  .cd-lap { padding: 0 4px; }
+  .cd-side { flex-direction: row; align-items: flex-end; margin-top: 18px; }
+  .cd-now { flex: 1 1 auto; max-width: 260px; margin: 0 0 0 4px; }
+  .cd-books { flex: none; width: 34%; max-width: 140px; margin-left: 12px; }
+}
+@media (max-width: 360px) { .cd-books { display: none; } .cd-now { max-width: none; margin-right: 6px; } }
+
+/* --- Workbench: a one-line status strip, tighter gaps, and pictures that fill their boxes --- */
+.cr-bench-side { max-width: 440px; }
+.cr-page .cr-sec-head .cr-bench-side > p:first-child { max-width: 420px; }
+.cr-page .cr-sec-head p.cr-status { display: inline-flex; flex-wrap: wrap; align-items: center; margin-top: 12px; padding: 7px 14px 7px 12px; border-radius: 999px; background: #fff; box-shadow: inset 0 0 0 1px rgba(11, 11, 12, 0.14); font: 500 12.5px/1.4 var(--mono); color: #3a3b3f; }
+.cr-status i { flex: none; width: 7px; height: 7px; margin-right: 10px; border-radius: 50%; background: #0b0b0c; box-shadow: 0 0 0 3px rgba(11, 11, 12, 0.1); }
+.cr-status b { margin: 0 9px; font-weight: 500; color: #a0a1a5; }
+.cr-page .cr-top { padding-bottom: clamp(40px, 4vw, 60px); }
+.cr-page .cr-top > .cr-sec:last-child { padding-bottom: 0; }
+.cr-page .cr-bench { padding-top: clamp(40px, 4.5vw, 64px); }
+.cr-page .cr-shelf { padding-top: clamp(48px, 5vw, 72px); }
+.cr-page .cr-paper > .cr-shelf:first-child { padding-top: clamp(48px, 5vw, 72px); }
+.cr-page .cr-paper.light { padding-bottom: clamp(40px, 4vw, 64px); }
+@media (min-width: 901px) {
+  .wb-card:not(.wb-lead) .wb-art { height: 272px; min-height: 0; }
+  .wb-card:not(.wb-lead) .wb-art > .v { transform: scale(1.14); }
+  .wb-lead .wb-art { min-height: 300px; }
+}
+@media (min-width: 1200px) { .wb-lead .wb-art > .v { transform: scale(1.1); } }
+
+/* --- Shelf: the book I'm reading now carries a bookmark ribbon and a small tag --- */
+.bk-ribbon { fill: var(--n-ink); stroke: none; }
+.bk-now-t { font: 500 11.5px var(--sans); letter-spacing: 0.04em; fill: #3a3b3f; }
+.bk-now-l { fill: none; stroke: #3a3b3f; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
+
+@supports not (inset: 0) {
+  .crc-text > * + * { margin-top: 12px; }
+  .crc-go i { margin-left: 10px; }
+}
+@media (max-width: 560px) {
+  .cd-lap { position: relative; padding-bottom: 2px; }
+  .cd-lap::after { content: ''; position: absolute; left: -8px; right: -8px; bottom: 5px; height: 1.5px; border-radius: 1px; background: var(--ink-d); }
+}
+.cr-page .cr-sec-head p.cr-status { border-radius: 16px; }
+.cr-status span { white-space: nowrap; }
+@media (max-width: 420px) {
+  .crc-inv { flex: 1.25 1 0; }
+  .cri-doc { width: 50%; }
+  .cri-doc em { font-size: 7px; letter-spacing: 0.08em; padding: 1px 3px; }
 }

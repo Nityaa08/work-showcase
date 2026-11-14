@@ -9,7 +9,24 @@ export const corner = {
   /** Field notes only show once at least one note is published (not `draft: true`). */
   notes: { kicker: 'Field notes', title: 'Notes from the field', text: 'Short write-ups of things that broke, and what I changed.', all: 'All notes' },
   shelf: { kicker: 'Shelf', title: 'On my shelf', text: 'The books from my desk, with a note on each.', hint: 'Tap a book on my shelf.' },
+  /** The one-line status strip under the Workbench heading (mono, like a terminal line). Facts, not boasts; no dates. */
+  benchStatus: (count: number) => [`${count} live demos`, 'all open source', 'no sign-up'],
 };
+
+/*
+ * "Right now": the note pinned beside the laptop at the top of My corner (and in its markdown).
+ * Edit freely: four short lines, no dates, phrased so they stay true for a few weeks.
+ * The Reading line names the book marked "Now reading" on the shelf (`nowReading` below), so the two always agree.
+ */
+export const now = {
+  title: 'Right now',
+  building: 'the invoice agent',
+  learning: 'LangGraph',
+  offScreen: 'dance practice',
+};
+/** The book on the shelf with the "Now reading" ribbon (an `id` from `books` below). '' hides the ribbon. */
+export const nowReading = 'dm';
+
 
 /**
  * The words that depend on whether any note is published yet. Until one is, nothing mentions writing or notes:
@@ -20,7 +37,7 @@ export function cornerCopy(hasNotes: boolean) {
     ? {
         title: 'Things I build, write and read.',
         intro: 'What I make on my own: small tools I built to learn, short notes on what I’ve learnt, and the books on my shelf.',
-        homeRow: { label: 'More I build, write and read', hint: 'Side projects, notes and my bookshelf' },
+        homeRow: { sub: 'Side projects you can try, short notes, and the books on my shelf.', cta: 'Open my corner' },
         laptop: 'Where the things I make on my own live: side projects to try, short notes, and the books on my shelf.',
         menuHint: 'Side projects, notes, books',
         summary: 'side projects to try, my notes and the books on my shelf',
@@ -28,7 +45,7 @@ export function cornerCopy(hasNotes: boolean) {
     : {
         title: 'Things I build and read.',
         intro: 'What I make on my own: small tools I built to learn, and the books on my shelf.',
-        homeRow: { label: 'More I build and read', hint: 'Side projects and my bookshelf' },
+        homeRow: { sub: 'Side projects you can try, and the books on my shelf.', cta: 'Open my corner' },
         laptop: 'Where the things I make on my own live: side projects to try, and the books on my shelf.',
         menuHint: 'Side projects, books',
         summary: 'side projects to try and the books on my shelf',
@@ -51,3 +68,14 @@ export const books: Book[] = [
   { id: 'dm', title: 'Dark Matter', author: 'Blake Crouch', why: '' },
   { id: 'sp', title: 'The Silent Patient', author: 'Alex Michaelides', why: '' },
 ];
+
+/** The "Right now" lines, label and value, for the page and the markdown. */
+export function nowLines() {
+  const b = books.find((x) => x.id === nowReading);
+  return [
+    ['Building', now.building],
+    ['Learning', now.learning],
+    ['Reading', b ? `${b.title}, from my shelf` : 'something from my shelf'],
+    ['Off-screen', now.offScreen],
+  ] as [string, string][];
+}

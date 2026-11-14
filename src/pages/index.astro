@@ -9,7 +9,7 @@ import { hero, how, contact, offClock, cards, desk, outsideIntro, contactLine, l
 import Desk from '../components/Desk.astro';
 import Trail from '../components/Trail.astro';
 import ContactLinks from '../components/ContactLinks.astro';
-import { cornerCopy } from '../data/corner';
+import { corner, cornerCopy } from '../data/corner';
 import { getNotes } from '../lib/notes';
 // The envelope's stamp: a rectangle with a perforated (scalloped) edge, traced clockwise.
 const stampEdge = (() => {
@@ -85,10 +85,32 @@ const deskNotes = desk.map((d) => (d.id === 'laptop' ? { ...d, note: cc.laptop }
           ))}
         </div>
 
-        {/* One quiet link row to "My corner" (side projects, notes, bookshelf), under the case cards. */}
-        <a class="cr-row" href="/corner/">
-          <span class="cr-row-t"><b>{cc.homeRow.label}</b><span>{cc.homeRow.hint}</span></span>
-          <span class="cr-row-go" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+        {/* The way into "My corner": a card inside Selected work, with a small preview of the page (three project
+            pictures and three book spines) and a clear button. The whole card is the link. */}
+        <a class="cr-card" href="/corner/">
+          <span class="crc-text">
+            <span class="crc-k">Beyond the case studies</span>
+            <span class="crc-t">{corner.name}</span>
+            <span class="crc-s">{cc.homeRow.sub}</span>
+          </span>
+          <span class="crc-peek" aria-hidden="true">
+            <span class="crc-tiles">
+              <span class="crc-tile crc-inv"><span class="cri-doc"><b /><i /><i /><i /><em>Review</em></span></span>
+              <span class="crc-tile crc-rt"><span class="crr"><i /><b /><i /></span><span class="crr on"><i /><b /><i /></span><span class="crr"><i /><b /><i /></span></span>
+              <span class="crc-tile crc-fr">{[30, 42, 36, 50, 40, 96, 44, 38, 46].map((h, j) => <i class:list={{ spike: j === 5 }} style={`height:${h}%`} />)}</span>
+            </span>
+            <svg class="crc-books" viewBox="0 0 120 98" width="120" height="98" focusable="false">
+              <rect class="crb crb-paper" x="18" y="12" width="20" height="72" rx="2" />
+              <rect class="crb crb-tint" x="40" y="18" width="22" height="66" rx="2" />
+              <rect class="crb crb-ink" x="64" y="20" width="19" height="64" rx="2" />
+              <path class="crb-band" d="M20 20 H36 M20 76 H36 M42 26 H60 M42 76 H60" />
+              <path class="crb-band crb-band-ink" d="M66 28 H81 M66 76 H81" />
+              <path class="crb-rib" d="M74.5 82 V96 L76.5 93.5 L78.5 96 V82 Z" />
+              <path class="crb-end" d="M86 84 V44 a2 2 0 0 1 2 -2 h2 V82 h12" />
+              <rect class="crb-plank" x="6" y="84" width="108" height="6" rx="1.5" />
+            </svg>
+          </span>
+          <span class="crc-go">{cc.homeRow.cta} <i aria-hidden="true">→</i></span>
         </a>
       </section>
 
