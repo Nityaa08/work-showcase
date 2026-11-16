@@ -9,7 +9,7 @@ import { hero, how, contact, offClock, cards, desk, outsideIntro, contactLine, l
 import Desk from '../components/Desk.astro';
 import Trail from '../components/Trail.astro';
 import ContactLinks from '../components/ContactLinks.astro';
-import { corner, cornerCopy } from '../data/corner';
+import { corner, cornerCopy, books, looks, spineName } from '../data/corner';
 import { getNotes } from '../lib/notes';
 // The envelope's stamp: a rectangle with a perforated (scalloped) edge, traced clockwise.
 const stampEdge = (() => {
@@ -28,6 +28,21 @@ const work = cases.filter((c) => c.ready);
 // My corner's words depend on whether a note is published yet; the desk's laptop note follows them.
 const cc = cornerCopy((await getNotes()).length > 0);
 const deskNotes = desk.map((d) => (d.id === 'laptop' ? { ...d, note: cc.laptop } : d));
+// The book spines in the My corner card: the shelf's own books, fills and proportions at a small scale, each with the
+// author's surname in small caps at the foot (as on the shelf).
+const miniBooks = (() => {
+  const BASE = 90, GAP = 1.5;
+  let x = 6;
+  const out = books.map((b, i) => {
+    const l = looks[b.id] ?? { w: 34, h: 210, fill: i % 2 ? 'tint' : 'paper' };
+    const name = spineName(b.author);
+    const w = +(l.w * 0.46).toFixed(1), h = Math.round(Math.max(l.h * 0.34, 20 + name.length * 0.8 * 6.4));
+    const o = { x, w, h, y: BASE - h, fill: l.fill, name };
+    x += w + GAP;
+    return o;
+  });
+  return { list: out, end: x - GAP, base: BASE };
+})();
 ---
 <!doctype html>
 <html lang="en">
@@ -86,7 +101,7 @@ const deskNotes = desk.map((d) => (d.id === 'laptop' ? { ...d, note: cc.laptop }
         </div>
 
         {/* The way into "My corner": a card inside Selected work, with a small preview of the page (three project
-            pictures and three book spines) and a clear button. The whole card is the link. */}
+            pictures and the shelf's book spines) and a clear button. The whole card is the link. */}
         <a class="cr-card" href="/corner/">
           <span class="crc-text">
             <span class="crc-k">Beyond the case studies</span>
@@ -99,15 +114,16 @@ const deskNotes = desk.map((d) => (d.id === 'laptop' ? { ...d, note: cc.laptop }
               <span class="crc-tile crc-rt"><span class="crr"><i /><b /><i /></span><span class="crr on"><i /><b /><i /></span><span class="crr"><i /><b /><i /></span></span>
               <span class="crc-tile crc-fr">{[30, 42, 36, 50, 40, 96, 44, 38, 46].map((h, j) => <i class:list={{ spike: j === 5 }} style={`height:${h}%`} />)}</span>
             </span>
-            <svg class="crc-books" viewBox="0 0 120 98" width="120" height="98" focusable="false">
-              <rect class="crb crb-paper" x="18" y="12" width="20" height="72" rx="2" />
-              <rect class="crb crb-tint" x="40" y="18" width="22" height="66" rx="2" />
-              <rect class="crb crb-ink" x="64" y="20" width="19" height="64" rx="2" />
-              <path class="crb-band" d="M20 20 H36 M20 76 H36 M42 26 H60 M42 76 H60" />
-              <path class="crb-band crb-band-ink" d="M66 28 H81 M66 76 H81" />
-              <path class="crb-rib" d="M74.5 82 V96 L76.5 93.5 L78.5 96 V82 Z" />
-              <path class="crb-end" d="M86 84 V44 a2 2 0 0 1 2 -2 h2 V82 h12" />
-              <rect class="crb-plank" x="6" y="84" width="108" height="6" rx="1.5" />
+            <svg class="crc-books" viewBox={`0 0 ${Math.ceil(miniBooks.end + 26)} 104`} width={Math.ceil(miniBooks.end + 26)} height="104" focusable="false">
+              {miniBooks.list.map((m) => (
+                <g>
+                  <rect class={`crb crb-${m.fill}`} x={m.x} y={m.y} width={m.w} height={m.h} rx="2" />
+                  <path class:list={['crb-band', { 'crb-band-ink': m.fill === 'ink' }]} d={`M${m.x + 2} ${m.y + 5} H${m.x + m.w - 2} M${m.x + 2} ${miniBooks.base - 4} H${m.x + m.w - 2}`} />
+                  <text class:list={['crb-a', { 'crb-a-ink': m.fill === 'ink' }]} transform={`translate(${(m.x + m.w / 2).toFixed(1)} ${miniBooks.base - 8}) rotate(90)`} dy="0.35em" text-anchor="end">{m.name}</text>
+                </g>
+              ))}
+              <path class="crb-end" d={`M${(miniBooks.end + 3).toFixed(1)} ${miniBooks.base} V${miniBooks.base - 40} a2 2 0 0 1 2 -2 h2 V${miniBooks.base - 2} h12`} />
+              <rect class="crb-plank" x="2" y={miniBooks.base} width={Math.ceil(miniBooks.end + 22)} height="6" rx="1.5" />
             </svg>
           </span>
           <span class="crc-go">{cc.homeRow.cta} <i aria-hidden="true">→</i></span>

@@ -1,14 +1,13 @@
 ---
 // The picture at the top of My corner: a larger ink drawing of the small laptop from the home desk, its screen typing
-// out a `~/corner` listing once (mono only inside the screen), a stack of books beside it, and a "Right now" note pinned
-// above the books in the desk-note style. Same line-art as the desk: 1.5px grey ink, white and light-grey fills, the
+// out a `~/corner` listing once (mono only inside the screen) and a stack of books with a mug beside it, both standing
+// on one desk line and centred in the hero's right column. Same line-art as the desk: 1.5px grey ink, white and light-grey fills, the
 // desk's soft shadow, and one near-black accent per drawing (the cursor; the book stack's ribbon).
 // Motion: the listing types once when the picture is on screen (.in), pauses off screen (.off), and moves only by
 // transform and opacity (the observer is the Workbench's, in corner.astro). With motion off or without JavaScript the
 // finished screen is simply there.
-// The listing follows src/data/projects.ts; the note's lines live in src/data/corner.ts (`now`).
+// The listing follows src/data/projects.ts.
 import { projects } from '../data/projects';
-import { now, nowLines } from '../data/corner';
 
 const entries = [...projects.map((p) => `${p.id}/`), 'shelf.md'];
 const X = 72, Y0 = 80, LH = 19;
@@ -37,11 +36,6 @@ const lastY = Y0 + (entries.length + 1) * LH;
     </svg>
   </div>
   <div class="cd-side">
-    <div class="cd-now">
-      <span class="cd-pin" />
-      <h2 class="cd-now-t">{now.title}</h2>
-      <dl>{nowLines().map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
-    </div>
     <svg class="cd-books" aria-hidden="true" viewBox="0 0 220 104" width="220" height="104" focusable="false">
       <ellipse class="dk-shadow" cx="106" cy="99" rx="94" ry="2.6" />
       <rect class="dk-paper" x="18" y="74" width="176" height="24" rx="3" />

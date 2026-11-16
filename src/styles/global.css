@@ -2892,7 +2892,7 @@ html.js .wb-card.in:not(.off) *, html.js .wb-card.in:not(.off) *::before, html.j
 .bk-body { stroke: var(--ink-d); stroke-width: 1.5; }
 .bk-paper { fill: #fff; } .bk-tint { fill: var(--n-tint); } .bk-tint2 { fill: #f1f0eb; } .bk-ink { fill: #2a2b2f; }
 .bk-band { fill: none; stroke: rgba(58, 59, 63, 0.3); stroke-width: 1; }
-.bk[data-obj="dm"] .bk-band { stroke: rgba(255, 255, 255, 0.22); }
+.bk.bk-is-ink .bk-band { stroke: rgba(255, 255, 255, 0.22); }
 .bk-t { font-family: var(--sans); font-weight: 600; fill: #0b0b0c; letter-spacing: 0.005em; }
 .bk-a { font: 600 8.5px var(--sans); letter-spacing: 0.16em; fill: #66686d; }
 .bk-t-ink { fill: #f1f0ec; } .bk-a.bk-t-ink { fill: rgba(241, 240, 236, 0.65); }
@@ -2957,7 +2957,7 @@ html.js .wb-card.in:not(.off) *, html.js .wb-card.in:not(.off) *::before, html.j
    ===================================================================== */
 
 /* --- Home: the way into My corner, a card inside Selected work. Words and a button on the left; on the right a small
-       preview of the page itself (three project pictures and three ink spines on light paper). The whole card is the link. --- */
+       preview of the page itself (three project pictures and the shelf's spines on light paper). The whole card is the link. --- */
 .cr-card {
   position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr); grid-template-areas: 'text peek' 'go peek';
   grid-template-rows: auto 1fr; column-gap: clamp(28px, 4vw, 64px); align-items: start;
@@ -3003,10 +3003,10 @@ html.js .wb-card.in:not(.off) *, html.js .wb-card.in:not(.off) *::before, html.j
 .crc-fr i:last-child { margin-right: 0; }
 .crc-fr i.spike { background: #0b0b0c; }
 /* the books */
-.crc-books { flex: none; width: 128px; height: auto; margin-left: 4px; overflow: visible; }
-.crb { stroke: #3a3b3f; stroke-width: 1.5; } .crb-paper { fill: #fff; } .crb-tint { fill: #e6e5df; } .crb-ink { fill: #2a2b2f; }
+.crc-books { flex: none; width: 152px; height: auto; margin-left: 4px; overflow: visible; }
+.crb { stroke: #3a3b3f; stroke-width: 1.5; } .crb-paper { fill: #fff; } .crb-tint { fill: #e6e5df; } .crb-tint2 { fill: #f1f0eb; } .crb-ink { fill: #2a2b2f; }
+.crb-a { font: 600 6.4px var(--sans); letter-spacing: 0.12em; fill: #55575c; } .crb-a-ink { fill: rgba(241, 240, 236, 0.75); }
 .crb-band { fill: none; stroke: rgba(58, 59, 63, 0.35); stroke-width: 1; } .crb-band-ink { stroke: rgba(255, 255, 255, 0.25); }
-.crb-rib { fill: #0b0b0c; }
 .crb-end { fill: #e6e5df; stroke: #3a3b3f; stroke-width: 1.5; stroke-linejoin: round; }
 .crb-plank { fill: #fbfaf6; stroke: #3a3b3f; stroke-width: 1.5; }
 @media (hover: hover) {
@@ -3028,13 +3028,13 @@ html.js .wb-card.in:not(.off) *, html.js .wb-card.in:not(.off) *::before, html.j
   .crc-peek { padding: 16px 12px 14px; }
   .crc-tile { height: 84px; margin-right: 8px; } .crc-tile:nth-child(2) { height: 92px; }
   .crc-rt { padding: 0 8px; }
-  .crc-books { width: 78px; }
+  .crc-books { width: 108px; margin-left: 2px; }
   .crc-go { align-self: stretch; justify-self: stretch; justify-content: center; }
 }
 @media (max-width: 340px) { .crc-tile:nth-child(3) { display: none; } }
 @media (prefers-reduced-motion: reduce) { .cr-card::after, .crc-go i, .crc-peek, .crc-tile { transition: none; } }
 
-/* --- /corner/: the first screen. Words on the left, the laptop, the "Right now" note and the books on the right;
+/* --- /corner/: the first screen. Words on the left; on the right the laptop and a stack of books on one desk line;
        shorter than home's hero so the Workbench starts on the first screen of a laptop. --- */
 .cr-page .cr-hero { display: grid; grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr); column-gap: clamp(32px, 5vw, 80px); align-items: center; max-width: none; padding-top: clamp(96px, 8.5vw, 124px); }
 .cr-page .cr-hero h1 { font-size: clamp(38px, 4.3vw, 62px); line-height: 1.02; text-wrap: balance; }
@@ -3042,7 +3042,7 @@ html.js .wb-card.in:not(.off) *, html.js .wb-card.in:not(.off) *::before, html.j
 .cr-page .cr-hero .cr-jump { margin-top: 14px; }
 .cr-page .cr-hero .cs-back { margin-bottom: 10px; }
 .cr-hero-art { min-width: 0; }
-.cd { --ink-d: #3a3b3f; --g: var(--n-ink); --g-tint: var(--n-tint); position: relative; display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); align-items: end; max-width: 680px; margin-left: auto; }
+.cd { --ink-d: #3a3b3f; --g: var(--n-ink); --g-tint: var(--n-tint); position: relative; display: grid; grid-template-columns: minmax(0, 2.15fr) minmax(0, 1fr); align-items: end; max-width: 690px; margin: 0 auto; }
 .cd-lap { min-width: 0; }
 /* one desk line under the laptop and the books */
 .cd::after { content: ''; position: absolute; left: -8px; right: -8px; bottom: 4px; height: 1.5px; border-radius: 1px; background: var(--ink-d); }
@@ -3057,29 +3057,16 @@ html.js .wb-card.in:not(.off) *, html.js .wb-card.in:not(.off) *::before, html.j
 .cd-cover { fill: #f3f1ea; transform-box: fill-box; transform-origin: 100% 50%; transform: scaleX(0); }
 .cd-cur { fill: var(--n-ink); }
 .cd-ribbon { fill: var(--n-ink); }
-.cd-side { display: flex; flex-direction: column; align-items: center; min-width: 0; }
+.cd-side { display: flex; flex-direction: column; align-items: center; min-width: 0; margin-left: -6px; }
 .cd-books { max-width: 220px; }
-.cd-now {
-  position: relative; width: 100%; max-width: 232px; box-sizing: border-box; margin: 0 0 14px -6px; padding: 20px 18px 16px; border-radius: 12px; background: #fff;
-  box-shadow: inset 0 0 0 1.5px var(--ink-d), 0 18px 34px -24px rgba(40, 30, 20, 0.45); transform: rotate(2deg);
-}
-.cd-pin { position: absolute; left: 50%; top: -7px; width: 13px; height: 13px; margin-left: -6.5px; border-radius: 50%; background: var(--n-tint); box-shadow: inset 0 0 0 1.5px var(--ink-d), 0 3px 4px -1px rgba(0, 0, 0, 0.18); }
-.cr-page .cd-now-t { margin: 0; font: 600 12px/1.4 var(--sans); letter-spacing: 0.08em; text-transform: uppercase; color: #0b0b0c; }
-.cd-now dl { margin: 8px 0 0; }
-.cd-now dl > div { padding: 7px 0 6px; border-top: 1px dashed rgba(11, 11, 12, 0.14); }
-.cd-now dl > div:first-child { border-top: 0; padding-top: 2px; }
-.cd-now dt { font: 500 11px/1.3 var(--sans); letter-spacing: 0.12em; text-transform: uppercase; color: #6c6e72; }
-.cd-now dd { margin: 2px 0 0; font: 500 15.5px/1.35 var(--sans); color: #0b0b0c; letter-spacing: -0.005em; }
 /* the listing types once: the command, then the files, then the prompt and a cursor that blinks three times */
 @keyframes cd-wipe { from { transform: scaleX(1); } to { transform: scaleX(0); } }
 @keyframes cd-show { from { opacity: 0; } to { opacity: 1; } }
 @keyframes cd-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
-@keyframes cd-pinned { from { opacity: 0; transform: translateY(-10px) rotate(5deg); } to { opacity: 1; transform: rotate(2deg); } }
 html.js .cd .cd-cover { transform-box: fill-box; transform-origin: 100% 50%; animation: cd-wipe 360ms steps(2, end) 0.55s both; }
 html.js .cd .cd-ls { animation: cd-show 120ms linear calc(1.05s + var(--i) * 90ms) both; }
 html.js .cd .cd-end { animation: cd-show 120ms linear 1.75s both; }
 html.js .cd .cd-cur { animation: cd-blink 1s linear 1.9s 3; }
-html.js .cd .cd-now { animation: cd-pinned 560ms var(--ease) 0.2s both; }
 html.js .cd *, html.js .cd { animation-play-state: paused; }
 html.js .cd.in:not(.off) * { animation-play-state: running; }
 @media (prefers-reduced-motion: reduce) { html.js .cd * { animation: none !important; } }
@@ -3088,14 +3075,11 @@ html.js .cd.in:not(.off) * { animation-play-state: running; }
   .cr-hero-art { margin-top: 28px; }
   .cd { margin-left: 0; max-width: 600px; }
 }
+/* phones: the laptop takes most of the row so its screen stays readable; the books stand beside it, a little smaller */
 @media (max-width: 560px) {
-  .cd { grid-template-columns: minmax(0, 1fr); }
-  .cd-lap { padding: 0 4px; }
-  .cd-side { flex-direction: row; align-items: flex-end; margin-top: 18px; }
-  .cd-now { flex: 1 1 auto; max-width: 260px; margin: 0 0 0 4px; }
-  .cd-books { flex: none; width: 34%; max-width: 140px; margin-left: 12px; }
+  .cd { grid-template-columns: minmax(0, 3.3fr) minmax(0, 1fr); }
+  .cd-side { margin-left: -14px; }
 }
-@media (max-width: 360px) { .cd-books { display: none; } .cd-now { max-width: none; margin-right: 6px; } }
 
 /* --- Workbench: a one-line status strip, tighter gaps, and pictures that fill their boxes --- */
 .cr-bench-side { max-width: 440px; }
@@ -3116,18 +3100,10 @@ html.js .cd.in:not(.off) * { animation-play-state: running; }
 }
 @media (min-width: 1200px) { .wb-lead .wb-art > .v { transform: scale(1.1); } }
 
-/* --- Shelf: the book I'm reading now carries a bookmark ribbon and a small tag --- */
-.bk-ribbon { fill: var(--n-ink); stroke: none; }
-.bk-now-t { font: 500 11.5px var(--sans); letter-spacing: 0.04em; fill: #3a3b3f; }
-.bk-now-l { fill: none; stroke: #3a3b3f; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
 
 @supports not (inset: 0) {
   .crc-text > * + * { margin-top: 12px; }
   .crc-go i { margin-left: 10px; }
-}
-@media (max-width: 560px) {
-  .cd-lap { position: relative; padding-bottom: 2px; }
-  .cd-lap::after { content: ''; position: absolute; left: -8px; right: -8px; bottom: 5px; height: 1.5px; border-radius: 1px; background: var(--ink-d); }
 }
 .cr-page .cr-sec-head p.cr-status { border-radius: 16px; }
 .cr-status span { white-space: nowrap; }

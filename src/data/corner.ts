@@ -13,19 +13,6 @@ export const corner = {
   benchStatus: (count: number) => [`${count} live demos`, 'all open source', 'no sign-up'],
 };
 
-/*
- * "Right now": the note pinned beside the laptop at the top of My corner (and in its markdown).
- * Edit freely: four short lines, no dates, phrased so they stay true for a few weeks.
- * The Reading line names the book marked "Now reading" on the shelf (`nowReading` below), so the two always agree.
- */
-export const now = {
-  title: 'Right now',
-  building: 'the invoice agent',
-  learning: 'LangGraph',
-  offScreen: 'dance practice',
-};
-/** The book on the shelf with the "Now reading" ribbon (an `id` from `books` below). '' hides the ribbon. */
-export const nowReading = 'dm';
 
 
 /**
@@ -56,26 +43,39 @@ export function cornerCopy(hasNotes: boolean) {
  * On my shelf. Titles and authors only: no covers, cover art or logos.
  * `why`: one short line on why I liked it, in my voice. While it is '' the book's note card says `whySoon`.
  * Room for more: add a book here and the shelf draws it (Shelf.astro lays the row out from this list).
+ * The spine shows the author's surname (`spineName`); the note card shows the full `author`.
  * `series: true` names it as a series ("Harry Potter (the series)"); it is still drawn as one spine.
  */
 export type Book = { id: string; title: string; author: string; why: string; series?: boolean };
 /** Shown on a book's note card while its `why` is still ''. */
 export const whySoon = 'Note coming soon.';
+/**
+ * The name printed at the foot of a book's spine (on the shelf and in home's My corner preview): the author's surname,
+ * set in small caps. Derived from `author`, so every book, including any added later, shows its author the same way.
+ * The note card keeps the full name ("by Alex Michaelides").
+ */
+export const spineName = (author: string) => author.trim().split(/\s+/).pop()!.toUpperCase();
 
 export const books: Book[] = [
   { id: 'itc', title: 'If Tomorrow Comes', author: 'Sidney Sheldon', why: '' },
   { id: 'hp', title: 'Harry Potter', author: 'J.K. Rowling', why: '', series: true },
   { id: 'dm', title: 'Dark Matter', author: 'Blake Crouch', why: '' },
   { id: 'sp', title: 'The Silent Patient', author: 'Alex Michaelides', why: '' },
+  { id: 'gg', title: 'Gone Girl', author: 'Gillian Flynn', why: '' },
+  { id: 'roa', title: 'Rage of Angels', author: 'Sidney Sheldon', why: '' },
 ];
 
-/** The "Right now" lines, label and value, for the page and the markdown. */
-export function nowLines() {
-  const b = books.find((x) => x.id === nowReading);
-  return [
-    ['Building', now.building],
-    ['Learning', now.learning],
-    ['Reading', b ? `${b.title}, from my shelf` : 'something from my shelf'],
-    ['Off-screen', now.offScreen],
-  ] as [string, string][];
-}
+export type Look = { w: number; h: number; fill: 'paper' | 'tint' | 'tint2' | 'ink' };
+// Per-book look on the shelf (src/components/Shelf.astro) in drawing units (1 unit = 1 CSS px at the drawing's natural size). Unknown books get a default.
+// Every spine carries its title and, at the foot, the author's surname (`spineName`, derived from `author`). The
+// heights are real-book proportions with room for both; a spine whose words would not fit grows taller (`fitH` in Shelf.astro), so
+// the surname is never dropped.
+export const looks: Record<string, Look> = {
+  itc: { w: 36, h: 224, fill: 'paper' },
+  hp: { w: 40, h: 206, fill: 'tint' },
+  dm: { w: 34, h: 200, fill: 'ink' },
+  sp: { w: 36, h: 240, fill: 'paper' },
+  gg: { w: 33, h: 208, fill: 'tint2' },
+  roa: { w: 36, h: 218, fill: 'paper' },
+};
+// Home's My corner card draws the same books at a small scale, with the same fills and surnames.
