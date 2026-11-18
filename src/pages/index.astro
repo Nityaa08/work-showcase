@@ -166,7 +166,7 @@ const miniBooks = (() => {
         </div>
         <div class="ow-desk"><Desk /></div>
         <div class="ow-note">
-          <p class="dk-hint" id="dk-hint"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V10m0-1.5a1.5 1.5 0 0 1 3 0V11m0-1a1.5 1.5 0 0 1 3 0v4.5A6.5 6.5 0 0 1 11.5 21h-.6a6 6 0 0 1-4.6-2.2L3.6 15.4a1.6 1.6 0 0 1 2.4-2.1L9 16" /></svg><span>{outsideIntro.hint}</span></p>
+          <p class="dk-hint" id="dk-hint"><i class="dk-hand" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V10m0-1.5a1.5 1.5 0 0 1 3 0V11m0-1a1.5 1.5 0 0 1 3 0v4.5A6.5 6.5 0 0 1 11.5 21h-.6a6 6 0 0 1-4.6-2.2L3.6 15.4a1.6 1.6 0 0 1 2.4-2.1L9 16" /></svg></i><span>{outsideIntro.hint}</span></p>
           <article class="dk-card" id="dk-card" tabindex="-1" hidden aria-labelledby="dk-name">
             <div class="dk-card-top">
               <h3 class="dk-name" id="dk-name"></h3>
@@ -262,7 +262,9 @@ const miniBooks = (() => {
       const reveals = [...document.querySelectorAll<HTMLElement>('[data-reveal]')];
       if (still.matches) reveals.forEach((el) => el.classList.add('in'));
       else {
-        const revealIO = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); revealIO.unobserve(e.target); } }), { threshold: 0.3 });
+        // When every animation of an entrance has finished, mark it .done so the browser can let go of their layers.
+        const settle = (el: Element) => Promise.all(el.getAnimations({ subtree: true }).map((x) => x.finished)).then(() => el.classList.add('done'), () => {});
+        const revealIO = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); revealIO.unobserve(e.target); settle(e.target); } }), { threshold: 0.3 });
         reveals.forEach((el) => revealIO.observe(el));
       }
       const liveIO = new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle('off', !e.isIntersecting)));
@@ -270,71 +272,108 @@ const miniBooks = (() => {
       const wait = (ms: number) => new Promise((r) => setTimeout(r, still.matches ? 0 : ms));
 
       // --- The desk: every object is a button that opens one note at a time. ---
+      // Round 25 (performance): one delegated listener per event type for the whole desk, all removable through one
+      // AbortController; a new note replaces the old one at once (the old object snaps back, nothing is queued); and the
+      // object whose reveal is playing sits on its own layer only for that time.
       const deskEl = document.querySelector<HTMLElement>('[data-desk]');
       if (deskEl) {
+        const ac = new AbortController(), on = { signal: ac.signal }, passive = { signal: ac.signal, passive: true };
         // Idle motion only runs while the desk is on screen.
-        new IntersectionObserver(([e]) => deskEl.classList.toggle('in', e.isIntersecting), { rootMargin: '60px 0px' }).observe(deskEl);
-        // While the page scrolls, the pointer sweeping over the drawing must not start hover loops (Safari updates hover
-        // mid-scroll). The hit areas ignore the pointer until scrolling has stopped for a moment.
+        const seen = new IntersectionObserver(([e]) => deskEl.classList.toggle('in', e.isIntersecting), { rootMargin: '60px 0px' });
+        seen.observe(deskEl);
+        // Cancel the page's laptop zoom inside the desk (see .dk-in in global.css): the browser multiplies zooms in
+        // single-precision floats, so pick the inverse whose product is exactly 1, or Chrome still treats it as zoomed.
+        const dkIn = deskEl.querySelector<HTMLElement>('.dk-in')!;
+        const unzoom = () => {
+          const z = Math.fround(parseFloat(getComputedStyle(document.documentElement).zoom) || 1);
+          let c = 1 / z;
+          for (let i = 1; Math.fround(z * Math.fround(c)) !== 1 && i < 600; i++) c = 1 / z + (i % 2 ? 1 : -1) * Math.ceil(i / 2) * 1e-8;
+          dkIn.style.zoom = z === 1 ? '' : c.toFixed(8);
+          dkIn.classList.toggle('unz', z !== 1);
+          return z;
+        };
+        // Strokes keep their on-screen width at every desk size: --u is drawing units per CSS pixel (see global.css).
+        // The strokes were drawn at 1.5px times the page zoom, so they stay that thick.
+        const sized = new ResizeObserver(([e]) => { const z = unzoom(), w = e.contentRect.width; if (w > 0) deskEl.style.setProperty('--u', ((600 * z) / w).toFixed(4)); });
+        unzoom(); sized.observe(dkIn);
+        addEventListener('pagehide', (e) => { if (!e.persisted) { ac.abort(); seen.disconnect(); sized.disconnect(); } }, { once: true });
+        // While the page scrolls, the pointer sweeping over the drawing must not start hover animations (Safari updates
+        // hover mid-scroll). The hit areas ignore the pointer until scrolling has stopped for a moment.
         let rest = 0;
         addEventListener('scroll', () => {
           if (!deskEl.classList.contains('in')) return;
-          if (!deskEl.classList.contains('busy')) { deskEl.classList.add('busy'); deskEl.querySelectorAll('.dk-obj.hot, .dk-steam.hot').forEach((o) => o.classList.remove('hot')); }
+          if (!deskEl.classList.contains('busy')) { deskEl.classList.add('busy'); setHot(''); }
           clearTimeout(rest); rest = window.setTimeout(() => deskEl.classList.remove('busy'), 180);
-        }, { passive: true });
+        }, passive);
         const notes = new Map([...(document.getElementById('dk-notes') as HTMLTemplateElement).content.querySelectorAll<HTMLElement>('[data-k]')].map((n) => [n.dataset.k!, n.dataset]));
         const card = document.getElementById('dk-card')!, hint = document.getElementById('dk-hint')!, live = document.getElementById('dk-live')!;
         const nameEl = card.querySelector('.dk-name')!, textEl = card.querySelector('.dk-text')!;
-        const linkEl = document.getElementById('dk-link') as HTMLAnchorElement;
-        const btns = [...deskEl.querySelectorAll<HTMLButtonElement>('.dk-hit')];
-        const btn = (k: string) => btns.find((x) => x.dataset.k === k)!;
-        const objs = (k: string) => deskEl.querySelectorAll(`[data-obj="${k}"], [data-for="${k}"]`);
-        const mark = (k: string, cls: string, on: boolean) => objs(k).forEach((o) => o.classList.toggle(cls, on));
-        let open = '', seq = 0;
+        const linkEl = document.getElementById('dk-link') as HTMLAnchorElement, linkText = linkEl.querySelector('span')!;
+        const btns = new Map([...deskEl.querySelectorAll<HTMLButtonElement>('.dk-hit')].map((b) => [b.dataset.k!, b]));
+        // Every element that belongs to an object, looked up once: its drawing, its piece (the small SVG it lives in)
+        // and, for the mug and the mic, the steam and the spotlight.
+        const parts = new Map([...btns.keys()].map((k) => [k, [...deskEl.querySelectorAll<Element>(`[data-obj="${k}"], [data-for="${k}"]`)]]));
+        const pieces = new Map([...btns.keys()].map((k) => [k, [...deskEl.querySelectorAll<Element>(`[data-pc="${k}"]`)]]));
+        const fly = deskEl.querySelector<SVGAnimationElement>('.dk-plane animateMotion');
+        const mark = (k: string, cls: string, v: boolean) => parts.get(k)!.forEach((o) => o.classList.toggle(cls, v));
+        let open = '', seq = 0, hot = '', swapT = 0, runT = 0, runK = '';
+        // Lift the object's piece onto its own layer while its reveal plays (about three seconds), then drop it.
+        const run = (k: string) => {
+          clearTimeout(runT); if (runK) pieces.get(runK)!.forEach((p) => p.classList.remove('run'));
+          runK = still.matches ? '' : k; if (!runK) return;
+          pieces.get(k)!.forEach((p) => p.classList.add('run'));
+          runT = window.setTimeout(() => { pieces.get(k)!.forEach((p) => p.classList.remove('run')); runK = ''; }, 3200);
+        };
+        // An object that loses its note goes straight back to rest: no reverse transitions running beside the new reveal.
+        const snap = (k: string) => {
+          const els = parts.get(k)!; els.forEach((o) => o.classList.add('dk-snap'));
+          mark(k, 'open', false);
+          requestAnimationFrame(() => requestAnimationFrame(() => els.forEach((o) => o.classList.remove('dk-snap'))));
+        };
         const setText = (k: string) => {
           const n = notes.get(k)!; nameEl.textContent = n.name!; textEl.textContent = n.note!;
           // A note can lead somewhere (the books open my shelf, the laptop My corner).
-          linkEl.hidden = !n.href; if (n.href) { linkEl.href = n.href; linkEl.querySelector('span')!.textContent = n.link!; }
+          linkEl.hidden = !n.href; if (n.href) { linkEl.href = n.href; linkText.textContent = n.link!; }
         };
         const close = (focusBack = false) => {
           if (!open) return;
-          const b = btn(open);
-          mark(open, 'open', false); b.setAttribute('aria-expanded', 'false');
-          seq++; card.classList.remove('show', 'swap'); card.hidden = true; hint.hidden = false; live.textContent = '';
+          const b = btns.get(open)!;
+          snap(open); b.setAttribute('aria-expanded', 'false'); run('');
+          seq++; clearTimeout(swapT); card.classList.remove('show', 'swap'); card.hidden = true; hint.hidden = false; live.textContent = '';
           open = '';
           if (focusBack) b.focus();
         };
         const show = (k: string) => {
           const n = notes.get(k)!, was = open, my = ++seq;
-          if (was) { mark(was, 'open', false); btn(was).setAttribute('aria-expanded', 'false'); }
-          open = k; mark(k, 'open', true); btn(k).setAttribute('aria-expanded', 'true');
+          if (was) { snap(was); btns.get(was)!.setAttribute('aria-expanded', 'false'); }
+          open = k; mark(k, 'open', true); btns.get(k)!.setAttribute('aria-expanded', 'true'); run(k);
           card.dataset.k = k;
+          clearTimeout(swapT);
           if (was && !card.hidden) {
-            // Switching notes: the card stays put and only its words cross-fade.
+            // Switching notes: the card stays put and only its words cross-fade. A newer click cancels this one.
             card.classList.add('swap');
-            window.setTimeout(() => { if (my !== seq) return; setText(k); card.classList.remove('swap'); }, still.matches ? 0 : 180);
+            swapT = window.setTimeout(() => { if (my !== seq) return; setText(k); card.classList.remove('swap'); }, still.matches ? 0 : 180);
           } else {
             setText(k); card.classList.remove('show', 'swap');
             hint.hidden = true; card.hidden = false;
-            requestAnimationFrame(() => requestAnimationFrame(() => { if (my === seq || open === k) card.classList.add('show'); }));
+            requestAnimationFrame(() => requestAnimationFrame(() => { if (my === seq) card.classList.add('show'); }));
           }
           // The globe's plane flies its route (SMIL); with motion off it simply lands.
-          if (k === 'globe') { const fly = deskEl.querySelector<SVGAnimationElement>('.dk-plane animateMotion'); if (fly) { fly.setAttribute('dur', still.matches ? '0.01s' : '2s'); try { fly.beginElement(); } catch {} } }
+          if (k === 'globe' && fly) { fly.setAttribute('dur', still.matches ? '0.01s' : '2s'); try { fly.beginElement(); } catch {} }
           live.textContent = `${n.name}. ${n.note}`;
           // On a phone the note sits under the drawing: bring it into view if it is below the fold.
           const r = card.getBoundingClientRect();
           if (r.bottom > innerHeight) card.scrollIntoView({ block: 'nearest', behavior: still.matches ? 'auto' : 'smooth' });
         };
-        btns.forEach((b) => {
-          const k = b.dataset.k!;
-          b.addEventListener('pointerenter', () => mark(k, 'hot', true));
-          b.addEventListener('pointerleave', () => mark(k, 'hot', false));
-          b.addEventListener('focus', () => b.matches(':focus-visible') && mark(k, 'hot', true));
-          b.addEventListener('blur', () => mark(k, 'hot', false));
-          b.addEventListener('click', () => (open === k ? close() : show(k)));
-        });
-        card.querySelector('.dk-close')!.addEventListener('click', () => close(true));
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && open) close(true); });
+        const hitOf = (t: EventTarget | null) => (t instanceof Element ? t.closest<HTMLButtonElement>('.dk-hit') : null);
+        const setHot = (k: string) => { if (hot === k) return; if (hot) mark(hot, 'hot', false); hot = k; if (k) mark(k, 'hot', true); };
+        deskEl.addEventListener('pointerover', (e) => { const b = hitOf(e.target); if (b) setHot(b.dataset.k!); }, on);
+        deskEl.addEventListener('pointerout', (e) => { const b = hitOf(e.target); if (b && hitOf(e.relatedTarget) !== b) setHot(''); }, on);
+        deskEl.addEventListener('focusin', (e) => { const b = hitOf(e.target); if (b && b.matches(':focus-visible')) setHot(b.dataset.k!); }, on);
+        deskEl.addEventListener('focusout', (e) => { if (hitOf(e.target)) setHot(''); }, on);
+        deskEl.addEventListener('click', (e) => { const b = hitOf(e.target); if (!b) return; const k = b.dataset.k!; open === k ? close() : show(k); }, on);
+        card.querySelector('.dk-close')!.addEventListener('click', () => close(true), on);
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && open) close(true); }, on);
       }
 
       // --- Contact: an envelope addressed to me. Clicking it (or the address) tucks the letter in, closes the flap,

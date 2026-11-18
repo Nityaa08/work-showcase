@@ -25,6 +25,14 @@ const hits: Record<string, [number, number, number, number]> = {
   mic: [510, 248, 84, 176],
 };
 const pct = (v: number, of: number) => `${((v / of) * 100).toFixed(3)}%`;
+// Each object's own small SVG: its box in drawing units [x, y, w, h], generous enough for its motion (anything that
+// moves past the box still shows, as the pieces don't clip).
+const boxes: Record<string, [number, number, number, number]> = {
+  mlight: [446, 58, 116, 282], events: [338, 48, 124, 146], books: [68, 50, 152, 132], laptop: [202, 128, 64, 52],
+  globe: [268, 50, 86, 134], ghungroo: [26, 264, 196, 76], mug: [224, 282, 60, 54], mat: [292, 284, 176, 56], mic: [460, 138, 86, 200],
+};
+const vb = (k: string) => boxes[k].join(' ');
+const place = (k: string) => { const [x, y, w, h] = boxes[k]; return `--x:${pct(x, W)};--y:${pct(y - Y0, VH)};--w:${pct(w, W)};--h:${pct(h, VH)}`; };
 
 // Ghungroo: rows of small bells along the front of each coiled strap.
 type Bell = { x: number; y: number; r: number; d: number };
@@ -39,7 +47,7 @@ const backB = ring(coilB.cx, coilB.cy - 2, coilB.rx - 2, coilB.ry, 205, 335, 6, 
 const frontB = [...ring(coilB.cx, coilB.cy + 3, coilB.rx, coilB.ry, 12, 168, 11, 3.5, 1), ...ring(coilB.cx, coilB.cy + 9, coilB.rx - 4, coilB.ry, 20, 160, 9, 3.3, 5)];
 const backA = ring(coilA.cx, coilA.cy - 2, coilA.rx - 2, coilA.ry, 200, 340, 7, 3.2, 2);
 const frontA = [...ring(coilA.cx, coilA.cy + 3, coilA.rx, coilA.ry, 10, 170, 13, 3.6, 4), ...ring(coilA.cx, coilA.cy + 10, coilA.rx - 4, coilA.ry, 18, 162, 11, 3.4, 6)];
-const bell = (b: Bell) => `<g class="dk-bell" style="--d:${b.d}s"><circle cx="${b.x}" cy="${b.y}" r="${b.r}"/><circle class="dk-bell-mouth" cx="${b.x}" cy="${(b.y + b.r * 0.42).toFixed(2)}" r="${(b.r * 0.26).toFixed(2)}"/></g>`;
+const bell = (b: Bell) => `<g class="dk-bell"><circle cx="${b.x}" cy="${b.y}" r="${b.r}"/><circle class="dk-bell-mouth" cx="${b.x}" cy="${(b.y + b.r * 0.42).toFixed(2)}" r="${(b.r * 0.26).toFixed(2)}"/></g>`;
 const strap = (c: typeof coilA) => `<ellipse class="dk-strap" cx="${c.cx}" cy="${c.cy}" rx="${c.rx}" ry="${c.ry}"/><ellipse class="dk-strap-ln" cx="${c.cx}" cy="${c.cy}" rx="${c.rx + 3.5}" ry="${c.ry + 3.5}"/><ellipse class="dk-strap-ln" cx="${c.cx}" cy="${c.cy}" rx="${c.rx - 3.5}" ry="${c.ry - 3.5}"/>`;
 // Confetti for the run-sheet: where each piece flies to (dx, dy), its spin and its look.
 const confetti = [
@@ -52,20 +60,18 @@ const confetti = [
 // Applause: tiny dots that pop around the mic once the spotlight lands.
 const claps = [[478, 172], [486, 154], [503, 146], [522, 152], [532, 168], [470, 192], [540, 188]]
   .map(([x, y], i) => `<circle class="dk-clap" cx="${x}" cy="${y}" r="2.6" style="--d:${(1.45 + (i % 4) * 0.12).toFixed(2)}s"/>`).join('');
-const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(''), backA.map(bell).join(''), strap(coilA), frontA.map(bell).join('')].join('');
+// The bells ring in a wave by row (Round 25, performance): each row of bells is one group that shakes, so ringing
+// moves 6 small layers instead of about 60 separate bells (which made the browser juggle over 120 layers).
+const row = (bs: Bell[], d: number) => `<g class="dk-bells" style="--d:${d}s">${bs.map(bell).join('')}</g>`;
+const ghungroo = [row(backB, 0.21), strap(coilB), row(frontB.slice(0, 11), 0.07), row(frontB.slice(11), 0.35), row(backA, 0.14), strap(coilA), row(frontA.slice(0, 13), 0), row(frontA.slice(13), 0.28)].join('');
 ---
 <div class="desk" data-desk>
+<div class="dk-in">
+  <!-- The drawing is split into pieces (Round 25, performance): the room is one SVG that never changes, and every
+       object is its own small SVG laid over it at the same scale. An object's animation then repaints only its own
+       small box, never the whole desk and the dot-grid paper under it. Each piece uses the same 600 x 400 drawing
+       units as before (its viewBox is just a window onto them), so the coordinates below are unchanged. -->
   <svg class="dk-svg" viewBox={`0 0 ${W} ${H}`} aria-hidden="true" focusable="false">
-    <defs>
-      <linearGradient id="dk-beam" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#0b0b0c" stop-opacity="0.02" />
-        <stop offset="1" stop-color="#0b0b0c" stop-opacity="0.09" />
-      </linearGradient>
-      <radialGradient id="dk-breath-g"><stop offset="0" stop-color="#0b0b0c" stop-opacity="0.12" /><stop offset="1" stop-color="#0b0b0c" stop-opacity="0" /></radialGradient>
-      <clipPath id="dk-globe-clip"><circle cx="285" cy="118" r="33.2" /></clipPath>
-      <clipPath id="dk-grille-clip"><circle cx="505" cy="190" r="11.2" /></clipPath>
-    </defs>
-
     <!-- the room: a shelf on the wall, the desk, the floor -->
     <g class="dk-room">
       <path class="dk-faint" d="M0 398 H600" />
@@ -74,7 +80,10 @@ const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(
       <rect class="dk-wood" x="22" y="330" width="556" height="12" rx="3" />
       <path class="dk-line" d="M46 342 V398 M554 342 V398 M46 362 H554" />
     </g>
+  </svg>
 
+  <svg class="dk-pc" data-pc="mic" viewBox={vb('mlight')} style={place('mlight')} aria-hidden="true" focusable="false">
+    <defs><linearGradient id="dk-beam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b0b0c" stop-opacity="0.02" /><stop offset="1" stop-color="#0b0b0c" stop-opacity="0.09" /></linearGradient></defs>
     <!-- the spotlight belongs to the mic: it hangs from a wall bracket at the bunting's height, right above the mic,
          and its cone lands on the desk round the mic's base. It sits behind everything on the desk. -->
     <g class="dk-obj dk-mic-light" data-for="mic">
@@ -85,7 +94,9 @@ const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(
         <rect class="dk-can" x="485" y="82" width="24" height="28" rx="5" /><ellipse class="dk-lens" cx="497" cy="110" rx="10" ry="3" />
       </g>
     </g>
+  </svg>
 
+  <svg class="dk-pc" data-pc="events" viewBox={vb('events')} style={place('events')} aria-hidden="true" focusable="false">
     <!-- the run-sheet: a clipboard on a nail, under a little bunting -->
     <g class="dk-obj dk-events" data-obj="events">
       <g class="dk-bunting">
@@ -114,7 +125,9 @@ const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(
       </g></g>
       <g class="dk-pop" transform="translate(400 112)" set:html={confetti} />
     </g>
+  </svg>
 
+  <svg class="dk-pc" data-pc="books" viewBox={vb('books')} style={place('books')} aria-hidden="true" focusable="false">
     <!-- books, one open on top -->
     <g class="dk-obj dk-books" data-obj="books">
       <ellipse class="dk-shadow" cx="136" cy="177.5" rx="68" ry="2.6" />
@@ -146,7 +159,9 @@ const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(
         </g>
       </g>
     </g>
+  </svg>
 
+  <svg class="dk-pc" data-pc="laptop" viewBox={vb('laptop')} style={place('laptop')} aria-hidden="true" focusable="false">
     <!-- a small open laptop on the shelf, between the books and the globe. Its note links to My corner.
          Opening it re-types the lines on its screen once, and the prompt (its one near-black accent) appears last. -->
     <g class="dk-obj dk-laptop" data-obj="laptop">
@@ -162,7 +177,10 @@ const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(
         <path class="dk-faint" d="M226 170.6 H240" />
       </g>
     </g>
+  </svg>
 
+  <svg class="dk-pc" data-pc="globe" viewBox={vb('globe')} style={place('globe')} aria-hidden="true" focusable="false">
+    <defs><clipPath id="dk-globe-clip"><circle cx="285" cy="118" r="33.2" /></clipPath></defs>
     <!-- a small globe, moved 24 units right to make room for the laptop -->
     <g class="dk-globe-at" transform="translate(24 0)">
     <g class="dk-obj dk-globe" data-obj="globe">
@@ -190,7 +208,9 @@ const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(
       </g>
     </g>
     </g>
+  </svg>
 
+  <svg class="dk-pc" data-pc="ghungroo" viewBox={vb('ghungroo')} style={place('ghungroo')} aria-hidden="true" focusable="false">
     <!-- ghungroo: a pair of ankle bells -->
     <g class="dk-obj dk-ghungroo" data-obj="ghungroo">
       <ellipse class="dk-shadow" cx="122" cy="331" rx="78" ry="3" />
@@ -203,7 +223,9 @@ const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(
         <path class="dk-spark" d="M58 292 l-6 -6 M100 286 V278 M144 290 l6 -7 M182 294 l7 -4" /><path class="dk-spark dk-spark2" d="M44 306 h-8 M78 284 l-3 -7 M124 282 V274 M166 286 l4 -7 M200 300 h8" />
       </g>
     </g>
+  </svg>
 
+  <svg class="dk-pc" data-pc="mug" viewBox={vb('mug')} style={place('mug')} aria-hidden="true" focusable="false">
     <!-- a mug -->
     <g class="dk-obj dk-mug" data-obj="mug">
       <ellipse class="dk-shadow" cx="252" cy="331" rx="26" ry="3" />
@@ -215,7 +237,10 @@ const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(
         <ellipse class="dk-rim" cx="250" cy="290" rx="20" ry="3.6" />
       </g>
     </g>
+  </svg>
 
+  <svg class="dk-pc" data-pc="mat" viewBox={vb('mat')} style={place('mat')} aria-hidden="true" focusable="false">
+    <defs><radialGradient id="dk-breath-g"><stop offset="0" stop-color="#0b0b0c" stop-opacity="0.12" /><stop offset="1" stop-color="#0b0b0c" stop-opacity="0" /></radialGradient></defs>
     <!-- a rolled yoga mat -->
     <g class="dk-obj dk-mat" data-obj="mat">
       <ellipse class="dk-shadow" cx="362" cy="331" rx="58" ry="3" />
@@ -228,7 +253,10 @@ const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(
         <path class="dk-green" d="M410 312 m0 -3 a2 3.5 0 1 1 -0.5 6.5 a4 8 0 1 0 0.6 -13 a6 13 0 1 1 -0.4 25" />
       </g></g>
     </g>
+  </svg>
 
+  <svg class="dk-pc" data-pc="mic" viewBox={vb('mic')} style={place('mic')} aria-hidden="true" focusable="false">
+    <defs><clipPath id="dk-grille-clip"><circle cx="505" cy="190" r="11.2" /></clipPath></defs>
     <!-- a stage mic on a small stand, under the spotlight -->
     <g class="dk-obj dk-mic" data-obj="mic">
       <ellipse class="dk-shadow" cx="505" cy="331" rx="30" ry="3" />
@@ -246,6 +274,7 @@ const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(
       <g class="dk-claps" set:html={claps} />
     </g>
   </svg>
+
 
   <!-- The mug's steam: three wisps, each its own tiny SVG. The idle loop moves them by transform and opacity only,
        so the browser composites it and never repaints the big drawing above (Round 15, performance). -->
@@ -265,4 +294,5 @@ const ghungroo = [backB.map(bell).join(''), strap(coilB), frontB.map(bell).join(
       </button>
     );
   })}
+</div>
 </div>

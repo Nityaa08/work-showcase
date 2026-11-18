@@ -1268,39 +1268,44 @@ html { scroll-behavior: smooth; }
 .h-outside { --ink-d: #3a3b3f; --g: var(--n-ink); --g-tint: var(--n-tint); } /* --g is the drawing's emphasis: near-black, not a hue (Round 14) */
 .desk { position: relative; width: 100%; max-width: 700px; margin-inline: auto; aspect-ratio: 600 / 400; }
 .dk-svg { position: absolute; top: 0; right: 0; bottom: 0; left: 0; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.dk-svg * { vector-effect: non-scaling-stroke; }
-.dk-line, .dk-ink { stroke: var(--ink-d); stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-.dk-faint { stroke: rgba(58, 59, 63, 0.28); stroke-width: 1.1; fill: none; stroke-linecap: round; }
-.dk-paper { fill: #fff; stroke: var(--ink-d); stroke-width: 1.5; stroke-linejoin: round; }
-.dk-wood { fill: #fbfaf6; stroke: var(--ink-d); stroke-width: 1.5; }
-.dk-green { stroke: var(--g); stroke-width: 1.5; fill: none; stroke-linecap: round; }
-.dk-green-fill { fill: var(--g-tint); stroke: var(--ink-d); stroke-width: 1.5; }
+/* Strokes keep one on-screen width at every desk size. Round 25: with JavaScript this is done by scaling each
+   stroke-width by --u (drawing units per CSS pixel, set by the page script from the desk's width), not by
+   vector-effect: non-scaling-stroke, because a non-scaling stroke anywhere inside an animated group stops Chrome from
+   running that group's transform animation on the compositor: every lift, bell, flag and confetti piece was repainted
+   on the main thread, frame by frame. Without JavaScript nothing animates, so the old rule stays as the fallback. */
+html:not(.js) .dk-svg *, html:not(.js) .dk-pc * { vector-effect: non-scaling-stroke; }
+.dk-line, .dk-ink { stroke: var(--ink-d); stroke-width: calc(1.5px * var(--u, 1)); fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.dk-faint { stroke: rgba(58, 59, 63, 0.28); stroke-width: calc(1.1px * var(--u, 1)); fill: none; stroke-linecap: round; }
+.dk-paper { fill: #fff; stroke: var(--ink-d); stroke-width: calc(1.5px * var(--u, 1)); stroke-linejoin: round; }
+.dk-wood { fill: #fbfaf6; stroke: var(--ink-d); stroke-width: calc(1.5px * var(--u, 1)); }
+.dk-green { stroke: var(--g); stroke-width: calc(1.5px * var(--u, 1)); fill: none; stroke-linecap: round; }
+.dk-green-fill { fill: var(--g-tint); stroke: var(--ink-d); stroke-width: calc(1.5px * var(--u, 1)); }
 .dk-green-solid { fill: var(--g); }
 .dk-ribbon { fill: var(--g); }
 .dk-shadow { fill: rgba(11, 11, 12, 0.07); transition: opacity var(--t-base) var(--ease); }
 .dk-land { fill: rgba(63, 122, 76, 0.2); }
-.dk-pin { fill: var(--g); } .dk-pin2 { fill: #fff; stroke: var(--g); stroke-width: 1.5; }
-.dk-arc { stroke: var(--g); stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 100; transition: stroke-dashoffset 900ms var(--ease); }
-.dk-strap { fill: none; stroke: #4a4b50; stroke-width: 7; }
-.dk-strap-ln { fill: none; stroke: var(--ink-d); stroke-width: 1.2; }
-.dk-bell circle { fill: #fbfaf6; stroke: var(--ink-d); stroke-width: 1.1; }
+.dk-pin { fill: var(--g); } .dk-pin2 { fill: #fff; stroke: var(--g); stroke-width: calc(1.5px * var(--u, 1)); }
+.dk-arc { stroke: var(--g); stroke-width: calc(1.5px * var(--u, 1)); fill: none; stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 100; transition: stroke-dashoffset 900ms var(--ease); }
+.dk-strap { fill: none; stroke: #4a4b50; stroke-width: calc(7px * var(--u, 1)); }
+.dk-strap-ln { fill: none; stroke: var(--ink-d); stroke-width: calc(1.2px * var(--u, 1)); }
+.dk-bell circle { fill: #fbfaf6; stroke: var(--ink-d); stroke-width: calc(1.1px * var(--u, 1)); }
 .dk-bell .dk-bell-mouth { fill: var(--ink-d); stroke: none; }
 .dk-bell { transform-box: fill-box; transform-origin: 50% 0; }
-.dk-spark { stroke: var(--g); stroke-width: 1.6; stroke-linecap: round; fill: none; opacity: 0; }
+.dk-spark { stroke: var(--g); stroke-width: calc(1.6px * var(--u, 1)); stroke-linecap: round; fill: none; opacity: 0; }
 .dk-heart { fill: var(--g); }
-.dk-rim { fill: #f3f1ea; stroke: var(--ink-d); stroke-width: 1.5; }
+.dk-rim { fill: #f3f1ea; stroke: var(--ink-d); stroke-width: calc(1.5px * var(--u, 1)); }
 .dk-steam path { stroke: rgba(58, 59, 63, 0.3); stroke-width: 1.3; fill: none; stroke-linecap: round; }
 .dk-steam { opacity: 0.55; }
-.dk-mat-body { fill: var(--g-tint); stroke: var(--ink-d); stroke-width: 1.5; stroke-linejoin: round; }
-.dk-mat-end { fill: #f1f6f1; stroke: var(--ink-d); stroke-width: 1.5; }
-.dk-tongue { fill: var(--g-tint); stroke: var(--ink-d); stroke-width: 1.2; transform-box: fill-box; transform-origin: 0 50%; transform: scaleX(0); transition: transform var(--t-slow) var(--ease); }
+.dk-mat-body { fill: var(--g-tint); stroke: var(--ink-d); stroke-width: calc(1.5px * var(--u, 1)); stroke-linejoin: round; }
+.dk-mat-end { fill: #f1f6f1; stroke: var(--ink-d); stroke-width: calc(1.5px * var(--u, 1)); }
+.dk-tongue { fill: var(--g-tint); stroke: var(--ink-d); stroke-width: calc(1.2px * var(--u, 1)); transform-box: fill-box; transform-origin: 0 50%; transform: scaleX(0); transition: transform var(--t-slow) var(--ease); }
 .dk-roll { transform-box: fill-box; transform-origin: 50% 100%; }
-.dk-stand { stroke: var(--ink-d); stroke-width: 2.4; stroke-linecap: round; }
+.dk-stand { stroke: var(--ink-d); stroke-width: calc(2.4px * var(--u, 1)); stroke-linecap: round; }
 .dk-can { fill: var(--ink-d); }
-.dk-lens { fill: #fff; stroke: var(--ink-d); stroke-width: 1.2; }
+.dk-lens { fill: #fff; stroke: var(--ink-d); stroke-width: calc(1.2px * var(--u, 1)); }
 .dk-beam { opacity: 0.32; transition: opacity var(--t-slow) var(--ease); }
 .dk-pool { fill: rgba(63, 122, 76, 0.22); }
-.dk-page { fill: #fbfaf6; stroke: var(--ink-d); stroke-width: 1.5; stroke-linejoin: round; transform-box: view-box; transform-origin: 136px 108px; }
+.dk-page { fill: #fbfaf6; stroke: var(--ink-d); stroke-width: calc(1.5px * var(--u, 1)); stroke-linejoin: round; transform-box: view-box; transform-origin: 136px 108px; }
 .dk-mer { transform-box: fill-box; transform-origin: center; }
 
 /* lift: hovered, focused or open objects rise a little; their shadow softens */
@@ -1314,15 +1319,15 @@ html { scroll-behavior: smooth; }
 .dk-mug.hot .dk-steam, .dk-mug.open .dk-steam { opacity: 1; }
 
 /* idle motion: only while the desk is on screen (.in), and only for the object under the pointer or focus */
-.desk.in .dk-books.hot .dk-page { animation: dk-flutter 1.6s ease-in-out infinite; }
+.desk.in .dk-books.hot .dk-page { animation: dk-flutter 1.6s ease-in-out; }
 @keyframes dk-flutter { 0%, 100% { transform: scaleX(1) skewY(0); } 40% { transform: scaleX(0.62) skewY(-4deg); } 60% { transform: scaleX(0.8) skewY(-2deg); } }
-.desk.in .dk-ghungroo.hot .dk-bell { animation: dk-jingle 1.2s var(--ease-in-out) infinite; animation-delay: var(--d); }
+.desk.in .dk-ghungroo.hot .dk-bells { animation: dk-ring 1.2s var(--ease-in-out) var(--d); }
 @keyframes dk-jingle { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(9deg); } 75% { transform: rotate(-9deg); } }
-.desk.in .dk-ghungroo.hot .dk-spark { animation: dk-spark 1.2s ease-in-out infinite; }
+.desk.in .dk-ghungroo.hot .dk-spark { animation: dk-spark 1.2s ease-in-out; }
 @keyframes dk-spark { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
-.desk.in .dk-mat.hot .dk-roll { animation: dk-rock 2.4s ease-in-out infinite; }
+.desk.in .dk-mat.hot .dk-roll { animation: dk-rock 2.4s ease-in-out; }
 @keyframes dk-rock { 0%, 100% { transform: rotate(0); } 30% { transform: rotate(-1.6deg); } 70% { transform: rotate(1.2deg); } }
-.desk.in .dk-globe.hot .dk-mer { animation: dk-spin 3s linear infinite; }
+.desk.in .dk-globe.hot .dk-mer { animation: none; }
 .desk.in .dk-globe.hot .dk-mer2 { animation-delay: -1.5s; }
 @keyframes dk-spin { 0% { transform: scaleX(1); } 50% { transform: scaleX(0.15); } 100% { transform: scaleX(1); } }
 /* the mug's steam drifts up slowly whenever the desk is on screen */
@@ -1397,25 +1402,25 @@ html { scroll-behavior: smooth; }
    ===================================================================== */
 
 /* --- Desk: idle life while on screen --- */
-.desk.in .dk-mer, .desk.in .dk-globe.hot .dk-mer { animation: dk-spin 10s linear infinite; }
+.desk.in .dk-mer, .desk.in .dk-globe.hot .dk-mer { animation: none; }
 .desk.in .dk-mer2, .desk.in .dk-globe.hot .dk-mer2 { animation-delay: -5s; }
 
 /* --- Books: three pages flip, then a film strip appears and gets crossed out --- */
-.dk-flip { fill: #fbfaf6; stroke: var(--ink-d); stroke-width: 1.5; stroke-linejoin: round; opacity: 0; transform-box: view-box; transform-origin: 136px 108px; }
+.dk-flip { fill: #fbfaf6; stroke: var(--ink-d); stroke-width: calc(1.5px * var(--u, 1)); stroke-linejoin: round; opacity: 0; transform-box: view-box; transform-origin: 136px 108px; }
 .desk.in .dk-books.open .dk-flip { animation: dk-flip 0.8s cubic-bezier(0.45, 0, 0.3, 1) var(--d) both; }
 @keyframes dk-flip { 0% { opacity: 1; transform: scaleX(1); } 50% { transform: scaleX(0.05) skewY(-5deg); } 88% { opacity: 1; transform: scaleX(-1); } 100% { opacity: 0; transform: scaleX(-1); } }
 .dk-verdict { opacity: 0; transform: translateY(6px); transition: opacity 400ms ease, transform 500ms var(--ease); }
 .dk-books.open .dk-verdict { opacity: 1; transform: none; transition-delay: 0.75s; }
-.dk-holes { stroke: var(--ink-d); stroke-width: 1.4; fill: none; }
+.dk-holes { stroke: var(--ink-d); stroke-width: calc(1.4px * var(--u, 1)); fill: none; }
 .dk-say { font: 600 12.5px var(--sans); fill: var(--ink-d); letter-spacing: 0.01em; }
 .dk-say-g { fill: var(--g); }
 .dk-say-n { fill: #66686d; }
 
 /* --- Ghungroo: a proper shake, sound rings and sparks --- */
-.dk-wave { fill: none; stroke: var(--g); stroke-width: 1.3; opacity: 0; transform-box: fill-box; transform-origin: center; }
+.dk-wave { fill: none; stroke: var(--g); stroke-width: calc(1.3px * var(--u, 1)); opacity: 0; transform-box: fill-box; transform-origin: center; }
 .desk.in .dk-ghungroo.open .dk-wave { animation: dk-wave 1.4s ease-out var(--d) 2 both; }
 @keyframes dk-wave { 0% { opacity: 0; transform: scale(0.5); } 15% { opacity: 0.75; } 100% { opacity: 0; transform: scale(1.3); } }
-.desk.in .dk-ghungroo.open .dk-bell { animation: dk-jingle 0.5s var(--ease-in-out) var(--d) 4; }
+.desk.in .dk-ghungroo.open .dk-bells { animation: dk-ring 0.5s var(--ease-in-out) var(--d) 4; }
 .desk.in .dk-ghungroo.open .dk-spark { animation: dk-spark 0.9s ease-in-out 3; }
 .desk.in .dk-ghungroo.open .dk-spark2 { animation-delay: 0.45s; }
 
@@ -1428,15 +1433,15 @@ html { scroll-behavior: smooth; }
 .dk-mat.open .dk-flat { transform: scaleX(1); }
 .dk-breath { opacity: 0; transform-box: fill-box; transform-origin: center; transition: opacity var(--t-slow) var(--ease); }
 .dk-mat.open .dk-breath { opacity: 0.6; transition-delay: 0.8s; }
-.desk.in .dk-mat.open .dk-breath { animation: dk-breathe 4.5s ease-in-out 1s infinite; }
-@keyframes dk-breathe { 0%, 100% { opacity: 0.3; transform: scale(0.94); } 50% { opacity: 1; transform: scale(1.06); } }
+.desk.in .dk-mat.open .dk-breath { animation: dk-breathe 4.5s ease-in-out 1s; }
+@keyframes dk-breathe { 0%, 100% { opacity: 0.6; transform: scale(1); } 50% { opacity: 1; transform: scale(1.06); } } /* one slow breath, then it rests */
 
 /* --- Globe: the route draws while a little plane flies India to Mexico --- */
 .dk-arc { transition: stroke-dashoffset 1.8s cubic-bezier(0.45, 0, 0.55, 1); }
 .dk-globe.hot:not(.open) .dk-arc { stroke-dashoffset: 100; }
 .dk-pin { opacity: 0; transition: opacity var(--t-base) var(--ease); }
 .dk-globe.hot .dk-pin, .dk-globe.open .dk-pin { opacity: 1; }
-.dk-plane path { fill: #fff; stroke: var(--ink-d); stroke-width: 1.2; stroke-linejoin: round; }
+.dk-plane path { fill: #fff; stroke: var(--ink-d); stroke-width: calc(1.2px * var(--u, 1)); stroke-linejoin: round; }
 .dk-plane { opacity: 0; transition: opacity var(--t-fast) var(--ease); }
 .dk-globe.open .dk-plane { opacity: 1; }
 
@@ -1451,22 +1456,22 @@ html { scroll-behavior: smooth; }
 
 /* --- Run-sheet: a clipboard on a nail under bunting; ticks fill in and confetti pops --- */
 .dk-nail { fill: var(--ink-d); }
-.dk-box { fill: #fff; stroke: var(--ink-d); stroke-width: 1.1; }
-.dk-tick { stroke: var(--g); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; fill: none; stroke-dasharray: 10; stroke-dashoffset: 10; transition: stroke-dashoffset 300ms ease; }
+.dk-box { fill: #fff; stroke: var(--ink-d); stroke-width: calc(1.1px * var(--u, 1)); }
+.dk-tick { stroke: var(--g); stroke-width: calc(1.8px * var(--u, 1)); stroke-linecap: round; stroke-linejoin: round; fill: none; stroke-dasharray: 10; stroke-dashoffset: 10; transition: stroke-dashoffset 300ms ease; }
 .dk-events.open .dk-tick { stroke-dashoffset: 0; transition-delay: calc(var(--d) + 0.35s); }
-.dk-flag { fill: #fbfaf6; stroke: var(--ink-d); stroke-width: 1.2; stroke-linejoin: round; transform-box: fill-box; transform-origin: 50% 0; }
+.dk-flag { fill: #fbfaf6; stroke: var(--ink-d); stroke-width: calc(1.2px * var(--u, 1)); stroke-linejoin: round; transform-box: fill-box; transform-origin: 50% 0; }
 .dk-flag-g { fill: var(--g-tint); }
 .dk-swing { transform-box: view-box; transform-origin: 400px 92px; }
 .dk-events .dk-lift, .dk-events.hot .dk-lift, .dk-events.open .dk-lift { transform: none; }
-.desk.in .dk-events.hot .dk-swing { animation: dk-sway 2.4s ease-in-out infinite; }
+.desk.in .dk-events.hot .dk-swing { animation: dk-sway 2.4s ease-in-out; }
 @keyframes dk-sway { 0%, 100% { transform: rotate(0); } 30% { transform: rotate(2.4deg); } 70% { transform: rotate(-2deg); } }
 .desk.in .dk-events.open .dk-swing { animation: dk-swing 1.6s ease-out both; }
 @keyframes dk-swing { 0% { transform: rotate(0); } 15% { transform: rotate(6deg); } 35% { transform: rotate(-4deg); } 55% { transform: rotate(2.4deg); } 75% { transform: rotate(-1deg); } 100% { transform: rotate(0); } }
-.desk.in .dk-events.hot .dk-flag { animation: dk-flag 1.4s ease-in-out var(--d) infinite alternate; }
+.desk.in .dk-events.hot .dk-flag { animation: dk-flag 1.4s ease-in-out var(--d) 2 alternate; }
 .desk.in .dk-events.open .dk-flag { animation: dk-flag 0.45s ease-in-out var(--d) 4 alternate; }
 @keyframes dk-flag { from { transform: rotate(-7deg); } to { transform: rotate(7deg); } }
 .dk-bit { opacity: 0; transform-box: fill-box; transform-origin: center; }
-.dk-bit-0 { fill: var(--g); } .dk-bit-1 { fill: var(--ink-d); } .dk-bit-2 { fill: var(--g-tint); stroke: var(--g); stroke-width: 1; }
+.dk-bit-0 { fill: var(--g); } .dk-bit-1 { fill: var(--ink-d); } .dk-bit-2 { fill: var(--g-tint); stroke: var(--g); stroke-width: calc(1px * var(--u, 1)); }
 .desk.in .dk-events.open .dk-bit { animation: dk-pop 1.5s cubic-bezier(0.2, 0.7, 0.3, 1) var(--d) both; }
 @keyframes dk-pop {
   0% { opacity: 0; transform: translate(0, 0) rotate(0) scale(0.4); }
@@ -1477,16 +1482,19 @@ html { scroll-behavior: smooth; }
 
 /* --- The note: slides in like an index card, its green edge drawing across --- */
 .dk-card {
-  translate: -18px 6px; rotate: -2deg; transform-origin: 0 100%; background-size: 0% 3px;
-  transition: opacity var(--t-base) var(--ease), translate var(--t-slow) var(--ease), rotate var(--t-slow) var(--ease), background-size var(--t-slow) var(--ease) 120ms;
+  translate: -18px 6px; rotate: -2deg; transform-origin: 0 100%; background-image: none;
+  transition: opacity var(--t-base) var(--ease), translate var(--t-slow) var(--ease), rotate var(--t-slow) var(--ease);
 }
-.dk-card.show { translate: 0 0; rotate: 0deg; background-size: 100% 3px; }
+/* the card's top edge draws across by transform on its own pseudo-element (it was a background-size transition: a repaint every frame) */
+.dk-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--g); transform: scaleX(0); transform-origin: 0 50%; transition: transform var(--t-slow) var(--ease) 120ms; pointer-events: none; }
+.dk-card.show { translate: 0 0; rotate: 0deg; }
+.dk-card.show::before { transform: none; }
 .dk-card .dk-text { opacity: 0; translate: 0 5px; transition: opacity var(--t-base) var(--ease), translate var(--t-base) var(--ease); }
 .dk-card.show .dk-text { opacity: 1; translate: 0 0; transition-delay: 120ms; }
 
 @media (prefers-reduced-motion: reduce) {
   .dk-card, .dk-card .dk-text { transition: none !important; translate: none !important; rotate: none !important; }
-  .dk-card { background-size: 100% 3px; }
+  .dk-card::before { transform: none; transition: none; }
   .dk-flip, .dk-wave, .dk-bit, .dk-clap { display: none; }
   .dk-mat.open .dk-breath { opacity: 0.6; }
 }
@@ -1671,7 +1679,7 @@ html { scroll-behavior: smooth; }
 .dk-books.open .dk-say-2 { opacity: 1; transition-delay: 1.6s; }
 
 /* Ghungroo: bells ring in a wave from one end to the other; rings spread on the desk. */
-.desk.in .dk-ghungroo.open .dk-bell { animation: dk-jingle 0.46s var(--ease-in-out) var(--d) 4; }
+.desk.in .dk-ghungroo.open .dk-bells { animation: dk-ring 0.46s var(--ease-in-out) var(--d) 4; }
 
 /* Yoga mat: unrolls in one smooth travel, then the glow breathes. */
 .dk-roll, .dk-flat { transition-duration: 1.1s; transition-timing-function: var(--ease-in-out); }
@@ -1679,7 +1687,7 @@ html { scroll-behavior: smooth; }
 /* Mic: the spotlight sweeps, brightens as it lands, and a soft halo blooms round the mic. */
 .desk.in .dk-mic-light.open .dk-beam { animation: dk-beam-land 1.5s var(--ease-in-out) both; }
 @keyframes dk-beam-land { 0% { opacity: 0.32; } 60% { opacity: 0.5; } 85%, 100% { opacity: 1; } }
-.dk-halo { fill: rgba(63, 122, 76, 0.12); stroke: var(--g); stroke-width: 1; opacity: 0; transform-box: fill-box; transform-origin: center; }
+.dk-halo { fill: rgba(63, 122, 76, 0.12); stroke: var(--g); stroke-width: calc(1px * var(--u, 1)); opacity: 0; transform-box: fill-box; transform-origin: center; }
 .dk-mic.open .dk-halo { opacity: 1; transition: opacity var(--t-base) var(--ease) 1.2s; }
 .desk.in .dk-mic.open .dk-halo { animation: dk-halo var(--t-slow) var(--ease) 1.25s both; }
 @keyframes dk-halo { 0% { opacity: 0; transform: scale(0.4); } 60% { opacity: 1; transform: scale(1.12); } 100% { opacity: 1; transform: scale(1); } }
@@ -1693,8 +1701,8 @@ html { scroll-behavior: smooth; }
 @keyframes dk-pin-pop { 0% { opacity: 0; transform: scale(0.2); } 70% { opacity: 1; transform: scale(1.4); } 100% { opacity: 1; transform: scale(1); } }
 
 /* Idle: the hint's hand gives a slow, small tap while the desk is on screen. */
-.dk-hint svg { transform-origin: 50% 80%; }
-.h-outside:has(.desk.in) .dk-hint svg { animation: dk-tap 3.2s var(--ease-in-out) infinite; }
+.dk-hand { display: inline-flex; flex: none; font-style: normal; transform-origin: 50% 80%; } /* the hand taps on this HTML wrapper: an animated <svg> under the page zoom is not composited (Round 25) */
+.h-outside:has(.desk.in) .dk-hand { animation: dk-tap 3.2s var(--ease-in-out) 3; }
 @keyframes dk-tap { 0%, 70%, 100% { transform: none; } 80% { transform: translateY(2px) rotate(-6deg); } 90% { transform: none; } }
 
 /* The note: switching between objects keeps the card in place and cross-fades only its words. */
@@ -1705,7 +1713,7 @@ html { scroll-behavior: smooth; }
 @media (max-width: 680px) { .dk-card { min-height: 172px; } }
 
 @media (prefers-reduced-motion: reduce) {
-  .dk-hint svg { animation: none !important; }
+  .dk-hand { animation: none !important; }
   .dk-card.show.swap .dk-name, .dk-card.show.swap .dk-text { opacity: 1; translate: none; }
   .dk-shadow { transform: none !important; }
 }
@@ -2074,7 +2082,7 @@ body.studio::before { content: none; display: none; }
    restyled and repainted the whole drawing. The steam now lives on three tiny HTML-level SVGs that move by transform
    and opacity only; the globe turns only while it is pointed at (or open), not as an idle loop. */
 .desk.in .dk-mer, .desk.in .dk-mer2 { animation: none; }
-.desk.in .dk-globe.hot .dk-mer, .desk.in .dk-globe.open .dk-mer { animation: dk-spin 4s linear infinite; }
+.desk.in .dk-globe.hot .dk-mer, .desk.in .dk-globe.open .dk-mer { animation: dk-spin 4s linear; }
 .desk.in .dk-globe.hot .dk-mer2, .desk.in .dk-globe.open .dk-mer2 { animation-delay: -2s; }
 .dk-steam { position: absolute; left: var(--x); top: var(--y); width: var(--w); height: var(--h); pointer-events: none; opacity: 0.55; transition: opacity var(--t-base) var(--ease); }
 .dk-steam.hot, .dk-steam.open { opacity: 1; }
@@ -2306,7 +2314,8 @@ body.studio::before { content: none; display: none; }
 @keyframes tr-twinkle { 0% { transform: none; opacity: 1; } 35% { transform: scale(0.4) rotate(45deg); opacity: 0.35; } 100% { transform: rotate(90deg); opacity: 1; } }
 
 /* the line: one dashed path; the clip wrapper sits on its own small layer */
-.tr-line { position: absolute; z-index: 0; top: 0; left: 0; width: var(--art); height: 87.5%; overflow: hidden; will-change: transform; }
+.tr-line { position: absolute; z-index: 0; top: 0; left: 0; width: var(--art); height: 87.5%; overflow: hidden; }
+.tr.in:not(.done) .tr-line { will-change: transform; } /* only while the line draws (Round 25) */
 .tr-line svg { position: absolute; top: 0; left: 0; display: block; width: 100%; height: 100%; overflow: visible; }
 .tr-line path { fill: none; stroke: var(--n-mid); stroke-width: 1.6; stroke-dasharray: 5 7; stroke-linecap: round; vector-effect: non-scaling-stroke; }
 .tr-h { display: none !important; }
@@ -2606,8 +2615,8 @@ html.cmdk-lock { overflow: hidden; }
    ===================================================================== */
 
 /* --- The desk's laptop (home): its note links to My corner. The globe sits 24 units right to make room. --- */
-.dk-screen { fill: #f3f1ea; stroke: var(--ink-d); stroke-width: 1.2; }
-.dk-prompt path { fill: none; stroke: var(--g); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.dk-screen { fill: #f3f1ea; stroke: var(--ink-d); stroke-width: calc(1.2px * var(--u, 1)); }
+.dk-prompt path { fill: none; stroke: var(--g); stroke-width: calc(1.5px * var(--u, 1)); stroke-linecap: round; stroke-linejoin: round; }
 .dk-prompt rect { fill: var(--g); }
 .dk-type { transform-box: fill-box; transform-origin: 0 50%; }
 @keyframes dk-type { from { transform: scaleX(0); } to { transform: scaleX(1); } }
@@ -3112,3 +3121,32 @@ html.js .cd.in:not(.off) * { animation-play-state: running; }
   .cri-doc { width: 50%; }
   .cri-doc em { font-size: 7px; letter-spacing: 0.08em; padding: 1px 3px; }
 }
+
+/* =====================================================================
+   Round 25: performance of the desk (and the shelf). Measured with scripts/perf.mjs; run `npm run perf` before deploy.
+   - Every object on the desk is its own small SVG (.dk-pc), so its animation repaints only its own box.
+   - While an object's reveal plays, its piece is lifted onto its own layer (.run, will-change only for that time).
+   - Nothing on the desk loops: hover and note animations play once. Only the mug's steam (three tiny layers, moved by
+     transform and opacity, only while the desk is on screen) keeps going.
+   - When a note is replaced or closed, the old object snaps back at once (.dk-snap) instead of playing every
+     transition in reverse while the new one plays.
+   ===================================================================== */
+.dk-pc { position: absolute; left: var(--x); top: var(--y); width: var(--w); height: var(--h); overflow: visible; pointer-events: none; }
+.dk-pc.run { will-change: transform; }
+.desk { contain: layout; }
+.dk-bells { transform-box: fill-box; transform-origin: 50% 0; }
+@keyframes dk-ring { 0%, 100% { transform: none; } 25% { transform: translateX(1.2px) rotate(2.5deg); } 75% { transform: translateX(-1.2px) rotate(-2.5deg); } }
+.dk-snap, .dk-snap * { transition: none !important; animation: none !important; }
+/* Once a one-time entrance has finished ([data-reveal] gets .done), its finished animations are dropped: the end
+   state is the element's own style, so nothing changes on screen, but the browser stops keeping a layer for each of
+   them (My path alone kept about 16 layers alive for the rest of the visit, which every later frame paid for). */
+[data-reveal].done *:not(.tr-twinkle) { animation: none !important; }
+.mini-flow:not(.in) b::before { will-change: auto; }
+[data-play].done *, [data-play].done *::before, [data-play].done *::after { animation: none !important; }
+/* The page zooms up a small step on laptops (`zoom` on :root, "Laptop scale"). Chrome will not run an SVG part's
+   transform animation on the compositor while any zoom applies to it, so every motion on the desk was repainted on
+   the main thread at 1400px and wider (a 1512px MacBook is zoom 1.08). The page script gives .dk-in the exact
+   inverse zoom (so the zoom it sees is exactly 1) and the class .unz; the desk's box still sizes with the page, so the
+   drawing is exactly as large as before, and the few pixel sizes inside (the name tags) are multiplied back. */
+.dk-in { position: absolute; top: 0; right: 0; bottom: 0; left: 0; }
+.dk-in.unz .dk-tip { font-size: calc(12.5px * var(--z, 1)); padding: calc(5px * var(--z, 1)) calc(10px * var(--z, 1)); bottom: calc(100% + 6px * var(--z, 1)); }

@@ -119,7 +119,11 @@ const title = `${corner.name} · Nityashree S`;
       else {
         const io = new IntersectionObserver((es) => es.forEach((e) => {
           const el = e.target as HTMLElement;
-          if (e.isIntersecting && e.intersectionRatio >= 0.35) el.classList.add('in');
+          if (e.isIntersecting && e.intersectionRatio >= 0.35 && !el.classList.contains('in')) {
+            el.classList.add('in');
+            // Once its picture has played, drop the finished animations so their layers are freed (Round 25).
+            Promise.all(el.getAnimations({ subtree: true }).map((x) => x.finished)).then(() => el.classList.add('done'), () => {});
+          }
           el.classList.toggle('off', !e.isIntersecting);
         }), { threshold: [0, 0.35] });
         plays.forEach((el) => io.observe(el));
@@ -165,14 +169,15 @@ const title = `${corner.name} · Nityashree S`;
           const r = card.getBoundingClientRect();
           if (r.bottom > innerHeight) card.scrollIntoView({ block: 'nearest', behavior: still.matches ? 'auto' : 'smooth' });
         };
-        btns.forEach((b) => {
-          const k = b.dataset.k!;
-          b.addEventListener('pointerenter', () => mark(k, 'hot', true));
-          b.addEventListener('pointerleave', () => mark(k, 'hot', false));
-          b.addEventListener('focus', () => b.matches(':focus-visible') && mark(k, 'hot', true));
-          b.addEventListener('blur', () => mark(k, 'hot', false));
-          b.addEventListener('click', () => (open === k ? close() : show(k, b)));
-        });
+        // One delegated listener per event type for the whole shelf (Round 25).
+        const hitOf = (t: EventTarget | null) => (t instanceof Element ? t.closest<HTMLButtonElement>('.bk-hit') : null);
+        let hot = '';
+        const setHot = (k: string) => { if (hot === k) return; if (hot) mark(hot, 'hot', false); hot = k; if (k) mark(k, 'hot', true); };
+        shelf.addEventListener('pointerover', (e) => { const b = hitOf(e.target); if (b) setHot(b.dataset.k!); });
+        shelf.addEventListener('pointerout', (e) => { const b = hitOf(e.target); if (b && hitOf(e.relatedTarget) !== b) setHot(''); });
+        shelf.addEventListener('focusin', (e) => { const b = hitOf(e.target); if (b && b.matches(':focus-visible')) setHot(b.dataset.k!); });
+        shelf.addEventListener('focusout', (e) => { if (hitOf(e.target)) setHot(''); });
+        shelf.addEventListener('click', (e) => { const b = hitOf(e.target); if (!b) return; const k = b.dataset.k!; open === k ? close() : show(k, b); });
         card.querySelector('.dk-close')!.addEventListener('click', () => close(true));
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && open) close(true); });
       }
