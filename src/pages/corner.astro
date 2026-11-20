@@ -1,15 +1,14 @@
 ---
 // My corner: one light page on the site's off-white paper. The header, the Workbench (side projects as light
 // technical cards, Invoice Agent as the wide lead), then on the dot-grid paper: Field notes (src/content/notes/,
-// only once a note is published) and the Shelf (an ink drawing; each book opens a note card like the home desk's).
+// only once a note is published). The books moved to the home desk (the Books note shows their spines).
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Meta from '../components/Meta.astro';
 import NoteCard from '../components/NoteCard.astro';
-import Shelf from '../components/Shelf.astro';
 import Bench from '../components/Bench.astro';
 import CornerDesk from '../components/CornerDesk.astro';
-import { corner, cornerCopy, books, whySoon } from '../data/corner';
+import { corner, cornerCopy } from '../data/corner';
 import { projectsIntro, projects } from '../data/projects';
 import { getNotes } from '../lib/notes';
 
@@ -37,7 +36,7 @@ const title = `${corner.name} · Nityashree S`;
             <h1>{cc.title}</h1>
             <p class="cr-intro">{cc.intro}</p>
             <nav class="cr-jump" aria-label="On this page">
-              <a href="#built">{corner.bench.kicker}</a>{notes.length > 0 && <a href="#notes">{corner.notes.kicker}</a>}<a href="#shelf">{corner.shelf.kicker}</a>
+              <a href="#built">{corner.bench.kicker}</a>{notes.length > 0 && <a href="#notes">{corner.notes.kicker}</a>}
             </nav>
           </div>
           <div class="cr-hero-art"><CornerDesk /></div>
@@ -68,30 +67,6 @@ const title = `${corner.name} · Nityashree S`;
         </section>
         )}
 
-        <section class="cr-sec cr-shelf" id="shelf" aria-labelledby="shelf-t">
-          <div class="shf-text">
-            <p class="kicker">{corner.shelf.kicker}</p>
-            <h2 id="shelf-t">{corner.shelf.title}</h2>
-            <p class="shf-intro">{corner.shelf.text}</p>
-          </div>
-          <div class="shf-side"><Shelf /></div>
-          <div class="shf-note">
-            <p class="dk-hint" id="sh-hint"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V10m0-1.5a1.5 1.5 0 0 1 3 0V11m0-1a1.5 1.5 0 0 1 3 0v4.5A6.5 6.5 0 0 1 11.5 21h-.6a6 6 0 0 1-4.6-2.2L3.6 15.4a1.6 1.6 0 0 1 2.4-2.1L9 16" /></svg><span>{corner.shelf.hint}</span></p>
-            <article class="dk-card" id="sh-card" tabindex="-1" hidden aria-labelledby="sh-name">
-              <div class="dk-card-top">
-                <h3 class="dk-name" id="sh-name"></h3>
-                <button type="button" class="dk-close" aria-label="Close note"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" /></svg></button>
-              </div>
-              <p class="sh-by" id="sh-by"></p>
-              <p class="dk-text" id="sh-text"></p>
-            </article>
-            <p class="sr-only" id="sh-live" aria-live="polite"></p>
-            <noscript>
-              <style is:inline>#sh-hint { display: none !important; }</style>
-              <ul class="dk-plain">{books.map((b) => <li><b>{b.title}</b>{b.series ? ' (the series)' : ''} by {b.author}. {b.why || whySoon}</li>)}</ul>
-            </noscript>
-          </div>
-        </section>
       </div>
     </main>
     <footer class="foot light cr-foot" data-light>
@@ -129,58 +104,6 @@ const title = `${corner.name} · Nityashree S`;
         plays.forEach((el) => io.observe(el));
       }
 
-      // --- The shelf: every book is a button that opens one note at a time, the same way the desk does on home. ---
-      const shelf = document.querySelector<HTMLElement>('[data-shelf]');
-      if (shelf) {
-        const notes = new Map([...(document.getElementById('sh-notes') as HTMLTemplateElement).content.querySelectorAll<HTMLElement>('[data-k]')].map((n) => [n.dataset.k!, n.dataset]));
-        const card = document.getElementById('sh-card')!, hint = document.getElementById('sh-hint')!, live = document.getElementById('sh-live')!;
-        const nameEl = document.getElementById('sh-name')!, byEl = document.getElementById('sh-by')!, textEl = document.getElementById('sh-text')!;
-        const btns = [...shelf.querySelectorAll<HTMLButtonElement>('.bk-hit')];
-        const objs = (k: string) => shelf.querySelectorAll(`[data-obj="${k}"]`);
-        const mark = (k: string, cls: string, on: boolean) => objs(k).forEach((o) => o.classList.toggle(cls, on));
-        const setExp = (k: string, on: boolean) => btns.filter((b) => b.dataset.k === k).forEach((b) => b.setAttribute('aria-expanded', String(on)));
-        let open = '', seq = 0, opener: HTMLButtonElement | null = null;
-        const setText = (k: string) => {
-          const n = notes.get(k)!;
-          nameEl.textContent = n.name!; byEl.textContent = `by ${n.by}`; textEl.textContent = n.note!;
-          textEl.classList.toggle('soon', n.soon !== undefined);
-        };
-        const close = (focusBack = false) => {
-          if (!open) return;
-          mark(open, 'open', false); setExp(open, false);
-          seq++; card.classList.remove('show', 'swap'); card.hidden = true; hint.hidden = false; live.textContent = '';
-          open = '';
-          if (focusBack && opener) opener.focus();
-        };
-        const show = (k: string, from: HTMLButtonElement) => {
-          const n = notes.get(k)!, was = open, my = ++seq;
-          opener = from;
-          if (was) { mark(was, 'open', false); setExp(was, false); }
-          open = k; mark(k, 'open', true); setExp(k, true);
-          if (was && !card.hidden) {
-            card.classList.add('swap');
-            window.setTimeout(() => { if (my !== seq) return; setText(k); card.classList.remove('swap'); }, still.matches ? 0 : 180);
-          } else {
-            setText(k); card.classList.remove('show', 'swap');
-            hint.hidden = true; card.hidden = false;
-            requestAnimationFrame(() => requestAnimationFrame(() => { if (my === seq || open === k) card.classList.add('show'); }));
-          }
-          live.textContent = `${n.name}, by ${n.by}. ${n.note}`;
-          const r = card.getBoundingClientRect();
-          if (r.bottom > innerHeight) card.scrollIntoView({ block: 'nearest', behavior: still.matches ? 'auto' : 'smooth' });
-        };
-        // One delegated listener per event type for the whole shelf (Round 25).
-        const hitOf = (t: EventTarget | null) => (t instanceof Element ? t.closest<HTMLButtonElement>('.bk-hit') : null);
-        let hot = '';
-        const setHot = (k: string) => { if (hot === k) return; if (hot) mark(hot, 'hot', false); hot = k; if (k) mark(k, 'hot', true); };
-        shelf.addEventListener('pointerover', (e) => { const b = hitOf(e.target); if (b) setHot(b.dataset.k!); });
-        shelf.addEventListener('pointerout', (e) => { const b = hitOf(e.target); if (b && hitOf(e.relatedTarget) !== b) setHot(''); });
-        shelf.addEventListener('focusin', (e) => { const b = hitOf(e.target); if (b && b.matches(':focus-visible')) setHot(b.dataset.k!); });
-        shelf.addEventListener('focusout', (e) => { if (hitOf(e.target)) setHot(''); });
-        shelf.addEventListener('click', (e) => { const b = hitOf(e.target); if (!b) return; const k = b.dataset.k!; open === k ? close() : show(k, b); });
-        card.querySelector('.dk-close')!.addEventListener('click', () => close(true));
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && open) close(true); });
-      }
     </script>
   </body>
 </html>

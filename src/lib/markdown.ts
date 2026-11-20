@@ -63,7 +63,7 @@ ${home.path.map((p) => `${Number(p.when)}. **${p.title}.** ${p.line}`).join('\n'
 
 *${home.offClock}.* ${home.outsideIntro.text}
 
-${home.desk.filter((d) => d.id !== 'laptop').map((d) => `- **${d.name}.** ${d.note}${d.href ? ` ${d.link}: ${abs(site, d.href)}` : ''}`).join('\n')}
+${home.desk.filter((d) => d.id !== 'laptop').map((d) => `- **${d.name}.** ${d.note}${d.id === 'books' ? ' ' + books.map((b) => `*${b.title}*${b.series ? ' (the series)' : ''} by ${b.author}`).join('; ') + '.' : ''}${d.href ? ` ${d.link}: ${abs(site, d.href)}` : ''}`).join('\n')}
 
 ## ${corner.name}
 
@@ -228,12 +228,6 @@ ${corner.notes.text}
 
 ${noteList(site, notes)}
 ` : ''}
-## ${corner.shelf.title}
-
-${corner.shelf.text}
-
-${books.map((b) => `- *${b.title}*${b.series ? ' (the series)' : ''} by ${b.author}${b.why ? `. ${b.why}` : ''}`).join('\n')}
-
 ## More
 
 - [Home](${abs(site, '/index.md')})

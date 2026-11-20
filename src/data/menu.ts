@@ -23,7 +23,7 @@ export const getMenuItems = (hasNotes: boolean): MenuItem[] => [
     id: `case-${c.slug}`, group: 'Case studies', label: c.title, hint: `Case ${c.no}`,
     keys: `case study work ${c.slug.replace(/-/g, ' ')}`, href: `/work/${c.slug}/`,
   })),
-  { id: 'corner', group: 'More', label: corner.name, hint: cornerCopy(hasNotes).menuHint, keys: 'corner projects demos side invoice smart router meridian fee fraud books shelf reading personal', href: '/corner/' },
+  { id: 'corner', group: 'More', label: corner.name, hint: cornerCopy(hasNotes).menuHint, keys: 'corner projects demos side invoice smart router meridian fee fraud notes writing how i work', href: '/corner/' },
   ...(hasNotes ? [{ id: 'notes', group: 'More', label: 'Read my notes', hint: 'Short write-ups', keys: 'notes blog writing posts articles', href: '/notes/' }] : []),
   { id: 'resume', group: 'Get in touch', label: 'Download resume', hint: 'PDF', keys: 'cv resume pdf', href: contact.resume, download: true },
   { id: 'email', group: 'Get in touch', label: 'Email me', hint: 'Opens your email app', keys: `mail contact write hello ${contact.email}`, href: mailto(letter.subject, letter.body) },
