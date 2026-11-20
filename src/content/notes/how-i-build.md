@@ -56,4 +56,4 @@ I'd put it this way: I design the system, I decide what correct looks like, I di
 
 And honestly? It's made me *more* careful, not less. When you're not the one writing every line, you can't assume you know what's in it. You have to check.
 
-Everything on my [workbench](/corner/) was built this way, including an invoice agent that I then spent a full day trying to break on purpose. That story's next.
+Everything on my [workbench](/corner/) was built this way, including an invoice agent that I then spent a full day [trying to break on purpose](/notes/break-my-invoice-agent/).
