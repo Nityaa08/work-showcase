@@ -10,7 +10,7 @@ export const how = {
   /** One sentence about working close to the people who use the work (only facts from the career kit). */
   people: 'I like working close to the people who use what I build: real questions from Sales and Business Development shaped how I tested, and finance’s own rules shaped the agents I built for them.',
   steps: ['Plan', 'Delegate', 'Prove', 'Own'],
-  tools: 'Tools I work with: Claude Code and Claude Design every day, plus Cursor, DeepSeek and Grok. Personal agents in Slack run my pull-request workflow. My side projects, an LLM gateway and a multi-agent research API, are on my GitHub.',
+  tools: 'Tools I work with: Claude Code and Claude Design every day, plus Cursor, DeepSeek and Grok. Personal agents in Slack run my pull-request workflow. My side projects (an invoice agent, an LLM gateway and a multi-agent research API) are live in My corner.',
 };
 export const contact = {
   email: 'nityashreesundararajan@gmail.com',
