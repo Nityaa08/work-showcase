@@ -34,6 +34,6 @@ export const projects: Project[] = [
   {
     id: 'fraud-pattern-explorer', short: 'A risk dashboard where every chart is a filter, from a spike to the transactions behind it.', name: 'Fraud Pattern Explorer',
     line: 'A risk dashboard where every chart is also a filter, to get from a suspicious spike to the transactions behind it.',
-    live: 'https://fraud-pattern-explorer.vercel.app', code: 'https://github.com/Nityaa08/fraud-pattern-explorer',
+    live: 'https://fraud.nityashree.in', code: 'https://github.com/Nityaa08/fraud-pattern-explorer',
   },
 ];
