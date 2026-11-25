@@ -2897,7 +2897,7 @@ html.js .wb-card.in:not(.off) *, html.js .wb-card.in:not(.off) *::before, html.j
 .note-body li { margin: 0 0 0.6em; padding-left: 0.2em; }
 .note-body li::marker { color: var(--ink-3); }
 .note-body a { color: inherit; text-decoration: underline; text-underline-offset: 4px; }
-.note-body code { font: 500 0.88em ui-monospace, SFMono-Regular, Menlo, monospace; padding: 2px 6px; border-radius: 6px; background: rgba(255, 255, 255, 0.07); color: #f1f0ec; white-space: pre; }
+.note-body code { font: 500 0.88em ui-monospace, SFMono-Regular, Menlo, monospace; padding: 2px 6px; border-radius: 6px; background: rgba(255, 255, 255, 0.07); color: #f1f0ec; white-space: pre-wrap; overflow-wrap: anywhere; }
 .note-more { margin: 36px 0 0; }
 .note-more a { position: relative; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 4px 16px; min-height: 44px; padding: 20px 22px; border-radius: 14px; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12); color: #ecebe6; }
 .note-more-k { grid-column: 1; font: 600 12px var(--sans); letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); }
@@ -3110,3 +3110,12 @@ html.js .cd.in:not(.off) * { animation-play-state: running; }
    drawing is exactly as large as before, and the few pixel sizes inside (the name tags) are multiplied back. */
 .dk-in { position: absolute; top: 0; right: 0; bottom: 0; left: 0; }
 .dk-in.unz .dk-tip { font-size: calc(12.5px * var(--z, 1)); padding: calc(5px * var(--z, 1)) calc(10px * var(--z, 1)); bottom: calc(100% + 6px * var(--z, 1)); }
+
+/* Nav with Projects and Notes: on phones About and Resume step out (both stay one tap away in the quick menu, the
+   hero and Contact), so the bar never wraps or scrolls sideways. */
+@media (max-width: 900px) { .links { gap: 18px; } }
+@media (max-width: 760px) { .links .nl-about { display: none; } }
+@media (max-width: 560px) { .links .nl-resume { display: none; } .links { gap: 14px; } }
+@media (max-width: 440px) { .nav { gap: 10px; } .links { gap: 11px; font-size: 13.5px; } .links .cta { padding: 7px 10px; } }
+@media (max-width: 375px) { .links .cta { display: none; } }
+@media (max-width: 340px) { .brand-who b { font-size: 13px; } .links { gap: 9px; font-size: 13px; } }

@@ -1,6 +1,9 @@
 ---
 interface Props { crumb?: string; active?: 'work' | 'about'; light?: boolean }
 const { crumb, active, light } = Astro.props;
+// Projects (My corner) and Notes are marked current from the address, so every page gets it right without a prop.
+const path = Astro.url.pathname;
+const here = path.startsWith('/corner') ? 'projects' : path.startsWith('/notes') ? 'notes' : active;
 import CommandMenu from './CommandMenu.astro';
 ---
 <a class="skip" href="#main">Skip to content</a>
@@ -10,9 +13,11 @@ import CommandMenu from './CommandMenu.astro';
   </a>
   {crumb && <span class="crumb"><a href="/#work">Work</a><span>/</span>{crumb}</span>}
   <nav class="links" aria-label="Main">
-    <a href="/#about" aria-current={active === 'about' ? 'page' : undefined}>About</a>
-    <a href="/#work" aria-current={active === 'work' ? 'page' : undefined}>Work</a>
-    <a href="/Nityashree_S_Resume.pdf" target="_blank" rel="noopener">Resume<span class="nav-ext" aria-hidden="true"> ↗</span></a>
+    <a class="nl-about" href="/#about" aria-current={here === 'about' ? 'page' : undefined}>About</a>
+    <a href="/#work" aria-current={here === 'work' ? 'page' : undefined}>Work</a>
+    <a href="/corner/" aria-current={here === 'projects' ? 'page' : undefined}>Projects</a>
+    <a href="/notes/" aria-current={here === 'notes' ? 'page' : undefined}>Notes</a>
+    <a class="nl-resume" href="/Nityashree_S_Resume.pdf" target="_blank" rel="noopener">Resume<span class="nav-ext" aria-hidden="true"> ↗</span></a>
     <a class="cta" href="/#contact">Contact</a>
   </nav>
   <button type="button" class="cmdk-btn" id="cmdk-btn" aria-haspopup="dialog" aria-controls="cmdk" aria-expanded="false" aria-label="Open quick menu" hidden>
